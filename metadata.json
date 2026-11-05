@@ -1,0 +1,6 @@
+{
+  "name": "Smart Hub BD - স্মার্ট হাব বিডি",
+  "description": "Smart Hub BD - বাংলাদেশের বিশ্বস্ত ডিজিটাল সেবা পোর্টাল (NID, জন্ম নিবন্ধন, ভূমি সেবা, TIN, মোবাইল ও সরকারি সেবা)।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

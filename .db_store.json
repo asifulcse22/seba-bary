@@ -1,0 +1,79 @@
+{
+  "users": [
+    {
+      "id": "usr_riaz",
+      "name": "Riaz",
+      "displayNameEn": "Hello, Riaz Khan",
+      "phone": "01712-345678",
+      "email": "riaz.khan@smarthubbd.com",
+      "passwordHash": "password123",
+      "activeTier": "business",
+      "walletBalance": 0,
+      "personalBalance": 0,
+      "businessBalance": 0,
+      "subAdminBalance": 0,
+      "avatarUrl": "",
+      "createdAt": "2026-11-05T16:57:28.599Z"
+    },
+    {
+      "id": "usr_1793899057051",
+      "name": "Tanvir Ahmed",
+      "displayNameEn": "Hello, Tanvir Ahmed",
+      "phone": "01812-334455",
+      "email": "01812334455@smarthubbd.com",
+      "passwordHash": "mypassword123",
+      "activeTier": "personal",
+      "walletBalance": 500,
+      "personalBalance": 0,
+      "businessBalance": 500,
+      "subAdminBalance": 0,
+      "avatarUrl": "",
+      "createdAt": "2026-11-05T17:17:37.051Z"
+    }
+  ],
+  "transactions": [
+    {
+      "id": "TRX-35873",
+      "userId": "01812-334455",
+      "date": "৫/১১/২৬, ৫:১৮ PM",
+      "type": "deposit",
+      "description": "ব্যালেন্স অ্যাড (bKash)",
+      "amount": 500,
+      "status": "সফল",
+      "method": "bKash",
+      "trxId": "BK78945612",
+      "phone": "01812-334455",
+      "accountType": "personal",
+      "createdAt": "2026-11-05T17:18:55.893Z"
+    },
+    {
+      "id": "TRX-14891",
+      "userId": "01812-334455",
+      "date": "৫/১১/২৬, ৫:১৮ PM",
+      "type": "deposit",
+      "description": "ব্যালেন্স অ্যাড (bKash)",
+      "amount": 500,
+      "status": "সফল",
+      "method": "bKash",
+      "trxId": "BK78945612",
+      "phone": "01812-334455",
+      "accountType": "business",
+      "createdAt": "2026-11-05T17:18:34.892Z"
+    },
+    {
+      "id": "TRX-63145",
+      "userId": "01812-334455",
+      "date": "৫/১১/২৬, ৫:১৭ PM",
+      "type": "deposit",
+      "description": "ব্যালেন্স অ্যাড (bKash)",
+      "amount": 500,
+      "status": "সফল",
+      "method": "bKash",
+      "trxId": "BK78945612",
+      "phone": "01812-334455",
+      "accountType": "business",
+      "createdAt": "2026-11-05T17:17:43.208Z"
+    }
+  ],
+  "orders": []
+}
