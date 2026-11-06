@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useApp } from '../context/AppContext';
-import { Rocket, ShieldCheck, Sparkles, LogIn, TrendingUp, CheckCircle2 } from 'lucide-react';
+import { Rocket, ShieldCheck, Sparkles, LogIn, TrendingUp, CheckCircle2, Camera } from 'lucide-react';
 import { UserAvatar } from './UserAvatar';
 
 interface HeroBannerProps {
@@ -8,7 +8,24 @@ interface HeroBannerProps {
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ variant = 'home' }) => {
-  const { user, openAuthModal, setActiveTab } = useApp();
+  const { user, openAuthModal, setActiveTab, updateAvatar } = useApp();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      alert('ছবির সাইজ সর্বোচ্চ ৫ মেগাবাইট হতে পারবে।');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        updateAvatar(reader.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#003c7d] via-[#0256a7] to-[#013571] text-white p-4 sm:p-6 shadow-2xl border-4 border-emerald-400/90 transition-all duration-300">
@@ -25,13 +42,43 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ variant = 'home' }) => {
         {/* Left Side: Avatar & Greetings */}
         <div className="flex items-center gap-3.5 sm:gap-5 w-full sm:w-auto">
           
-          {/* Dynamic User Avatar with waving hand badge */}
+          {/* Dynamic User Avatar with camera upload badge & waving hand badge */}
           <div className="relative shrink-0 group">
-            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-sky-300 via-emerald-300 to-yellow-200 p-1 shadow-xl ring-4 ring-white/30 group-hover:ring-white/50 transition-all duration-300 group-hover:scale-105">
+            {/* Hidden file input */}
+            <input 
+              type="file" 
+              ref={fileInputRef} 
+              accept="image/*" 
+              className="hidden" 
+              onChange={handleAvatarFileChange} 
+            />
+
+            <div 
+              onClick={() => user ? fileInputRef.current?.click() : openAuthModal('login')}
+              className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-sky-300 via-emerald-300 to-yellow-200 p-1 shadow-xl ring-4 ring-white/30 group-hover:ring-white/60 transition-all duration-300 group-hover:scale-105 cursor-pointer relative"
+              title={user ? "ক্লিক করে প্রোফাইল ছবি আপলোড বা পরিবর্তন করুন" : "লগইন করুন"}
+            >
               <div className="w-full h-full rounded-full overflow-hidden bg-slate-900 flex items-center justify-center">
                 <UserAvatar user={user} size="xl" showRing={false} />
               </div>
+
+              {/* Hover Camera Overlay */}
+              <div className="absolute inset-0 rounded-full bg-slate-950/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                <Camera className="w-5 h-5 text-emerald-300" />
+              </div>
             </div>
+
+            {/* Small camera badge button */}
+            {user && (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="absolute -top-1 -right-1 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-emerald-500 hover:bg-emerald-400 text-white flex items-center justify-center shadow-lg border-2 border-white transition-transform hover:scale-110 cursor-pointer z-10"
+                title="প্রোফাইল ছবি আপলোড/পরিবর্তন করুন"
+              >
+                <Camera className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+              </button>
+            )}
             
             {/* Waving hand badge with smooth hand-wave animation */}
             <span 
@@ -47,7 +94,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ variant = 'home' }) => {
               {user ? (
                 <span>স্বাগতম, <span className="bg-gradient-to-r from-white via-sky-100 to-emerald-200 bg-clip-text text-transparent">{user.name}</span>!</span>
               ) : (
-                <span>স্বাগতম <span className="bg-gradient-to-r from-white via-sky-100 to-emerald-200 bg-clip-text text-transparent">Smart Hub BD</span>-তে!</span>
+                <span>স্বাগতম <span className="bg-gradient-to-r from-white via-sky-100 to-emerald-200 bg-clip-text text-transparent">SHEBA BARY (সেবা বাড়ি)</span>-তে!</span>
               )}
             </h1>
 
@@ -56,10 +103,10 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ variant = 'home' }) => {
                 variant === 'home' ? (
                   <span>স্মার্ট সেবা, সহজ সমাধান!</span>
                 ) : (
-                  <span>আপনার ডিজিটাল সেবার বিশ্বস্ত সহযোগী — Smart Hub BD</span>
+                  <span>আপনার ডিজিটাল সেবার বিশ্বস্ত সহযোগী — SHEBA BARY</span>
                 )
               ) : (
-                <span>ডিজিটাল সেবা এখন হাতের মুঠোয় — দ্রুত, বিশ্বস্ত ও সহজ সমাধান!</span>
+                <span>স্মার্ট সেবা, সহজ সমাধান — আপনার প্রয়োজনীয় ডিজিটাল সেবা এক জায়গায়!</span>
               )}
             </p>
 

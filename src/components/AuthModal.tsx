@@ -81,15 +81,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Modal Top Header */}
         <div className="bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 text-white p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center font-bold text-xl backdrop-blur-xs">
-              S
+            <div className="w-11 h-11 rounded-full p-0.5 bg-white/20 flex items-center justify-center backdrop-blur-xs shadow-md">
+              <img 
+                src="/images/sheba-logo.png" 
+                alt="SHEBA BARY Logo" 
+                className="w-full h-full object-contain rounded-full bg-white"
+              />
             </div>
             <div>
               <h3 className="font-black text-lg">
                 {mode === 'login' ? 'লগইন করুন' : 'নতুন অ্যাকাউন্ট তৈরি করুন'}
               </h3>
               <p className="text-xs text-emerald-100">
-                Smart Hub BD — নিরাপদ ডিজিটাল সেবা প্ল্যাটফর্ম
+                SHEBA BARY (সেবা বাড়ি) — স্মার্ট সেবা, সহজ সমাধান!
               </p>
             </div>
           </div>
@@ -200,52 +204,6 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 />
               </div>
             </div>
-
-            {/* Account Tier Choice on Registration */}
-            {mode === 'register' && (
-              <div className="space-y-1.5 pt-1">
-                <label className="block text-xs font-bold text-slate-700">
-                  অ্যাকাউন্ট টাইপ নির্বাচন করুন
-                </label>
-                <div className="grid grid-cols-3 gap-2">
-                  <div
-                    onClick={() => setSelectedTier('personal')}
-                    className={`p-2 rounded-xl border text-center cursor-pointer transition-all ${
-                      selectedTier === 'personal'
-                        ? 'border-blue-500 bg-blue-50 text-blue-900 ring-2 ring-blue-200 font-bold'
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                    }`}
-                  >
-                    <span className="text-xs block">Personal</span>
-                    <span className="text-[10px] text-blue-600 font-bold">৳{TIER_PRICES.personal.toLocaleString('en-US')}</span>
-                  </div>
-
-                  <div
-                    onClick={() => setSelectedTier('business')}
-                    className={`p-2 rounded-xl border text-center cursor-pointer transition-all relative ${
-                      selectedTier === 'business'
-                        ? 'border-emerald-500 bg-emerald-50 text-emerald-900 ring-2 ring-emerald-200 font-bold'
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                    }`}
-                  >
-                    <span className="text-xs block">Business</span>
-                    <span className="text-[10px] text-emerald-600 font-bold">৳{TIER_PRICES.business.toLocaleString('en-US')} 🔥</span>
-                  </div>
-
-                  <div
-                    onClick={() => setSelectedTier('sub_admin')}
-                    className={`p-2 rounded-xl border text-center cursor-pointer transition-all ${
-                      selectedTier === 'sub_admin'
-                        ? 'border-purple-600 bg-purple-50 text-purple-900 ring-2 ring-purple-200 font-bold'
-                        : 'border-slate-200 hover:bg-slate-50 text-slate-600'
-                    }`}
-                  >
-                    <span className="text-xs block">Sub Admin</span>
-                    <span className="text-[10px] text-purple-600 font-bold">৳{TIER_PRICES.sub_admin.toLocaleString('en-US')} 🌟</span>
-                  </div>
-                </div>
-              </div>
-            )}
 
             <button
               type="submit"

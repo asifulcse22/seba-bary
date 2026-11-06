@@ -5,6 +5,11 @@ import { tierPricingDiscount } from '../data/servicesData';
 interface AppContextType {
   user: UserProfile | null;
   setUser: React.Dispatch<React.SetStateAction<UserProfile | null>>;
+  isGuestMode: boolean;
+  setIsGuestMode: React.Dispatch<React.SetStateAction<boolean>>;
+  authLandingMode: 'login' | 'register';
+  setAuthLandingMode: React.Dispatch<React.SetStateAction<'login' | 'register'>>;
+  goToAuthPage: (mode?: 'login' | 'register') => void;
   transactions: Transaction[];
   orders: ServiceOrder[];
   activeTab: 'dashboard' | 'wallet_hub' | 'orders' | 'services' | 'settings';
@@ -13,8 +18,8 @@ interface AppContextType {
   setSelectedCategory: (cat: string) => void;
   selectedServiceForOrder: Service | null;
   setSelectedServiceForOrder: (service: Service | null) => void;
-  addBalance: (amount: number, method: 'bKash' | 'Nagad', trxId: string, phone: string) => Promise<{ success: boolean; message: string }>;
-  withdrawBalance: (amount: number, method: 'bKash' | 'Nagad' | 'Bank' | 'Card', accountDetails: string) => Promise<{ success: boolean; message: string }>;
+  addBalance: (amount: number, method: 'bKash' | 'Nagad', trxId: string, phone: string, targetTier?: AccountTier) => Promise<{ success: boolean; message: string }>;
+  withdrawBalance: (amount: number, method: 'bKash' | 'Nagad' | 'Bank' | 'Card', accountDetails: string, sourceTier?: AccountTier) => Promise<{ success: boolean; message: string }>;
   switchTier: (tier: AccountTier) => Promise<{ success: boolean; message: string }>;
   upgradeTier: (tier: AccountTier) => Promise<{ success: boolean; message: string }>;
   placeOrder: (service: Service, formData: Record<string, string>, customerName?: string, customerPhone?: string) => Promise<{ success: boolean; message: string; order?: ServiceOrder }>;
@@ -22,6 +27,7 @@ interface AppContextType {
   loginUser: (phone: string, pass: string) => Promise<{ success: boolean; message: string }>;
   registerUser: (name: string, phone: string, pass: string, tier: AccountTier) => Promise<{ success: boolean; message: string }>;
   logoutUser: () => void;
+  updateAvatar: (avatarUrl: string) => Promise<{ success: boolean; message: string }>;
   openAuthModal: (mode?: 'login' | 'register') => void;
   authModalState: { isOpen: boolean; mode: 'login' | 'register' };
   closeAuthModal: () => void;
@@ -70,6 +76,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
+  const [isGuestMode, setIsGuestMode] = useState<boolean>(false);
+  const [authLandingMode, setAuthLandingMode] = useState<'login' | 'register'>('login');
+
+  const goToAuthPage = (mode: 'login' | 'register' = 'login') => {
+    setAuthLandingMode(mode);
+    setIsGuestMode(false);
+  };
   const [activeTab, setActiveTab] = useState<'dashboard' | 'wallet_hub' | 'orders' | 'services' | 'settings'>('dashboard');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedServiceForOrder, setSelectedServiceForOrder] = useState<Service | null>(null);
@@ -210,6 +223,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       localStorage.removeItem('smarthub_logged_out');
       setUser(loggedUser);
+      setIsGuestMode(false);
       localStorage.setItem('smarthub_user', JSON.stringify(loggedUser));
       await refreshBackendData(u.phone);
       showToast(`স্বাগতম, ${u.name}! আপনি সফলভাবে লগইন করেছেন।`);
@@ -255,6 +269,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       localStorage.removeItem('smarthub_logged_out');
       setUser(registeredUser);
+      setIsGuestMode(false);
       localStorage.setItem('smarthub_user', JSON.stringify(registeredUser));
       await refreshBackendData(u.phone);
       showToast(`অভিনন্দন, ${u.name}! আপনার ${tier} অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে।`);
@@ -269,12 +284,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     localStorage.removeItem('smarthub_auth_phone');
     localStorage.setItem('smarthub_logged_out', 'true');
     setUser(null);
+    setIsGuestMode(false);
+    setAuthLandingMode('login');
     setTransactions([]);
     setOrders([]);
     showToast('আপনি সফলভাবে লগআউট করেছেন।');
   };
 
-  const addBalance = async (amount: number, method: 'bKash' | 'Nagad', trxId: string, phone: string) => {
+  const addBalance = async (amount: number, method: 'bKash' | 'Nagad', trxId: string, phone: string, targetTier?: AccountTier) => {
     if (!user) {
       openAuthModal('login');
       return { success: false, message: 'ব্যালেন্স রিচার্জ করতে প্রথমে লগইন করুন।' };
@@ -289,6 +306,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: false, message: 'প্রেরক মোবাইল নাম্বার দিন।' };
     }
 
+    const appliedTier = targetTier || user.activeTier || 'personal';
+
     try {
       const res = await fetch('/api/wallet/deposit', {
         method: 'POST',
@@ -298,44 +317,79 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           amount,
           method,
           trxId,
-          phone
+          phone,
+          targetTier: appliedTier
         })
       });
       const data = await res.json();
 
-      if (res.ok && data.user) {
-        setUser(prev => prev ? ({
+      setUser(prev => {
+        if (!prev) return null;
+        const newTierBalances = {
+          ...prev.tierBalances,
+          [appliedTier]: (prev.tierBalances?.[appliedTier] || 0) + amount
+        };
+        const updated = {
           ...prev,
-          walletBalance: data.user.walletBalance,
-          tierBalances: {
-            ...prev.tierBalances,
-            [prev.activeTier]: (prev.tierBalances?.[prev.activeTier] || 0) + amount
-          }
-        }) : null);
-        if (data.transaction) {
-          setTransactions(prev => [data.transaction, ...prev]);
-        }
-      } else {
-        // Optimistic fallback
-        setUser(prev => prev ? ({
-          ...prev,
-          walletBalance: prev.walletBalance + amount
-        }) : null);
+          walletBalance: prev.walletBalance + amount,
+          tierBalances: newTierBalances
+        };
+        localStorage.setItem('smarthub_user', JSON.stringify(updated));
+        return updated;
+      });
+
+      if (data && data.transaction) {
+        setTransactions(prev => [data.transaction, ...prev]);
       }
 
-      showToast(`অভিনন্দন! ৳${amount} টাকা সফলভাবে আপনার ওয়ালেটে যুক্ত হয়েছে।`);
+      showToast(`অভিনন্দন! ৳${amount} টাকা সফলভাবে ${appliedTier === 'personal' ? 'পার্সোনাল' : appliedTier === 'sub_admin' ? 'সাব অ্যাডমিন' : 'বিজনেস'} ওয়ালেটে যুক্ত হয়েছে।`);
       return { success: true, message: 'ব্যালেন্স সফলভাবে যুক্ত হয়েছে।' };
     } catch (err: any) {
-      setUser(prev => prev ? ({
-        ...prev,
-        walletBalance: prev.walletBalance + amount
-      }) : null);
+      setUser(prev => {
+        if (!prev) return null;
+        const newTierBalances = {
+          ...prev.tierBalances,
+          [appliedTier]: (prev.tierBalances?.[appliedTier] || 0) + amount
+        };
+        const updated = {
+          ...prev,
+          walletBalance: prev.walletBalance + amount,
+          tierBalances: newTierBalances
+        };
+        localStorage.setItem('smarthub_user', JSON.stringify(updated));
+        return updated;
+      });
       showToast(`৳${amount} টাকা ওয়ালেটে যোগ হয়েছে।`);
       return { success: true, message: 'ব্যালেন্স যুক্ত হয়েছে।' };
     }
   };
 
-  const withdrawBalance = async (amount: number, method: 'bKash' | 'Nagad' | 'Bank' | 'Card', accountDetails: string) => {
+  const updateAvatar = async (avatarUrl: string) => {
+    if (!user) return { success: false, message: 'লগইন করুন।' };
+    const updated = { ...user, avatarUrl };
+    setUser(updated);
+    localStorage.setItem('smarthub_user', JSON.stringify(updated));
+
+    try {
+      await fetch('/api/user/avatar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.phone, avatarUrl })
+      });
+    } catch (e) {
+      console.warn('Avatar update sync error:', e);
+    }
+
+    showToast('প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!');
+    return { success: true, message: 'ছবি আপডেট হয়েছে!' };
+  };
+
+  const withdrawBalance = async (
+    amount: number, 
+    method: 'bKash' | 'Nagad' | 'Bank' | 'Card', 
+    accountDetails: string,
+    sourceTier?: AccountTier
+  ) => {
     if (!user) {
       openAuthModal('login');
       return { success: false, message: 'উইথড্র করতে প্রথমে লগইন করুন।' };
@@ -343,8 +397,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (amount < 100) {
       return { success: false, message: 'সর্বনিম্ন উইথড্র পরিমাণ ৳১০০ টাকা।' };
     }
-    if (amount > user.walletBalance) {
-      return { success: false, message: 'আপনার ওয়ালেটে পর্যাপ্ত ব্যালেন্স নেই।' };
+
+    const appliedTier: AccountTier = sourceTier || user.activeTier || 'personal';
+    const currentTierBalance = user.tierBalances?.[appliedTier] ?? 0;
+    const tierName = appliedTier === 'personal' ? 'পার্সোনাল' : appliedTier === 'sub_admin' ? 'সাব অ্যাডমিন' : 'বিজনেস';
+
+    if (amount > currentTierBalance) {
+      return { 
+        success: false, 
+        message: `আপনার ${tierName} অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই (বর্তমান: ৳${currentTierBalance.toLocaleString('bn-BD')})।` 
+      };
     }
     if (!accountDetails.trim()) {
       return { success: false, message: 'অ্যাকাউন্ট নাম্বার বা বিস্তারিত দিন।' };
@@ -354,32 +416,52 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       const res = await fetch('/api/wallet/withdraw', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId: user.phone, amount, method, accountDetails })
+        body: JSON.stringify({ 
+          userId: user.phone, 
+          amount, 
+          method, 
+          accountDetails,
+          sourceTier: appliedTier
+        })
       });
       const data = await res.json();
 
-      if (res.ok && data.user) {
-        setUser(prev => prev ? ({
+      setUser(prev => {
+        if (!prev) return null;
+        const newTierBalances = {
+          ...prev.tierBalances,
+          [appliedTier]: Math.max(0, (prev.tierBalances?.[appliedTier] ?? 0) - amount)
+        };
+        const updated = {
           ...prev,
-          walletBalance: data.user.walletBalance
-        }) : null);
-        if (data.transaction) {
-          setTransactions(prev => [data.transaction, ...prev]);
-        }
-      } else {
-        setUser(prev => prev ? ({
-          ...prev,
-          walletBalance: prev.walletBalance - amount
-        }) : null);
+          walletBalance: Math.max(0, prev.walletBalance - amount),
+          tierBalances: newTierBalances
+        };
+        localStorage.setItem('smarthub_user', JSON.stringify(updated));
+        return updated;
+      });
+
+      if (data && data.transaction) {
+        setTransactions(prev => [data.transaction, ...prev]);
       }
 
-      showToast(`উইথড্র অনুরোধ সফল হয়েছে! দ্রুত ৳${amount} আপনার অ্যাকাউন্টে পাঠানো হবে।`);
+      showToast(`উইথড্র অনুরোধ সফল হয়েছে! ৳${amount} টাকা দ্রুত পাঠানো হবে।`);
       return { success: true, message: 'উইথড্র অনুরোধ গৃহীত হয়েছে।' };
     } catch (e) {
-      setUser(prev => prev ? ({
-        ...prev,
-        walletBalance: prev.walletBalance - amount
-      }) : null);
+      setUser(prev => {
+        if (!prev) return null;
+        const newTierBalances = {
+          ...prev.tierBalances,
+          [appliedTier]: Math.max(0, (prev.tierBalances?.[appliedTier] ?? 0) - amount)
+        };
+        const updated = {
+          ...prev,
+          walletBalance: Math.max(0, prev.walletBalance - amount),
+          tierBalances: newTierBalances
+        };
+        localStorage.setItem('smarthub_user', JSON.stringify(updated));
+        return updated;
+      });
       showToast(`উইথড্র অনুরোধ পাঠানো হয়েছে।`);
       return { success: true, message: 'উইথড্র অনুরোধ গৃহীত হয়েছে।' };
     }
@@ -390,6 +472,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       openAuthModal('login');
       return { success: false, message: 'অ্যাকাউন্ট পরিবর্তন করতে লগইন করুন।' };
     }
+    setUser(prev => {
+      if (!prev) return null;
+      const updated = { ...prev, activeTier: tier };
+      localStorage.setItem('smarthub_user', JSON.stringify(updated));
+      return updated;
+    });
     try {
       await fetch('/api/user/switch-tier', {
         method: 'POST',
@@ -399,13 +487,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {
       // optimistic
     }
-    setUser(prev => prev ? ({
-      ...prev,
-      activeTier: tier
-    }) : null);
-    const tierName = tier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : tier === 'business' ? 'বিজনেস অ্যাকাউন্ট' : 'Sub Admin Panel';
-    showToast(`আপনি এখন ${tierName} মোডে আছেন।`);
-    return { success: true, message: `সফলভাবে ${tierName} মোডে পরিবর্তন করা হয়েছে।` };
+    showToast(`সফলভাবে ${tier === 'personal' ? 'পার্সোনাল' : tier === 'sub_admin' ? 'সাব অ্যাডমিন' : 'বিজনেস'} একাউন্ট সিলেক্ট করা হয়েছে।`);
+    return { success: true, message: 'একাউন্ট পরিবর্তন হয়েছে।' };
   };
 
   const upgradeTier = async (tier: AccountTier) => {
@@ -501,6 +584,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         user,
         setUser,
+        isGuestMode,
+        setIsGuestMode,
+        authLandingMode,
+        setAuthLandingMode,
+        goToAuthPage,
         transactions,
         orders,
         activeTab,
@@ -518,6 +606,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         loginUser,
         registerUser,
         logoutUser,
+        updateAvatar,
         openAuthModal,
         authModalState,
         closeAuthModal,

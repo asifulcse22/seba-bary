@@ -47,10 +47,10 @@ export const Footer: React.FC = () => {
       {/* Brand & Copyright bar */}
       <div className="text-center text-xs text-slate-500 space-y-1">
         <p className="font-semibold text-slate-700">
-          Smart Hub BD — স্মার্ট হাব বিডি © {new Date().getFullYear()}। সর্বস্বত্ব সংরক্ষিত।
+          SHEBA BARY (সেবা বাড়ি) © {new Date().getFullYear()}। সর্বস্বত্ব সংরক্ষিত।
         </p>
         <p className="text-[11px] text-slate-400">
-          গণপ্রজাতন্ত্রী বাংলাদেশ সরকারের ডিজিটাল সেবা ও আইসিটি ডিভিশন নির্দেশিকা মোতাবেক পরিচালিত।
+          স্মার্ট সেবা, সহজ সমাধান! • হেল্পলাইন: 01992-867758 • নিরাপদ ডিজিটাল সেবা প্ল্যাটফর্ম
         </p>
       </div>
 

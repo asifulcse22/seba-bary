@@ -13,7 +13,8 @@ import {
   Gift, 
   TrendingUp, 
   ShieldCheck, 
-  Sparkles 
+  Sparkles,
+  PlusCircle
 } from 'lucide-react';
 import { getTierPlans, TIER_PRICES } from '../data/tierPlans';
 
@@ -22,7 +23,7 @@ interface TierCardsSectionProps {
 }
 
 export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetails }) => {
-  const { user } = useApp();
+  const { user, setActiveTab, switchTier } = useApp();
   const plans = getTierPlans();
 
   return (
@@ -49,14 +50,14 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         </div>
       </div>
 
-      {/* 3 Tier Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6 items-stretch">
+      {/* 3 Tier Cards Grid - Horizontal Carousel on mobile, 3-column grid on desktop */}
+      <div className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 items-stretch overflow-x-auto pb-4 pt-1 px-1 -mx-1 sm:mx-0 snap-x snap-mandatory scroll-smooth no-scrollbar">
         
         {/* ============================================================== */}
         {/* --- Card 1: পার্সোনাল অ্যাকাউন্ট (Personal Account) --- */}
         {/* ============================================================== */}
         <div 
-          className={`relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-sky-50/80 via-white to-blue-50/60 shadow-lg hover:shadow-2xl ${
+          className={`w-[85vw] max-w-[340px] shrink-0 snap-center md:w-auto md:max-w-none relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-sky-50/80 via-white to-blue-50/60 shadow-lg hover:shadow-2xl ${
             user?.activeTier === 'personal'
               ? 'border-blue-500 ring-4 ring-blue-300/50'
               : 'border-blue-200 hover:border-blue-400'
@@ -118,6 +119,37 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
           </div>
 
+          {/* Wallet Balance inside Personal Card */}
+          <div className="px-5 pb-3">
+            <div className="p-3 rounded-2xl bg-white border border-blue-200/90 shadow-xs flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-sky-500 text-white flex items-center justify-center font-black text-sm shadow-xs shrink-0">
+                  ৳
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 block leading-tight">
+                    বর্তমান ওয়ালেট ব্যালেন্স
+                  </span>
+                  <span className="text-lg sm:text-xl font-black text-blue-900 tracking-tight tabular-nums">
+                    ৳ {(user?.tierBalances?.personal ?? 0).toLocaleString('bn-BD')}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  switchTier('personal');
+                  setActiveTab('wallet_hub');
+                }}
+                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-500 hover:from-blue-500 hover:to-sky-400 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-1 cursor-pointer shrink-0"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>রিচার্জ</span>
+              </button>
+            </div>
+          </div>
+
           {/* Action button */}
           <div className="p-5 pt-0">
             <button
@@ -135,7 +167,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 2: বিজনেস অ্যাকাউন্ট (Business Account) - Most Popular --- */}
         {/* ============================================================== */}
         <div 
-          className={`relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-emerald-50/90 via-white to-green-50/70 shadow-xl hover:shadow-2xl scale-100 md:-translate-y-1.5 ${
+          className={`w-[85vw] max-w-[340px] shrink-0 snap-center md:w-auto md:max-w-none relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-emerald-50/90 via-white to-green-50/70 shadow-xl hover:shadow-2xl scale-100 md:-translate-y-1.5 ${
             user?.activeTier === 'business'
               ? 'border-emerald-500 ring-4 ring-emerald-300/70'
               : 'border-emerald-400 hover:border-emerald-500'
@@ -209,6 +241,37 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
           </div>
 
+          {/* Wallet Balance inside Business Card */}
+          <div className="px-5 pb-3">
+            <div className="p-3 rounded-2xl bg-white border border-emerald-200/90 shadow-xs flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-sm shadow-xs shrink-0">
+                  ৳
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 block leading-tight">
+                    বর্তমান ওয়ালেট ব্যালেন্স
+                  </span>
+                  <span className="text-lg sm:text-xl font-black text-emerald-900 tracking-tight tabular-nums">
+                    ৳ {(user?.tierBalances?.business ?? 0).toLocaleString('bn-BD')}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  switchTier('business');
+                  setActiveTab('wallet_hub');
+                }}
+                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-1 cursor-pointer shrink-0"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>রিচার্জ</span>
+              </button>
+            </div>
+          </div>
+
           {/* Action button */}
           <div className="p-5 pt-0">
             <button
@@ -226,7 +289,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 3: Sub Admin Panel - RECOMMENDED --- */}
         {/* ============================================================== */}
         <div 
-          className={`relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-purple-50/90 via-white to-indigo-50/70 shadow-lg hover:shadow-2xl ${
+          className={`w-[85vw] max-w-[340px] shrink-0 snap-center md:w-auto md:max-w-none relative rounded-3xl overflow-hidden border-2 transition-all duration-300 flex flex-col justify-between bg-gradient-to-b from-purple-50/90 via-white to-indigo-50/70 shadow-lg hover:shadow-2xl ${
             user?.activeTier === 'sub_admin'
               ? 'border-purple-600 ring-4 ring-purple-300/70'
               : 'border-purple-300 hover:border-purple-400'
@@ -290,6 +353,37 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
           </div>
 
+          {/* Wallet Balance inside Sub Admin Card */}
+          <div className="px-5 pb-3">
+            <div className="p-3 rounded-2xl bg-white border border-purple-200/90 shadow-xs flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-700 to-indigo-600 text-white flex items-center justify-center font-black text-sm shadow-xs shrink-0">
+                  ৳
+                </div>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-500 block leading-tight">
+                    বর্তমান ওয়ালেট ব্যালেন্স
+                  </span>
+                  <span className="text-lg sm:text-xl font-black text-purple-900 tracking-tight tabular-nums">
+                    ৳ {(user?.tierBalances?.sub_admin ?? 0).toLocaleString('bn-BD')}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  switchTier('sub_admin');
+                  setActiveTab('wallet_hub');
+                }}
+                className="px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-700 to-indigo-600 hover:from-purple-600 hover:to-indigo-500 text-white text-xs font-bold shadow-xs hover:shadow-md transition-all flex items-center gap-1 cursor-pointer shrink-0"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>রিচার্জ</span>
+              </button>
+            </div>
+          </div>
+
           {/* Action button */}
           <div className="p-5 pt-0">
             <button
@@ -303,6 +397,16 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
         </div>
 
+      </div>
+
+      {/* Mobile Horizontal Swipe Indicator */}
+      <div className="flex md:hidden items-center justify-center gap-1.5 pt-1 text-slate-500">
+        <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+        <span className="w-2 h-2 rounded-full bg-emerald-600"></span>
+        <span className="w-2 h-2 rounded-full bg-purple-600"></span>
+        <span className="text-[11px] font-bold text-slate-500 ml-1">
+          বামে-ডানে স্ক্রোল করে অন্য অ্যাকাউন্ট দেখুন
+        </span>
       </div>
 
     </section>

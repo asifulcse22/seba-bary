@@ -4,8 +4,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { 
   initDb, 
+  getDbStatus,
   findUserByPhone, 
   createUser, 
+  updateUserAvatar,
   updateUserBalance, 
   updateUserTier,
   addTransaction, 
@@ -29,6 +31,11 @@ initDb().catch(err => {
   console.error('Database initialization error:', err);
 });
 
+// Database & Neon status endpoint
+app.get('/api/db/status', (_req, res) => {
+  res.json(getDbStatus());
+});
+
 // Authentication Routes
 app.post('/api/auth/register', async (req, res) => {
   try {
@@ -47,7 +54,7 @@ app.post('/api/auth/register', async (req, res) => {
       phone,
       email,
       password,
-      activeTier: activeTier || 'business'
+      activeTier: activeTier || 'personal'
     });
 
     res.json({
@@ -142,6 +149,20 @@ app.get('/api/auth/me', async (req, res) => {
   }
 });
 
+// Update user avatar photo
+app.post('/api/user/avatar', async (req, res) => {
+  try {
+    const { userId, avatarUrl } = req.body;
+    if (!userId || !avatarUrl) {
+      return res.status(400).json({ error: 'ব্যবহারকারী আইডি ও ছবি আবশ্যক।' });
+    }
+    const updated = await updateUserAvatar(userId, avatarUrl);
+    res.json({ success: true, user: updated });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Tier switch route
 app.post('/api/user/switch-tier', async (req, res) => {
   try {
@@ -156,7 +177,7 @@ app.post('/api/user/switch-tier', async (req, res) => {
 // Wallet Routes
 app.post('/api/wallet/deposit', async (req, res) => {
   try {
-    const { userId, amount, method, trxId, phone } = req.body;
+    const { userId, amount, method, trxId, phone, targetTier } = req.body;
     const numAmount = parseFloat(amount);
 
     if (!numAmount || numAmount <= 0) {
@@ -167,8 +188,12 @@ app.post('/api/wallet/deposit', async (req, res) => {
     }
 
     const uid = userId || 'usr_riaz';
+    const depositTier = (targetTier === 'personal' || targetTier === 'sub_admin' || targetTier === 'business') 
+      ? targetTier 
+      : 'personal';
+
     const updatedUser = await updateUserBalance(uid, numAmount, {
-      tier: 'business',
+      tier: depositTier,
       delta: numAmount
     });
 
@@ -177,13 +202,13 @@ app.post('/api/wallet/deposit', async (req, res) => {
       userId: uid,
       date: new Date().toLocaleString('bn-BD', { dateStyle: 'short', timeStyle: 'short' }),
       type: 'deposit',
-      description: `ব্যালেন্স অ্যাড (${method || 'bKash'})`,
+      description: `${depositTier === 'personal' ? 'পার্সোনাল' : depositTier === 'sub_admin' ? 'সাব অ্যাডমিন' : 'বিজনেস'} ডিপোজিট (${method || 'bKash'})`,
       amount: numAmount,
       status: 'সফল',
       method: method || 'bKash',
       trxId: trxId.toUpperCase(),
       phone: phone || '',
-      accountType: updatedUser?.activeTier || 'business',
+      accountType: depositTier,
       createdAt: new Date().toISOString()
     });
 
@@ -195,7 +220,7 @@ app.post('/api/wallet/deposit', async (req, res) => {
 
 app.post('/api/wallet/withdraw', async (req, res) => {
   try {
-    const { userId, amount, method, accountDetails } = req.body;
+    const { userId, amount, method, accountDetails, sourceTier } = req.body;
     const numAmount = parseFloat(amount);
 
     if (numAmount < 100) {
@@ -203,20 +228,27 @@ app.post('/api/wallet/withdraw', async (req, res) => {
     }
 
     const uid = userId || 'usr_riaz';
-    const updatedUser = await updateUserBalance(uid, -numAmount);
+    const withdrawTier = (sourceTier === 'personal' || sourceTier === 'business' || sourceTier === 'sub_admin')
+      ? sourceTier
+      : 'personal';
+
+    const updatedUser = await updateUserBalance(uid, -numAmount, {
+      tier: withdrawTier,
+      delta: -numAmount
+    });
 
     const tx = await addTransaction({
       id: `WTH-${Date.now().toString().slice(-5)}`,
       userId: uid,
       date: new Date().toLocaleString('bn-BD', { dateStyle: 'short', timeStyle: 'short' }),
       type: 'withdraw',
-      description: `উইথড্র অনুরোধ (${method})`,
+      description: `${withdrawTier === 'personal' ? 'পার্সোনাল' : withdrawTier === 'sub_admin' ? 'সাব অ্যাডমিন' : 'বিজনেস'} একাউন্ট উইথড্র অনুরোধ (${method})`,
       amount: -numAmount,
       status: 'প্রক্রিয়াধীন',
       method: method || 'bKash',
       trxId: `WTH-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
       phone: accountDetails || '',
-      accountType: updatedUser?.activeTier || 'business',
+      accountType: withdrawTier,
       createdAt: new Date().toISOString()
     });
 

@@ -49,12 +49,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     }
   };
 
-  // Check if avatarUrl is a real user-uploaded picture (and not the old placeholder)
-  const isCustomRealImage = Boolean(
-    user?.avatarUrl && 
-    !user.avatarUrl.includes('photo-1507003211169-0a1dd7228f2d') &&
-    user.avatarUrl.trim().length > 10
-  );
+  // Check if avatarUrl is provided or fallback to handsome modern default user portrait
+  const displayImageUrl = user?.avatarUrl && user.avatarUrl.trim().length > 5 
+    ? user.avatarUrl 
+    : user 
+      ? 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=250&q=80'
+      : '';
+
+  const [imgError, setImgError] = React.useState(false);
 
   return (
     <div
@@ -62,10 +64,11 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         showRing ? 'ring-2 ring-white/60 shadow-md' : ''
       } ${className}`}
     >
-      {isCustomRealImage && user ? (
+      {user && displayImageUrl && !imgError ? (
         <img
-          src={user.avatarUrl}
+          src={displayImageUrl}
           alt={user.name || 'User'}
+          onError={() => setImgError(true)}
           className="w-full h-full rounded-full object-cover"
         />
       ) : user ? (

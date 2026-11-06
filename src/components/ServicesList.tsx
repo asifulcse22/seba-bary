@@ -78,10 +78,10 @@ export const ServicesList: React.FC<ServicesListProps> = ({ onSelectService }) =
           </div>
 
           {/* Popular toggle and active tier badge */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={() => setOnlyPopular(!onlyPopular)}
-              className={`px-3.5 py-2 rounded-2xl text-xs font-bold flex items-center gap-1.5 transition-all duration-300 cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
+              className={`px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl sm:rounded-2xl text-xs font-bold flex items-center gap-1.5 transition-all duration-300 cursor-pointer shadow-xs hover:scale-105 active:scale-95 ${
                 onlyPopular
                   ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md shadow-orange-500/25'
                   : 'bg-slate-100 text-slate-700 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-200'
@@ -91,9 +91,9 @@ export const ServicesList: React.FC<ServicesListProps> = ({ onSelectService }) =
               <span>শুধু জনপ্রিয় সেবা</span>
             </button>
 
-            <div className="px-3 py-2 rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-1.5">
-              <span>আপনার রেট:</span>
-              <span className="text-emerald-600 uppercase">
+            <div className="px-3 py-1.5 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+              <span>রেট:</span>
+              <span className="text-emerald-700 uppercase font-black">
                 {user?.activeTier === 'personal' ? 'Regular' : user?.activeTier === 'business' ? 'Business (-15%)' : user?.activeTier === 'sub_admin' ? 'Wholesale (-35%)' : 'Guest'}
               </span>
             </div>
@@ -101,15 +101,15 @@ export const ServicesList: React.FC<ServicesListProps> = ({ onSelectService }) =
 
         </div>
 
-        {/* Category Pills Slider */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+        {/* Category Pills - Clean wrapping without horizontal scroll */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1">
           {categories.map((cat) => {
             const isSelected = selectedCategory === cat.id;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                className={`flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                   isSelected
                     ? 'bg-emerald-600 text-white shadow-md'
                     : 'bg-slate-50 text-slate-700 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-200'

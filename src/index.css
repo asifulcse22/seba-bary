@@ -54,6 +54,45 @@ button, nav, .tab-btn, .badge, h1, h2, h3, h4, h5, h6 {
   animation: pulse-glow 3s ease-in-out infinite;
 }
 
+@keyframes slow-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: slow-spin 14s linear infinite;
+}
+
+@keyframes logo-float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1deg);
+  }
+}
+
+.animate-logo-float {
+  animation: logo-float 4.5s ease-in-out infinite;
+}
+
+@keyframes glow-breathe {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(1);
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.1);
+    filter: blur(28px);
+  }
+}
+
+.animate-glow-breathe {
+  animation: glow-breathe 4s ease-in-out infinite;
+}
+
 /* Custom scrollbars and styling */
 ::-webkit-scrollbar {
   width: 6px;

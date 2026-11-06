@@ -29,6 +29,36 @@
       "subAdminBalance": 0,
       "avatarUrl": "",
       "createdAt": "2026-11-05T17:17:37.051Z"
+    },
+    {
+      "id": "usr_1793965583164",
+      "name": "Asiful Islam",
+      "displayNameEn": "Hello, Asiful Islam",
+      "phone": "01804624046",
+      "email": "01804624046@smarthubbd.com",
+      "passwordHash": "seba@3Q",
+      "activeTier": "personal",
+      "walletBalance": 0,
+      "personalBalance": 0,
+      "businessBalance": 0,
+      "subAdminBalance": 0,
+      "avatarUrl": "",
+      "createdAt": "2026-11-06T11:46:23.164Z"
+    },
+    {
+      "id": "usr_1793971708801",
+      "name": "Asiful Islam",
+      "displayNameEn": "Hello, Asiful Islam",
+      "phone": "01723456789",
+      "email": "01723456789@smarthubbd.com",
+      "passwordHash": "seba@3Q",
+      "activeTier": "personal",
+      "walletBalance": 0,
+      "personalBalance": 0,
+      "businessBalance": 0,
+      "subAdminBalance": 0,
+      "avatarUrl": "",
+      "createdAt": "2026-11-06T13:28:28.801Z"
     }
   ],
   "transactions": [

@@ -17,9 +17,10 @@ import { UserAvatar } from './UserAvatar';
 
 interface HeaderProps {
   onOpenTierModal: (tier?: AccountTier) => void;
+  onGoToAuth?: (mode?: 'login' | 'register') => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenTierModal }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenTierModal, onGoToAuth }) => {
   const { user, activeTab, setActiveTab, orders, openAuthModal, logoutUser } = useApp();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
@@ -54,21 +55,21 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal }) => {
             onClick={() => setActiveTab('dashboard')} 
             className="flex items-center gap-2 sm:gap-3 cursor-pointer group select-none shrink-0"
           >
-            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-[#00a86b] via-teal-500 to-[#2ecc71] p-0.5 shadow-md flex items-center justify-center transition-transform group-hover:scale-105">
-              <div className="w-full h-full bg-white rounded-full flex items-center justify-center">
-                <span className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-emerald-600 to-teal-500 bg-clip-text text-transparent">
-                  S
-                </span>
-              </div>
+            <div className="relative w-10 h-10 sm:w-12 sm:h-12 rounded-full p-0.5 bg-gradient-to-tr from-emerald-500 via-teal-400 to-blue-500 shadow-md flex items-center justify-center transition-transform group-hover:scale-105">
+              <img 
+                src="/images/sheba-logo.png" 
+                alt="SHEBA BARY Logo" 
+                className="w-full h-full object-contain rounded-full bg-white"
+              />
               <span className="absolute -bottom-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-white rounded-full"></span>
             </div>
             
             <div className="flex flex-col">
               <span className="text-base sm:text-xl md:text-2xl font-black text-slate-800 tracking-tight leading-none group-hover:text-emerald-700 transition-colors whitespace-nowrap">
-                Smart Hub BD
+                SHEBA BARY
               </span>
               <span className="text-[11px] sm:text-xs font-bold text-emerald-600 tracking-wide mt-0.5 leading-none whitespace-nowrap">
-                স্মার্ট হাব বিডি
+                সেবা বাড়ি • স্মার্ট সেবা
               </span>
             </div>
           </div>
@@ -287,14 +288,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal }) => {
               /* If logged out: Show Login and Register buttons clearly */
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
-                  onClick={() => openAuthModal('login')}
+                  onClick={() => onGoToAuth ? onGoToAuth('login') : openAuthModal('login')}
                   className="px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-600 text-white font-bold text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-emerald-600/20 hover:shadow-lg hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer"
                 >
                   <LogIn className="w-3.5 h-3.5" />
                   <span>লগইন</span>
                 </button>
                 <button
-                  onClick={() => openAuthModal('register')}
+                  onClick={() => onGoToAuth ? onGoToAuth('register') : openAuthModal('register')}
                   className="hidden sm:inline-flex px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-800 hover:text-emerald-900 border border-emerald-300 hover:border-emerald-400 font-bold text-xs sm:text-sm shadow-xs hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer"
                 >
                   <UserPlus className="w-3.5 h-3.5 text-emerald-600" />

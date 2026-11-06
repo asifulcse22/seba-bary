@@ -1,6 +1,9 @@
 import { Pool } from 'pg';
+import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+
+dotenv.config();
 
 export interface DbUser {
   id: string;
@@ -52,23 +55,35 @@ export interface DbOrder {
   remarks: string;
 }
 
-let pool: Pool | null = null;
-let isNeonConnected = false;
+export function getDbStatus() {
+  const hasUrl = !!(process.env.DATABASE_URL && !process.env.DATABASE_URL.includes('MY_NEON_DATABASE_URL'));
+  return {
+    isNeonConnected,
+    hasDatabaseUrl: hasUrl,
+    engine: isNeonConnected ? 'Neon PostgreSQL' : 'Local Persistent Storage'
+  };
+}
 
-// Initialize PostgreSQL Pool if DATABASE_URL is configured
-const connectionString = process.env.DATABASE_URL;
-if (connectionString && !connectionString.includes('MY_NEON_DATABASE_URL')) {
-  try {
-    pool = new Pool({
-      connectionString,
-      ssl: {
-        rejectUnauthorized: false
-      }
-    });
-    console.log('[Neon PostgreSQL] Initializing connection pool...');
-  } catch (err) {
-    console.error('[Neon PostgreSQL] Pool creation failed, using persistent fallback:', err);
+let pool: Pool | null = null;
+export let isNeonConnected = false;
+
+export function getPool(): Pool | null {
+  if (pool) return pool;
+  const connectionString = process.env.DATABASE_URL;
+  if (connectionString && !connectionString.includes('MY_NEON_DATABASE_URL')) {
+    try {
+      pool = new Pool({
+        connectionString,
+        ssl: {
+          rejectUnauthorized: false
+        }
+      });
+      console.log('[Neon PostgreSQL] Pool created with connection string.');
+    } catch (err) {
+      console.error('[Neon PostgreSQL] Pool creation failed:', err);
+    }
   }
+  return pool;
 }
 
 // Memory / JSON storage fallback for instant local execution
@@ -232,9 +247,10 @@ function saveLocalStore(store: LocalStore) {
 
 // Database helper functions that check Neon first, then local store
 export async function initDb() {
-  if (pool) {
+  const activePool = getPool();
+  if (activePool) {
     try {
-      const client = await pool.connect();
+      const client = await activePool.connect();
       console.log('[Neon PostgreSQL] Successfully connected to Neon database!');
       isNeonConnected = true;
 
@@ -247,7 +263,7 @@ export async function initDb() {
           phone VARCHAR(32) UNIQUE NOT NULL,
           email VARCHAR(128),
           password_hash VARCHAR(255) NOT NULL,
-          active_tier VARCHAR(32) DEFAULT 'business',
+          active_tier VARCHAR(32) DEFAULT 'personal',
           wallet_balance NUMERIC(12, 2) DEFAULT 0.00,
           personal_balance NUMERIC(12, 2) DEFAULT 0.00,
           business_balance NUMERIC(12, 2) DEFAULT 0.00,
@@ -255,6 +271,10 @@ export async function initDb() {
           avatar_url TEXT,
           created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
         );
+
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS personal_balance NUMERIC(12, 2) DEFAULT 0.00;
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS business_balance NUMERIC(12, 2) DEFAULT 0.00;
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS sub_admin_balance NUMERIC(12, 2) DEFAULT 0.00;
 
         CREATE TABLE IF NOT EXISTS transactions (
           id VARCHAR(64) PRIMARY KEY,
@@ -291,19 +311,35 @@ export async function initDb() {
         );
       `);
 
-      // Seed initial user in Neon if table is empty
-      const userCheck = await client.query('SELECT COUNT(*) FROM users');
-      if (parseInt(userCheck.rows[0].count) === 0) {
-        await client.query(`
-          INSERT INTO users (id, name, display_name_en, phone, email, password_hash, active_tier, wallet_balance, personal_balance, business_balance, sub_admin_balance, avatar_url)
-          VALUES ('usr_riaz', 'Riaz', 'Hello, Riaz Khan', '01712-345678', 'riaz.khan@smarthubbd.com', 'password123', 'business', 0.00, 0.00, 0.00, 0.00, '')
-        `);
-      } else {
-        // Sanitize any existing rows with the old fake demo balance 811551
-        await client.query(`
-          UPDATE users SET wallet_balance = 0.00, business_balance = 0.00, personal_balance = 0.00, sub_admin_balance = 0.00 WHERE wallet_balance >= 800000;
-        `);
+      // Populate Neon with users from local store so newly registered accounts (e.g. Asiful Islam) exist in Neon
+      const store = loadLocalStore();
+      if (Array.isArray(store.users)) {
+        for (const u of store.users) {
+          const userCheck = await client.query('SELECT id FROM users WHERE phone = $1', [u.phone]);
+          if (userCheck.rows.length === 0) {
+            await client.query(`
+              INSERT INTO users (id, name, display_name_en, phone, email, password_hash, active_tier, wallet_balance, personal_balance, business_balance, sub_admin_balance, avatar_url, created_at)
+              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
+            `, [
+              u.id,
+              u.name,
+              u.displayNameEn || `Hello, ${u.name}`,
+              u.phone,
+              u.email,
+              u.passwordHash,
+              u.activeTier || 'business',
+              u.walletBalance || 0,
+              u.personalBalance || 0,
+              u.businessBalance || 0,
+              u.subAdminBalance || 0,
+              u.avatarUrl || '',
+              u.createdAt || new Date().toISOString()
+            ]);
+            console.log(`[Neon PostgreSQL] Populated user to Neon: ${u.name} (${u.phone})`);
+          }
+        }
       }
+
       client.release();
     } catch (err) {
       console.warn('[Neon PostgreSQL] Failed to run schema migrations, falling back to local storage:', err);
@@ -343,8 +379,17 @@ export async function findUserByPhone(phone: string): Promise<DbUser | null> {
   }
 
   const store = loadLocalStore();
-  const user = store.users.find(u => u.phone.replace(/[^0-9]/g, '') === cleanPhone.replace(/[^0-9]/g, ''));
-  return user || null;
+  const user = store.users.find(u => u.phone.replace(/[^0-9]/g, '') === cleanPhone.replace(/[^0-9]/g, '') || u.phone === phone);
+  if (user) {
+    return {
+      ...user,
+      walletBalance: Number(user.walletBalance) || 0,
+      personalBalance: Number(user.personalBalance) || 0,
+      businessBalance: Number(user.businessBalance) || 0,
+      subAdminBalance: Number(user.subAdminBalance) || 0
+    };
+  }
+  return null;
 }
 
 export async function createUser(data: {
@@ -354,7 +399,7 @@ export async function createUser(data: {
   password: string;
   activeTier?: 'personal' | 'business' | 'sub_admin';
 }): Promise<DbUser> {
-  const initialTier = data.activeTier || 'business';
+  const initialTier = data.activeTier || 'personal';
   const initialBalance = 0;
 
   const newUser: DbUser = {
@@ -407,10 +452,23 @@ export async function createUser(data: {
 export async function updateUserBalance(userId: string, deltaAmount: number, tierDelta?: { tier: 'personal' | 'business' | 'sub_admin'; delta: number }): Promise<DbUser | null> {
   if (isNeonConnected && pool) {
     try {
-      const res = await pool.query(
-        `UPDATE users SET wallet_balance = wallet_balance + $1 WHERE id = $2 OR phone = $2 RETURNING *`,
-        [deltaAmount, userId]
-      );
+      let queryStr = `UPDATE users SET wallet_balance = wallet_balance + $1 WHERE id = $2 OR phone = $2 RETURNING *`;
+      let queryParams: any[] = [deltaAmount, userId];
+
+      if (tierDelta) {
+        if (tierDelta.tier === 'personal') {
+          queryStr = `UPDATE users SET wallet_balance = wallet_balance + $1, personal_balance = personal_balance + $2 WHERE id = $3 OR phone = $3 RETURNING *`;
+          queryParams = [deltaAmount, tierDelta.delta, userId];
+        } else if (tierDelta.tier === 'business') {
+          queryStr = `UPDATE users SET wallet_balance = wallet_balance + $1, business_balance = business_balance + $2 WHERE id = $3 OR phone = $3 RETURNING *`;
+          queryParams = [deltaAmount, tierDelta.delta, userId];
+        } else if (tierDelta.tier === 'sub_admin') {
+          queryStr = `UPDATE users SET wallet_balance = wallet_balance + $1, sub_admin_balance = sub_admin_balance + $2 WHERE id = $3 OR phone = $3 RETURNING *`;
+          queryParams = [deltaAmount, tierDelta.delta, userId];
+        }
+      }
+
+      const res = await pool.query(queryStr, queryParams);
       if (res.rows.length > 0) {
         const row = res.rows[0];
         return {
@@ -435,14 +493,63 @@ export async function updateUserBalance(userId: string, deltaAmount: number, tie
   }
 
   const store = loadLocalStore();
-  const user = store.users.find(u => u.id === userId || u.phone === userId);
+  const cleanId = userId.replace(/[^0-9]/g, '');
+  const user = store.users.find(u => 
+    u.id === userId || 
+    u.phone === userId || 
+    (cleanId && u.phone.replace(/[^0-9]/g, '') === cleanId)
+  );
   if (user) {
-    user.walletBalance += deltaAmount;
+    user.walletBalance = (Number(user.walletBalance) || 0) + deltaAmount;
+    user.personalBalance = Number(user.personalBalance) || 0;
+    user.businessBalance = Number(user.businessBalance) || 0;
+    user.subAdminBalance = Number(user.subAdminBalance) || 0;
+
     if (tierDelta) {
       if (tierDelta.tier === 'personal') user.personalBalance += tierDelta.delta;
       if (tierDelta.tier === 'business') user.businessBalance += tierDelta.delta;
       if (tierDelta.tier === 'sub_admin') user.subAdminBalance += tierDelta.delta;
     }
+    saveLocalStore(store);
+    return user;
+  }
+  return null;
+}
+
+export async function updateUserAvatar(userId: string, avatarUrl: string): Promise<DbUser | null> {
+  if (isNeonConnected && pool) {
+    try {
+      const res = await pool.query(
+        `UPDATE users SET avatar_url = $1 WHERE id = $2 OR phone = $2 RETURNING *`,
+        [avatarUrl, userId]
+      );
+      if (res.rows.length > 0) {
+        const row = res.rows[0];
+        return {
+          id: row.id,
+          name: row.name,
+          displayNameEn: row.display_name_en,
+          phone: row.phone,
+          email: row.email,
+          passwordHash: row.password_hash,
+          activeTier: row.active_tier,
+          walletBalance: parseFloat(row.wallet_balance),
+          personalBalance: parseFloat(row.personal_balance || 0),
+          businessBalance: parseFloat(row.business_balance || 0),
+          subAdminBalance: parseFloat(row.sub_admin_balance || 0),
+          avatarUrl: row.avatar_url,
+          createdAt: row.created_at
+        };
+      }
+    } catch (e) {
+      console.error('Neon avatar update error:', e);
+    }
+  }
+
+  const store = loadLocalStore();
+  const user = store.users.find(u => u.id === userId || u.phone === userId);
+  if (user) {
+    user.avatarUrl = avatarUrl;
     saveLocalStore(store);
     return user;
   }
