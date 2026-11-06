@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { 
@@ -34,7 +35,7 @@ app.use((req, res, next) => {
   }
   next();
 });
-
+app.use(cors());
 app.use(express.json());
 
 // Initialize database
