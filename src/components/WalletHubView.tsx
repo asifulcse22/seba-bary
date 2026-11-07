@@ -26,26 +26,20 @@ export const WalletHubView: React.FC = () => {
     showToast 
   } = useApp();
 
-  // Active view tier: Defaults to logged-in user's active tier (e.g. 'business')
+  // Active view tier: Defaults to logged-in user's active tier (e.g. 'personal' or 'business')
   const [selectedViewTier, setSelectedViewTier] = useState<AccountTier>(() => user?.activeTier || 'personal');
-  const [depositTargetTier, setDepositTargetTier] = useState<AccountTier>(() => user?.activeTier || 'personal');
-  const [withdrawSourceTier, setWithdrawSourceTier] = useState<AccountTier>(() => user?.activeTier || 'personal');
   const [txFilter, setTxFilter] = useState<'all' | AccountTier>('all');
 
   // Keep synced if user's active tier changes
   useEffect(() => {
     if (user?.activeTier) {
       setSelectedViewTier(user.activeTier);
-      setDepositTargetTier(user.activeTier);
-      setWithdrawSourceTier(user.activeTier);
     }
   }, [user?.activeTier]);
 
   // Sync deposit target when changing selectedViewTier
   const handleSelectViewTier = (tier: AccountTier) => {
     setSelectedViewTier(tier);
-    setDepositTargetTier(tier);
-    setWithdrawSourceTier(tier);
     if (tier === 'personal') setDepositAmount('500');
     else if (tier === 'business') setDepositAmount('1450');
     else setDepositAmount('2950');
@@ -121,7 +115,7 @@ export const WalletHubView: React.FC = () => {
     }
     setIsDepositSubmitting(true);
     try {
-      const res = await addBalance(num, depositMethod, depositTrxId, depositPhone, depositTargetTier);
+      const res = await addBalance(num, depositMethod, depositTrxId, depositPhone, selectedViewTier);
       if (res.success) {
         setDepositPhone('');
         setDepositTrxId('');
@@ -139,16 +133,16 @@ export const WalletHubView: React.FC = () => {
       return;
     }
 
-    const availableBal = user?.tierBalances?.[withdrawSourceTier] ?? 0;
+    const availableBal = user?.tierBalances?.[selectedViewTier] ?? 0;
     if (num > availableBal) {
-      const tierTitle = withdrawSourceTier === 'personal' ? 'পার্সোনাল' : withdrawSourceTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস';
+      const tierTitle = selectedViewTier === 'personal' ? 'পার্সোনাল' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস';
       showToast(`আপনার ${tierTitle} একাউন্টে পর্যাপ্ত ব্যালেন্স নেই (বর্তমান: ৳${availableBal.toLocaleString('bn-BD')})।`);
       return;
     }
 
     setIsWithdrawSubmitting(true);
     try {
-      const res = await withdrawBalance(num, withdrawMethod, withdrawAccount, withdrawSourceTier);
+      const res = await withdrawBalance(num, withdrawMethod, withdrawAccount, selectedViewTier);
       if (res.success) {
         setWithdrawAccount('');
         setWithdrawAmount('');
@@ -257,7 +251,6 @@ export const WalletHubView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setDepositTargetTier('personal');
                   setDepositAmount('500');
                   document.getElementById('add-balance-form')?.scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -271,7 +264,6 @@ export const WalletHubView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setWithdrawSourceTier('personal');
                     document.getElementById('withdraw-form')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="py-2.5 px-3 rounded-xl bg-white hover:bg-blue-50 text-blue-700 border border-blue-300 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
@@ -328,7 +320,6 @@ export const WalletHubView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setDepositTargetTier('business');
                   setDepositAmount('1450');
                   document.getElementById('add-balance-form')?.scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -342,7 +333,6 @@ export const WalletHubView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setWithdrawSourceTier('business');
                     document.getElementById('withdraw-form')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="py-2.5 px-3 rounded-xl bg-white hover:bg-emerald-50 text-emerald-700 border border-emerald-300 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
@@ -399,7 +389,6 @@ export const WalletHubView: React.FC = () => {
               <button
                 type="button"
                 onClick={() => {
-                  setDepositTargetTier('sub_admin');
                   setDepositAmount('2950');
                   document.getElementById('add-balance-form')?.scrollIntoView({ behavior: 'smooth' });
                 }}
@@ -413,7 +402,6 @@ export const WalletHubView: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setWithdrawSourceTier('sub_admin');
                     document.getElementById('withdraw-form')?.scrollIntoView({ behavior: 'smooth' });
                   }}
                   className="py-2.5 px-3 rounded-xl bg-white hover:bg-purple-50 text-purple-700 border border-purple-300 text-xs font-extrabold flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
@@ -443,90 +431,50 @@ export const WalletHubView: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
         
         {/* Left Column: ব্যালেন্স অ্যাড করুন (Add Balance Form) */}
-        <div id="add-balance-form" className="rounded-3xl bg-white border border-emerald-200/90 shadow-md p-4 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-emerald-100">
+        <div 
+          id="add-balance-form" 
+          className={`rounded-3xl bg-white border shadow-md p-4 sm:p-6 space-y-4 transition-all ${
+            selectedViewTier === 'personal'
+              ? 'border-blue-200/90'
+              : selectedViewTier === 'business'
+              ? 'border-emerald-200/90'
+              : 'border-purple-200/90'
+          }`}
+        >
+          <div className={`flex items-center justify-between pb-2 border-b ${
+            selectedViewTier === 'personal'
+              ? 'border-blue-100'
+              : selectedViewTier === 'business'
+              ? 'border-emerald-100'
+              : 'border-purple-100'
+          }`}>
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm ${
+                selectedViewTier === 'personal'
+                  ? 'bg-blue-100 text-blue-700'
+                  : selectedViewTier === 'business'
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : 'bg-purple-100 text-purple-700'
+              }`}>
                 +
               </div>
               <h2 className="text-base sm:text-lg font-black text-slate-800">
-                ব্যালেন্স অ্যাড করুন
+                {selectedViewTier === 'personal' 
+                  ? 'পার্সোনাল ওয়ালেটে ব্যালেন্স অ্যাড করুন' 
+                  : selectedViewTier === 'business' 
+                  ? 'বিজনেস ওয়ালেটে ব্যালেন্স অ্যাড করুন' 
+                  : 'সাব-এডমিন ওয়ালেটে ব্যালেন্স অ্যাড করুন'}
               </h2>
             </div>
-            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-              {depositTargetTier === 'personal' ? '👤 পার্সোনাল একাউন্ট' : depositTargetTier === 'sub_admin' ? '★ সাব-এডমিন প্যানেল' : '💼 বিজনেস একাউন্ট'}
+            <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+              selectedViewTier === 'personal'
+                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                : selectedViewTier === 'business'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-purple-50 text-purple-700 border-purple-200'
+            }`}>
+              {selectedViewTier === 'personal' ? '👤 পার্সোনাল একাউন্ট' : selectedViewTier === 'sub_admin' ? '★ সাব-এডমিন প্যানেল' : '💼 বিজনেস একাউন্ট'}
             </span>
-          </div>
-
-          {/* Account Tier Selector */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-black text-slate-800">
-              কোন অ্যাকাউন্টে ব্যালেন্স যোগ করবেন? (টার্গেট একাউন্ট)
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => {
-                  setDepositTargetTier('personal');
-                  if (!depositAmount || depositAmount === '1450' || depositAmount === '2950') {
-                    setDepositAmount('500');
-                  }
-                }}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  depositTargetTier === 'personal'
-                    ? 'border-blue-600 bg-blue-50/90 text-blue-900 ring-2 ring-blue-300 shadow-sm'
-                    : 'border-slate-200 hover:border-blue-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">👤</span>
-                <span className="text-xs font-extrabold mt-0.5">পার্সোনাল</span>
-                <span className="text-[10px] font-bold text-blue-700 mt-0.5">
-                  ৳ {(user?.tierBalances?.personal ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDepositTargetTier('business');
-                  if (!depositAmount || depositAmount === '500' || depositAmount === '2950') {
-                    setDepositAmount('1450');
-                  }
-                }}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  depositTargetTier === 'business'
-                    ? 'border-emerald-600 bg-emerald-50/90 text-emerald-900 ring-2 ring-emerald-300 shadow-sm'
-                    : 'border-slate-200 hover:border-emerald-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">💼</span>
-                <span className="text-xs font-extrabold mt-0.5">বিজনেস</span>
-                <span className="text-[10px] font-bold text-emerald-700 mt-0.5">
-                  ৳ {(user?.tierBalances?.business ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setDepositTargetTier('sub_admin');
-                  if (!depositAmount || depositAmount === '500' || depositAmount === '1450') {
-                    setDepositAmount('2950');
-                  }
-                }}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  depositTargetTier === 'sub_admin'
-                    ? 'border-purple-600 bg-purple-50/90 text-purple-950 ring-2 ring-purple-300 shadow-sm'
-                    : 'border-slate-200 hover:border-purple-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">★</span>
-                <span className="text-xs font-extrabold mt-0.5">সাব-এডমিন</span>
-                <span className="text-[10px] font-bold text-purple-700 mt-0.5">
-                  ৳ {(user?.tierBalances?.sub_admin ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-            </div>
           </div>
 
           <p className="text-xs font-semibold text-slate-600">
@@ -658,7 +606,7 @@ export const WalletHubView: React.FC = () => {
                   কত টাকা পাঠিয়েছেন?
                 </label>
                 <span className="text-[11px] font-bold text-slate-500">
-                  টার্গেট: {depositTargetTier === 'personal' ? 'পার্সোনাল (৳৫০০)' : depositTargetTier === 'sub_admin' ? 'সাব-এডমিন (৳২,৯৫০)' : 'বিজনেস (৳১,৪৫০)'}
+                  টার্গেট: {selectedViewTier === 'personal' ? 'পার্সোনাল (৳৫০০)' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন (৳২,৯৫০)' : 'বিজনেস (৳১,৪৫০)'}
                 </span>
               </div>
               <input
@@ -674,9 +622,9 @@ export const WalletHubView: React.FC = () => {
               {/* Quick Select Buttons */}
               <div className="flex items-center gap-1.5 flex-wrap pt-2">
                 <span className="text-[10px] font-bold text-slate-400">দ্রুত নির্বাচন:</span>
-                {(depositTargetTier === 'personal' 
+                {(selectedViewTier === 'personal' 
                   ? [500, 1000, 2000, 5000]
-                  : depositTargetTier === 'business'
+                  : selectedViewTier === 'business'
                   ? [1450, 2500, 5000, 10000]
                   : [2950, 5000, 10000, 20000]
                 ).map((amt) => (
@@ -686,7 +634,11 @@ export const WalletHubView: React.FC = () => {
                     onClick={() => setDepositAmount(amt.toString())}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       depositAmount === amt.toString()
-                        ? 'bg-emerald-600 text-white shadow-xs'
+                        ? selectedViewTier === 'personal'
+                          ? 'bg-blue-600 text-white shadow-xs'
+                          : selectedViewTier === 'business'
+                          ? 'bg-emerald-600 text-white shadow-xs'
+                          : 'bg-purple-700 text-white shadow-xs'
                         : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
                     }`}
                   >
@@ -699,14 +651,20 @@ export const WalletHubView: React.FC = () => {
             <button
               type="submit"
               disabled={isDepositSubmitting}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-600 hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-600 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 hover:shadow-xl hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer disabled:opacity-60"
+              className={`w-full py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all duration-300 cursor-pointer disabled:opacity-60 ${
+                selectedViewTier === 'personal'
+                  ? 'bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 shadow-blue-600/20 hover:shadow-blue-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                  : selectedViewTier === 'business'
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-600 shadow-emerald-600/20 hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                  : 'bg-gradient-to-r from-purple-700 via-indigo-600 to-amber-600 hover:from-purple-600 hover:to-amber-500 shadow-purple-600/20 hover:shadow-purple-500/35 hover:-translate-y-0.5 active:translate-y-0'
+              }`}
             >
               {isDepositSubmitting ? (
                 <span>যাচাই করা হচ্ছে...</span>
               ) : (
                 <>
                   <span>
-                    {depositTargetTier === 'personal' ? 'পার্সোনাল ওয়ালেটে জমা দিন' : depositTargetTier === 'sub_admin' ? 'সাব-এডমিন ওয়ালেটে জমা দিন' : 'বিজনেস ওয়ালেটে জমা দিন'}
+                    {selectedViewTier === 'personal' ? 'পার্সোনাল ওয়ালেটে জমা দিন' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন ওয়ালেটে জমা দিন' : 'বিজনেস ওয়ালেটে জমা দিন'}
                   </span>
                   <span className="transition-transform group-hover:translate-x-1">➔</span>
                 </>
@@ -716,75 +674,50 @@ export const WalletHubView: React.FC = () => {
         </div>
 
         {/* Right Column: উইথড্র করুন (Withdraw Form) */}
-        <div id="withdraw-form" className="rounded-3xl bg-white border border-blue-200/90 shadow-md p-4 sm:p-6 space-y-4">
-          <div className="flex items-center justify-between pb-2 border-b border-blue-100">
+        <div 
+          id="withdraw-form" 
+          className={`rounded-3xl bg-white border shadow-md p-4 sm:p-6 space-y-4 transition-all ${
+            selectedViewTier === 'personal'
+              ? 'border-blue-200/90'
+              : selectedViewTier === 'business'
+              ? 'border-emerald-200/90'
+              : 'border-purple-200/90'
+          }`}
+        >
+          <div className={`flex items-center justify-between pb-2 border-b ${
+            selectedViewTier === 'personal'
+              ? 'border-blue-100'
+              : selectedViewTier === 'business'
+              ? 'border-emerald-100'
+              : 'border-purple-100'
+          }`}>
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 flex items-center justify-center font-bold text-sm">
+              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm ${
+                selectedViewTier === 'personal'
+                  ? 'bg-blue-100 text-blue-700'
+                  : selectedViewTier === 'business'
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : 'bg-purple-100 text-purple-700'
+              }`}>
                 💳
               </div>
               <h2 className="text-base sm:text-lg font-black text-slate-800">
-                উইথড্র করুন
+                {selectedViewTier === 'personal' 
+                  ? 'পার্সোনাল থেকে উইথড্র করুন' 
+                  : selectedViewTier === 'business' 
+                  ? 'বিজনেস থেকে উইথড্র করুন' 
+                  : 'সাব-এডমিন থেকে উইথড্র করুন'}
               </h2>
             </div>
-            <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200">
-              {withdrawSourceTier === 'personal' ? '👤 পার্সোনাল' : withdrawSourceTier === 'sub_admin' ? '★ সাব-এডমিন' : '💼 বিজনেস'}
+            <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+              selectedViewTier === 'personal'
+                ? 'bg-blue-50 text-blue-700 border-blue-200'
+                : selectedViewTier === 'business'
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                : 'bg-purple-50 text-purple-700 border-purple-200'
+            }`}>
+              {selectedViewTier === 'personal' ? '👤 পার্সোনাল' : selectedViewTier === 'sub_admin' ? '★ সাব-এডমিন' : '💼 বিজনেস'}
             </span>
-          </div>
-
-          {/* Source Account Tier Selector */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-black text-slate-800">
-              কোন অ্যাকাউন্ট থেকে টাকা তুলবেন? (উৎস একাউন্ট)
-            </label>
-            <div className="grid grid-cols-3 gap-2">
-              <button
-                type="button"
-                onClick={() => setWithdrawSourceTier('personal')}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  withdrawSourceTier === 'personal'
-                    ? 'border-blue-600 bg-blue-50/90 text-blue-900 ring-2 ring-blue-300 shadow-sm'
-                    : 'border-slate-200 hover:border-blue-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">👤</span>
-                <span className="text-xs font-extrabold mt-0.5">পার্সোনাল</span>
-                <span className="text-[10px] font-bold text-blue-700 mt-0.5">
-                  উদ্বৃত্ত: ৳{(user?.tierBalances?.personal ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setWithdrawSourceTier('business')}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  withdrawSourceTier === 'business'
-                    ? 'border-emerald-600 bg-emerald-50/90 text-emerald-900 ring-2 ring-emerald-300 shadow-sm'
-                    : 'border-slate-200 hover:border-emerald-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">💼</span>
-                <span className="text-xs font-extrabold mt-0.5">বিজনেস</span>
-                <span className="text-[10px] font-bold text-emerald-700 mt-0.5">
-                  উদ্বৃত্ত: ৳{(user?.tierBalances?.business ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setWithdrawSourceTier('sub_admin')}
-                className={`p-2.5 rounded-2xl border-2 flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                  withdrawSourceTier === 'sub_admin'
-                    ? 'border-purple-600 bg-purple-50/90 text-purple-950 ring-2 ring-purple-300 shadow-sm'
-                    : 'border-slate-200 hover:border-purple-200 bg-white text-slate-700'
-                }`}
-              >
-                <span className="text-base">★</span>
-                <span className="text-xs font-extrabold mt-0.5">সাব-এডমিন</span>
-                <span className="text-[10px] font-bold text-purple-700 mt-0.5">
-                  উদ্বৃত্ত: ৳{(user?.tierBalances?.sub_admin ?? 0).toLocaleString('bn-BD')}
-                </span>
-              </button>
-            </div>
           </div>
 
           <p className="text-xs font-semibold text-slate-600">
@@ -871,8 +804,10 @@ export const WalletHubView: React.FC = () => {
                 <label className="block text-xs font-bold text-slate-700">
                   উইথড্র করার পরিমাণ (টাকা)
                 </label>
-                <span className="text-[11px] font-bold text-blue-700">
-                  সর্বোচ্চ: ৳{(user?.tierBalances?.[withdrawSourceTier] ?? 0).toLocaleString('bn-BD')}
+                <span className={`text-[11px] font-bold ${
+                  selectedViewTier === 'personal' ? 'text-blue-700' : selectedViewTier === 'business' ? 'text-emerald-700' : 'text-purple-700'
+                }`}>
+                  সর্বোচ্চ: ৳{(user?.tierBalances?.[selectedViewTier] ?? 0).toLocaleString('bn-BD')}
                 </span>
               </div>
               <input
@@ -881,7 +816,7 @@ export const WalletHubView: React.FC = () => {
                 onChange={(e) => setWithdrawAmount(e.target.value)}
                 placeholder="ন্যূনতম ৳১০০"
                 min="100"
-                max={user?.tierBalances?.[withdrawSourceTier] ?? undefined}
+                max={user?.tierBalances?.[selectedViewTier] ?? undefined}
                 required
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm font-medium transition-all"
               />
@@ -904,9 +839,15 @@ export const WalletHubView: React.FC = () => {
             <button
               type="submit"
               disabled={isWithdrawSubmitting}
-              className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:via-sky-500 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 hover:shadow-xl hover:shadow-blue-500/35 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer disabled:opacity-60"
+              className={`w-full py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all duration-300 cursor-pointer disabled:opacity-60 ${
+                selectedViewTier === 'personal'
+                  ? 'bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:via-sky-500 hover:to-indigo-500 shadow-blue-600/20 hover:shadow-blue-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                  : selectedViewTier === 'business'
+                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-600 shadow-emerald-600/20 hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                  : 'bg-gradient-to-r from-purple-700 via-indigo-600 to-amber-600 hover:from-purple-600 hover:via-indigo-500 hover:to-amber-500 shadow-purple-600/20 hover:shadow-purple-500/35 hover:-translate-y-0.5 active:translate-y-0'
+              }`}
             >
-              {isWithdrawSubmitting ? 'প্রসেসিং হচ্ছে...' : `${withdrawSourceTier === 'personal' ? 'পার্সোনাল' : withdrawSourceTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস'} একাউন্ট থেকে উইথড্র করুন ➔`}
+              {isWithdrawSubmitting ? 'প্রসেসিং হচ্ছে...' : `${selectedViewTier === 'personal' ? 'পার্সোনাল' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস'} একাউন্ট থেকে উইথড্র করুন ➔`}
             </button>
           </form>
         </div>
