@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { AccountTier, Service } from '../types';
-import { services, categories } from '../data/servicesData';
+import { services, categories, personalServices } from '../data/servicesData';
 import { getTierPlans } from '../data/tierPlans';
 import { UserAvatar } from './UserAvatar';
 import { 
@@ -71,11 +71,14 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   // Personal lock rule: Services unlocked only after deposit (balance > 0)
   const isPersonalUnlocked = tier !== 'personal' || personalBalance > 0;
 
-  // Filter services by tier relevance
-  const personalCategories = ['nid', 'birth', 'tax', 'land', 'mobile', 'bill', 'cert', 'all'];
+  // Filter services by tier relevance:
+  // For Personal, strictly show only NID, Birth Reg, and TIN checks and related check services!
+  const personalCategories = ['all', 'nid', 'birth', 'tax'];
 
-  const filteredServices = services.filter(svc => {
-    // If personal, show personal categories
+  const sourceServices = tier === 'personal' ? personalServices : services;
+
+  const filteredServices = sourceServices.filter(svc => {
+    // If personal, show strictly personal categories
     if (tier === 'personal' && !personalCategories.includes(svc.category)) {
       return false;
     }
@@ -542,19 +545,25 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           {categories
             .filter(cat => tier !== 'personal' || personalCategories.includes(cat.id))
-            .map(cat => (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCat(cat.id)}
-                className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
-                  selectedCat === cat.id
-                    ? `${colors.badge} shadow-xs`
-                    : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
-                }`}
-              >
-                <span>{cat.icon} {cat.label}</span>
-              </button>
-            ))}
+            .map(cat => {
+              const label = tier === 'personal'
+                ? (cat.id === 'nid' ? 'NID চেক' : cat.id === 'birth' ? 'জন্ম নিবন্ধন চেক' : cat.id === 'tax' ? 'TIN চেক' : cat.label)
+                : cat.label;
+
+              return (
+                <button
+                  key={cat.id}
+                  onClick={() => setSelectedCat(cat.id)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    selectedCat === cat.id
+                      ? `${colors.badge} shadow-xs`
+                      : 'bg-white hover:bg-slate-100 text-slate-700 border border-slate-200'
+                  }`}
+                >
+                  <span>{cat.icon} {label}</span>
+                </button>
+              );
+            })}
         </div>
       </div>
 
@@ -658,6 +667,94 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
         )}
 
       </div>
+
+      {/* ============================================================== */}
+      {/* 9. PERSONAL TIER: RULES, RESTRICTIONS & RECOMMENDATION BOX */}
+      {/* ============================================================== */}
+      {tier === 'personal' && (
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+          className="rounded-3xl bg-gradient-to-br from-rose-50/95 via-white to-amber-50/80 border-2 border-rose-300/80 p-4 sm:p-7 shadow-lg space-y-4 sm:space-y-5 relative overflow-hidden"
+        >
+          {/* Subtle decorative glow */}
+          <div className="absolute top-0 right-0 w-48 h-48 bg-rose-200/30 rounded-full blur-3xl pointer-events-none -mr-16 -mt-16"></div>
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-amber-200/30 rounded-full blur-3xl pointer-events-none -ml-16 -mb-16"></div>
+
+          {/* Header */}
+          <div className="flex items-center gap-2.5 sm:gap-3 pb-3 border-b border-rose-200/70 relative z-10">
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-gradient-to-tr from-rose-600 via-red-500 to-amber-500 text-white flex items-center justify-center text-base sm:text-lg font-black shadow-md shadow-rose-500/25 shrink-0">
+              ⚠️
+            </div>
+            <div>
+              <h3 className="text-sm sm:text-base md:text-lg font-black text-rose-950 flex items-center gap-2">
+                <span>পার্সোনাল অ্যাকাউন্টের ব্যবহারের নিয়ম ও সীমাবদ্ধতা</span>
+              </h3>
+              <p className="text-[10px] sm:text-xs font-semibold text-rose-800/80">
+                অ্যাকাউন্ট ব্যবহারের পূর্বে নিচের গুরুত্বপূর্ণ শর্তগুলো জেনে নিন
+              </p>
+            </div>
+          </div>
+
+          {/* Two Red Warning Restriction Boxes (❌) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 relative z-10">
+            {/* Restriction 1 */}
+            <motion.div 
+              whileHover={{ scale: 1.01 }}
+              className="p-3.5 sm:p-4 rounded-2xl bg-white/95 border-2 border-rose-200 shadow-xs flex items-start gap-2.5 sm:gap-3 hover:border-rose-400 transition-all"
+            >
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-100 border border-rose-300 text-rose-700 flex items-center justify-center text-xs sm:text-sm font-black shrink-0 mt-0.5 shadow-2xs">
+                ❌
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-xs sm:text-sm md:text-base font-black text-rose-900 leading-snug">
+                  কাস্টমারের কাজ করা যাবে না।
+                </h4>
+                <p className="text-[11px] sm:text-xs font-medium text-slate-600 leading-relaxed">
+                  এই অ্যাকাউন্ট শুধুমাত্র নিজস্ব ব্যবহারের জন্য। দোকানদার বা বাইরের কোনো কাস্টমারের কাজ বা সেবা দেওয়া যাবে না।
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Restriction 2 */}
+            <motion.div 
+              whileHover={{ scale: 1.01 }}
+              className="p-3.5 sm:p-4 rounded-2xl bg-white/95 border-2 border-rose-200 shadow-xs flex items-start gap-2.5 sm:gap-3 hover:border-rose-400 transition-all"
+            >
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-rose-100 border border-rose-300 text-rose-700 flex items-center justify-center text-xs sm:text-sm font-black shrink-0 mt-0.5 shadow-2xs">
+                ❌
+              </div>
+              <div className="space-y-0.5">
+                <h4 className="text-xs sm:text-sm md:text-base font-black text-rose-900 leading-snug">
+                  ইনকামের সুযোগ নেই।
+                </h4>
+                <p className="text-[11px] sm:text-xs font-medium text-slate-600 leading-relaxed">
+                  এটিতে কোনো কমিশন, অতিরিক্ত মার্জিন বা ব্যবসায়িক ইনকামের সুবিধা নেই। কাস্টমারের কাজ করে ইনকাম করতে চাইলে বিজনেস অ্যাকাউন্ট নিন।
+                </p>
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Golden Advisory Box (💡) */}
+          <motion.div 
+            whileHover={{ scale: 1.01 }}
+            className="p-3.5 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-100/90 via-yellow-100/85 to-amber-50 border-2 border-amber-400/90 shadow-md flex items-start gap-3 sm:gap-3.5 relative z-10"
+          >
+            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 flex items-center justify-center text-lg sm:text-xl font-black shrink-0 mt-0.5 shadow-md shadow-amber-500/25 ring-2 ring-white">
+              💡
+            </div>
+            <div className="space-y-0.5 sm:space-y-1">
+              <h4 className="text-xs sm:text-base md:text-lg font-black text-amber-950 leading-snug">
+                শুধু নিজের প্রয়োজন হলে এই অ্যাকাউন্টই যথেষ্ট।
+              </h4>
+              <p className="text-[11px] sm:text-sm font-semibold text-amber-900/90 leading-relaxed">
+                আপনার নিজের বা পরিবারের NID, জন্ম নিবন্ধন ও TIN চেক করার মতো ব্যক্তিগত কাজের জন্য অতিরিক্ত খরচে বিজনেস অ্যাকাউন্ট নেওয়ার দরকার নেই — এই পার্সোনাল অ্যাকাউন্টটিই আপনার জন্য সম্পূর্ণ যথেষ্ট!
+              </p>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
 
     </div>
   );

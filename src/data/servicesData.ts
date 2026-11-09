@@ -22,6 +22,113 @@ export const stats = [
   { label: 'মোট সেন্টার', value: '৩২৯', icon: '🏢' },
 ];
 
+// ============================================================================
+// 👤 পার্সোনাল অ্যাকাউন্টের নির্দিষ্ট সেবাসমূহ (শুধুমাত্র NID, জন্ম নিবন্ধন ও TIN চেক ও সংশ্লিষ্ট)
+// ============================================================================
+export const personalServices: Service[] = [
+  {
+    id: 'personal-nid-check',
+    title: 'NID চেক',
+    titleEn: 'NID Check & Verification',
+    description: 'এনআইডি নম্বর ও জন্ম তারিখ দিয়ে তথ্য তাৎক্ষণিক যাচাই ও স্ট্যাটাস চেক',
+    icon: '✅',
+    color: 'bg-blue-600',
+    category: 'nid',
+    price: 18,
+    popular: true,
+    inputLabel: 'এনআইডি নাম্বার ও জন্ম তারিখ',
+    inputPlaceholder: '১০/১৩/১৭ ডিজিট আইডি নাম্বার / DD-MM-YYYY',
+    fields: [
+      { name: 'nidNumber', label: 'এনআইডি নাম্বার', placeholder: '১০ বা ১৭ সংখ্যার এনআইডি নম্বর দিন', required: true },
+      { name: 'dob', label: 'জন্ম তারিখ', placeholder: 'DD/MM/YYYY', required: true },
+    ]
+  },
+  {
+    id: 'personal-birth-check',
+    title: 'জন্ম নিবন্ধন চেক',
+    titleEn: 'Birth Registration Check',
+    description: '১৭ ডিজিটের অনলাইন জন্ম নিবন্ধন নম্বর দিয়ে তথ্য যাচাই ও ভেরিফিকেশন',
+    icon: '✅',
+    color: 'bg-emerald-600',
+    category: 'birth',
+    price: 20,
+    popular: true,
+    inputLabel: 'জন্ম নিবন্ধন নম্বর ও জন্ম তারিখ',
+    inputPlaceholder: '১৭ ডিজিটের জন্ম নিবন্ধন নম্বর / DD-MM-YYYY',
+    fields: [
+      { name: 'birthRegNumber', label: 'জন্ম নিবন্ধন নম্বর', placeholder: '১৭ সংখ্যার জন্ম নিবন্ধন নম্বর দিন', required: true },
+      { name: 'dob', label: 'জন্ম তারিখ', placeholder: 'DD/MM/YYYY', required: true },
+    ]
+  },
+  {
+    id: 'personal-tin-check',
+    title: 'TIN চেক',
+    titleEn: 'e-TIN Check & Verification',
+    description: '১২ ডিজিটের ই-টিন নম্বর অথবা এনআইডি দিয়ে ট্যাক্স সার্টিফিকেট তথ্য যাচাই',
+    icon: '✅',
+    color: 'bg-amber-600',
+    category: 'tax',
+    price: 25,
+    popular: true,
+    inputLabel: 'TIN নম্বর অথবা NID নম্বর',
+    inputPlaceholder: '১২ ডিজিট TIN নম্বর বা এনআইডি নম্বর দিন',
+    fields: [
+      { name: 'tinNumber', label: 'TIN বা এনআইডি নম্বর', placeholder: '১২ ডিজিট TIN নম্বর বা এনআইডি নম্বর দিন', required: true },
+      { name: 'dob', label: 'জন্ম তারিখ (প্রয়োজনে)', placeholder: 'DD/MM/YYYY' },
+    ]
+  },
+  {
+    id: 'personal-server-copy',
+    title: 'NID সার্ভার কপি',
+    titleEn: 'Official NID Server Copy',
+    description: 'ব্যক্তিগত তথ্য যাচাইয়ের অফিশিয়াল সার্ভার কপি সংগ্রহ',
+    icon: '📋',
+    color: 'bg-blue-700',
+    category: 'nid',
+    price: 18,
+    popular: true,
+    inputLabel: 'আইডি নাম্বার ও জন্ম তারিখ',
+    inputPlaceholder: '১০/১৩/১৭ ডিজিট আইডি নাম্বার / DD-MM-YYYY',
+    fields: [
+      { name: 'nidNumber', label: 'এনআইডি নাম্বার', placeholder: '১০ বা ১৭ সংখ্যার এনআইডি নম্বর দিন', required: true },
+      { name: 'dob', label: 'জন্ম তারিখ', placeholder: 'DD/MM/YYYY', required: true },
+    ]
+  },
+  {
+    id: 'personal-birth-copy',
+    title: 'জন্ম নিবন্ধন কপি',
+    titleEn: 'Birth Certificate Copy',
+    description: 'ব্যক্তিগত অনলাইন জন্ম নিবন্ধন সনদের ডিজিটাল কপি',
+    icon: '📄',
+    color: 'bg-emerald-700',
+    category: 'birth',
+    price: 20,
+    popular: true,
+    inputLabel: 'জন্ম নিবন্ধন নম্বর ও জন্ম তারিখ',
+    inputPlaceholder: '১৭ ডিজিটের জন্ম নিবন্ধন নম্বর',
+    fields: [
+      { name: 'birthRegNumber', label: 'জন্ম নিবন্ধন নম্বর', placeholder: '১৭ সংখ্যার নম্বর দিন', required: true },
+      { name: 'dob', label: 'জন্ম তারিখ', placeholder: 'DD/MM/YYYY', required: true },
+    ]
+  },
+  {
+    id: 'personal-tin-copy',
+    title: 'টিন সার্টিফিকেট',
+    titleEn: 'TIN Certificate Download',
+    description: 'ব্যক্তিগত আয়কর ই-টিন সার্টিফিকেট সংগ্রহ',
+    icon: '📄',
+    color: 'bg-amber-700',
+    category: 'tax',
+    price: 30,
+    popular: true,
+    inputLabel: 'TIN নম্বর অথবা NID নম্বর',
+    inputPlaceholder: '১২ ডিজিট TIN নম্বর দিন',
+    fields: [
+      { name: 'tinNumber', label: 'TIN নম্বর', placeholder: '১২ ডিজিট TIN নম্বর দিন', required: true },
+    ]
+  }
+];
+
 export const services: Service[] = [
   // --- NID সেবা ---
   {

@@ -100,11 +100,11 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             <div className="space-y-1.5 sm:space-y-3 pt-1.5 sm:pt-3 border-t border-blue-200/80">
               {plans.personal.features.map((feat, idx) => (
                 <div key={idx} className="flex items-start gap-1 sm:gap-2.5">
-                  <div className="w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full bg-blue-100 border border-blue-300 text-blue-700 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
-                    <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 stroke-[3]" />
+                  <div className="w-3.5 h-3.5 sm:w-5 sm:h-5 rounded-full bg-emerald-100 border border-emerald-300 text-emerald-700 flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">
+                    <Check className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-emerald-600 stroke-[3.5]" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-[9px] sm:text-xs md:text-sm font-bold text-slate-900 leading-tight sm:leading-snug break-words">
+                    <span className="text-[10px] sm:text-xs md:text-sm font-black text-slate-900 leading-tight sm:leading-snug break-words">
                       {feat.title}
                     </span>
                     {feat.subText && (

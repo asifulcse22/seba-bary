@@ -58,18 +58,18 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
       discountPercentage: TIER_DISCOUNTS.personal,
       features: [
         {
-          title: 'ব্যক্তিগত NID, জন্ম নিবন্ধন ও বিল পেমেন্ট',
-          subText: 'নিরাপদে নিজের ও পরিবারের সকল সরকারি আবেদন',
+          title: 'NID চেক',
+          subText: 'জাতীয় পরিচয়পত্র ও ভোটার তথ্য যাচাই',
           iconType: 'check'
         },
         {
-          title: 'যেকোনো সময় সরাসরি সার্ভার কপি ডাউনলোড',
-          subText: 'তাৎক্ষণিক অফিশিয়াল পিডিএফ ও তথ্য যাচাই',
+          title: 'জন্ম নিবন্ধন চেক',
+          subText: 'অনলাইন জন্ম নিবন্ধন ভেরিফিকেশন ও তথ্য যাচাই',
           iconType: 'check'
         },
         {
-          title: 'অর্ডার ট্র্যাকিং ও সার্বক্ষণিক ডিজিটাল সেবা',
-          subText: 'লাইভ স্ট্যাটাস আপডেট ও ডিজিটাল রসিদ ভল্ট',
+          title: 'TIN চেক',
+          subText: 'ই-টিন সার্টিফিকেট ও আয়কর তথ্য যাচাই',
           iconType: 'check'
         }
       ]
