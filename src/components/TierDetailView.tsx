@@ -52,7 +52,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   const [depositAmount, setDepositAmount] = useState<number>(500);
   const [depositMethod, setDepositMethod] = useState<'bKash' | 'Nagad'>('bKash');
   const [trxId, setTrxId] = useState('');
-  const [senderPhone, setSenderPhone] = useState(user?.phone || '');
+  const [senderPhone, setSenderPhone] = useState('');
   const [isDepositing, setIsDepositing] = useState(false);
   const [depositError, setDepositError] = useState<string | null>(null);
 
@@ -396,14 +396,6 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                     className="w-full px-3 py-1.5 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-xs font-medium"
                   />
                 </div>
-              </div>
-
-              {/* Number notice */}
-              <div className="p-2 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 flex items-center justify-between">
-                <span>
-                  {depositMethod} পার্সোনাল নাম্বার: <strong className="text-emerald-700 font-mono text-xs">01992-867758</strong> (Send Money)
-                </span>
-                <span className="text-emerald-600 font-bold">তাৎক্ষণিক অটো-অ্যাপ্রুভাল</span>
               </div>
 
               <button

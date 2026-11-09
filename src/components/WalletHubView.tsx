@@ -512,61 +512,63 @@ export const WalletHubView: React.FC = () => {
             </button>
           </div>
 
-          {/* Send Money Number Box with Smart One-Click Copy */}
-          <div 
-            onClick={handleCopyNumber}
-            title="নাম্বার কপি করতে ক্লিক করুন"
-            className={`group p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2 shadow-xs ${
-              copiedNumber 
-                ? 'bg-emerald-100 border-emerald-400 ring-2 ring-emerald-300' 
-                : depositMethod === 'bKash'
-                ? 'bg-gradient-to-r from-pink-50 via-rose-50 to-pink-50/50 border-pink-200 hover:border-pink-400'
-                : 'bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50/50 border-orange-200 hover:border-orange-400'
-            }`}
-          >
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-[11px] font-bold text-slate-600">
-                  {depositMethod} পার্সোনাল নাম্বার (Send Money করুন)
-                </span>
-                <span className="text-[10px] text-slate-400 font-semibold">(ট্যাপ করে কপি)</span>
-              </div>
-              <div className={`text-lg sm:text-xl font-black tracking-wider transition-colors ${
+          {/* Send Money Number Box with Smart One-Click Copy (Only if number is configured) */}
+          {currentDepositNumber ? (
+            <div 
+              onClick={handleCopyNumber}
+              title="নাম্বার কপি করতে ক্লিক করুন"
+              className={`group p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between gap-2 shadow-xs ${
                 copiedNumber 
-                  ? 'text-emerald-800' 
-                  : depositMethod === 'bKash' 
-                  ? 'text-pink-700' 
-                  : 'text-orange-700'
-              }`}>
-                {currentDepositNumber}
-              </div>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleCopyNumber();
-              }}
-              className={`px-3 py-1.5 rounded-xl font-bold text-xs border flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-95 ${
-                copiedNumber
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
-                  : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 group-hover:border-slate-400'
+                  ? 'bg-emerald-100 border-emerald-400 ring-2 ring-emerald-300' 
+                  : depositMethod === 'bKash'
+                  ? 'bg-gradient-to-r from-pink-50 via-rose-50 to-pink-50/50 border-pink-200 hover:border-pink-400'
+                  : 'bg-gradient-to-r from-orange-50 via-amber-50 to-orange-50/50 border-orange-200 hover:border-orange-400'
               }`}
             >
-              {copiedNumber ? (
-                <>
-                  <Check className="w-3.5 h-3.5 text-white animate-in zoom-in" />
-                  <span>কপি হয়েছে!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-3.5 h-3.5 text-slate-600 group-hover:text-slate-900" />
-                  <span>কপি করুন</span>
-                </>
-              )}
-            </button>
-          </div>
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[11px] font-bold text-slate-600">
+                    {depositMethod} পার্সোনাল নাম্বার (Send Money করুন)
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-semibold">(ট্যাপ করে কপি)</span>
+                </div>
+                <div className={`text-lg sm:text-xl font-black tracking-wider transition-colors ${
+                  copiedNumber 
+                    ? 'text-emerald-800' 
+                    : depositMethod === 'bKash' 
+                    ? 'text-pink-700' 
+                    : 'text-orange-700'
+                }`}>
+                  {currentDepositNumber}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCopyNumber();
+                }}
+                className={`px-3 py-1.5 rounded-xl font-bold text-xs border flex items-center gap-1.5 shadow-xs transition-all cursor-pointer active:scale-95 ${
+                  copiedNumber
+                    ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                    : 'bg-white hover:bg-slate-50 text-slate-800 border-slate-300 group-hover:border-slate-400'
+                }`}
+              >
+                {copiedNumber ? (
+                  <>
+                    <Check className="w-3.5 h-3.5 text-white animate-in zoom-in" />
+                    <span>কপি হয়েছে!</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3.5 h-3.5 text-slate-600 group-hover:text-slate-900" />
+                    <span>কপি করুন</span>
+                  </>
+                )}
+              </button>
+            </div>
+          ) : null}
 
           {/* Form Fields */}
           <form onSubmit={handleDepositSubmit} className="space-y-3">
