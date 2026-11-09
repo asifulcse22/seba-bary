@@ -184,38 +184,18 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
           <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
         </button>
 
-        {/* Tier Switcher Pills */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
-          <button
-            onClick={() => onSwitchTierView('personal')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              tier === 'personal'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            👤 পার্সোনাল
-          </button>
-          <button
-            onClick={() => onSwitchTierView('business')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              tier === 'business'
-                ? 'bg-emerald-600 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            💼 বিজনেস 🔥
-          </button>
-          <button
-            onClick={() => onSwitchTierView('sub_admin')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              tier === 'sub_admin'
-                ? 'bg-purple-700 text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
-            }`}
-          >
-            🌟 Sub Admin
-          </button>
+        {/* Current Tier Dedicated Badge */}
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          <span className={`px-3.5 py-1.5 rounded-xl font-black text-xs shadow-2xs border flex items-center gap-1.5 ${
+            tier === 'personal'
+              ? 'bg-blue-50 text-blue-800 border-blue-200'
+              : tier === 'business'
+              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+              : 'bg-purple-50 text-purple-800 border-purple-200'
+          }`}>
+            <span>{tier === 'personal' ? '👤' : tier === 'business' ? '💼' : '🌟'}</span>
+            <span>{tier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : tier === 'business' ? 'বিজনেস অ্যাকাউন্ট' : 'সাব-এডমিন প্যানেল'}</span>
+          </span>
         </div>
       </div>
 

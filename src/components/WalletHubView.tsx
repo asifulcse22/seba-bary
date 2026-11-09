@@ -152,10 +152,7 @@ export const WalletHubView: React.FC = () => {
     }
   };
 
-  const filteredTransactions = transactions.filter(tx => {
-    if (txFilter === 'all') return true;
-    return tx.accountType === txFilter;
-  });
+  const filteredTransactions = transactions.filter(tx => tx.accountType === selectedViewTier);
 
   return (
     <div className="space-y-6">
@@ -163,59 +160,20 @@ export const WalletHubView: React.FC = () => {
       {/* Top Banner */}
       <HeroBanner variant="wallet" />
 
-      {/* Account Switcher Header */}
+      {/* Account Header */}
       <div className="flex items-center justify-between flex-wrap gap-2.5 pb-1">
         <div className="flex items-center gap-2">
           <span className="text-xs font-black text-slate-700">অ্যাকাউন্ট ভিউ:</span>
-          <span className={`text-xs font-black px-3 py-1 rounded-full border shadow-xs ${
+          <span className={`text-xs font-black px-3.5 py-1 rounded-full border shadow-xs flex items-center gap-1.5 ${
             selectedViewTier === 'personal' 
               ? 'bg-blue-50 text-blue-800 border-blue-300' 
               : selectedViewTier === 'sub_admin'
               ? 'bg-purple-50 text-purple-800 border-purple-300'
               : 'bg-emerald-50 text-emerald-800 border-emerald-300'
           }`}>
-            {selectedViewTier === 'personal' ? '👤 পার্সোনাল অ্যাকাউন্ট' : selectedViewTier === 'sub_admin' ? '★ সাব-এডমিন প্যানেল' : '💼 বিজনেস অ্যাকাউন্ট'}
+            <span>{selectedViewTier === 'personal' ? '👤' : selectedViewTier === 'business' ? '💼' : '★'}</span>
+            <span>{selectedViewTier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন প্যানেল' : 'বিজনেস অ্যাকাউন্ট'}</span>
           </span>
-        </div>
-
-        {/* Tab switchers */}
-        <div className="flex items-center bg-white p-1 rounded-2xl border border-slate-200 shadow-xs text-xs font-bold gap-1">
-          <button
-            type="button"
-            onClick={() => handleSelectViewTier('personal')}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-              selectedViewTier === 'personal'
-                ? 'bg-blue-600 text-white shadow-xs font-black'
-                : 'text-slate-600 hover:text-blue-700 hover:bg-blue-50'
-            }`}
-          >
-            <span>👤</span>
-            <span>পার্সোনাল</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSelectViewTier('business')}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-              selectedViewTier === 'business'
-                ? 'bg-emerald-600 text-white shadow-xs font-black'
-                : 'text-slate-600 hover:text-emerald-700 hover:bg-emerald-50'
-            }`}
-          >
-            <span>💼</span>
-            <span>বিজনেস</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSelectViewTier('sub_admin')}
-            className={`px-3 py-1.5 rounded-xl transition-all cursor-pointer flex items-center gap-1.5 ${
-              selectedViewTier === 'sub_admin'
-                ? 'bg-purple-700 text-white shadow-xs font-black'
-                : 'text-slate-600 hover:text-purple-700 hover:bg-purple-50'
-            }`}
-          >
-            <span>★</span>
-            <span>সাব-এডমিন</span>
-          </button>
         </div>
       </div>
 
@@ -867,45 +825,15 @@ export const WalletHubView: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2 flex-wrap">
-            {/* Filter buttons */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-xl text-xs font-bold gap-1">
-              <button
-                type="button"
-                onClick={() => setTxFilter('all')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  txFilter === 'all' ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                সকল
-              </button>
-              <button
-                type="button"
-                onClick={() => setTxFilter('personal')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  txFilter === 'personal' ? 'bg-blue-600 text-white shadow-xs' : 'text-blue-700 hover:bg-blue-50'
-                }`}
-              >
-                👤 পার্সোনাল
-              </button>
-              <button
-                type="button"
-                onClick={() => setTxFilter('business')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  txFilter === 'business' ? 'bg-emerald-600 text-white shadow-xs' : 'text-emerald-700 hover:bg-emerald-50'
-                }`}
-              >
-                💼 বিজনেস
-              </button>
-              <button
-                type="button"
-                onClick={() => setTxFilter('sub_admin')}
-                className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
-                  txFilter === 'sub_admin' ? 'bg-purple-700 text-white shadow-xs' : 'text-purple-700 hover:bg-purple-50'
-                }`}
-              >
-                ★ সাব-এডমিন
-              </button>
-            </div>
+            <span className={`px-2.5 py-1 rounded-lg text-xs font-bold border ${
+              selectedViewTier === 'personal'
+                ? 'bg-blue-50 text-blue-800 border-blue-200'
+                : selectedViewTier === 'business'
+                ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                : 'bg-purple-50 text-purple-800 border-purple-200'
+            }`}>
+              {selectedViewTier === 'personal' ? '👤 পার্সোনাল লেনদেন' : selectedViewTier === 'business' ? '💼 বিজনেস লেনদেন' : '★ সাব-এডমিন লেনদেন'}
+            </span>
 
             <button
               onClick={() => showToast('লেনদেন ডাটা রিফ্রেশ করা হয়েছে।')}

@@ -32,7 +32,8 @@ const MainApp: React.FC = () => {
     setSelectedServiceForOrder,
     toastMessage,
     authModalState,
-    closeAuthModal
+    closeAuthModal,
+    switchTier
   } = useApp();
 
   const [selectedTierView, setSelectedTierView] = useState<AccountTier | null>(null);
@@ -96,6 +97,9 @@ const MainApp: React.FC = () => {
                 onBack={() => setSelectedTierView(null)}
                 onSelectService={(svc) => setSelectedServiceForOrder(svc)}
                 onOpenRecharge={() => {
+                  if (selectedTierView) {
+                    switchTier(selectedTierView);
+                  }
                   setSelectedTierView(null);
                   setActiveTab('wallet_hub');
                 }}

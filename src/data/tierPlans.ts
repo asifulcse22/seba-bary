@@ -91,18 +91,13 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
       discountPercentage: TIER_DISCOUNTS.business,
       features: [
         {
-          title: 'NID, সিম, কল লিস্ট, TINসহ ৫০+ ডিজিটাল সার্ভিস',
+          title: 'NID, সিম, কল লিস্ট, TINসহ বিভিন্ন সার্ভিস',
           subText: 'দোকান বা ব্যবসা থেকে আনলিমিটেড কাস্টমার সার্ভিস',
           iconType: 'check'
         },
         {
-          title: 'কাজ করলেই দারুণ ইনকামের সুযোগ (১৫% ফ্ল্যাট ছাড়)',
-          subText: 'প্রতিটি সার্ভিসে সরাসরি কমিশন ও খরচ কম',
-          iconType: 'gift'
-        },
-        {
-          title: 'কাস্টমার রসিদ ও স্লিপ প্রিন্ট করার পূর্ণ সুবিধা',
-          subText: 'নিজের দোকান/এজেন্ট নামে কাস্টম রিসিপ্ট দিন',
+          title: 'কাজ করেই ইনকামের সুযোগ',
+          subText: 'প্রতিটি সার্ভিসে সরাসরি কমিশন ও আকর্ষণীয় আয়',
           iconType: 'trend'
         }
       ]
