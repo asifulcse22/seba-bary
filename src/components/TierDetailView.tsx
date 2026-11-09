@@ -24,7 +24,8 @@ import {
   Filter,
   ArrowRight,
   TrendingUp,
-  FileText
+  FileText,
+  LayoutDashboard
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -178,9 +179,10 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200/80 shadow-xs">
         <button
           onClick={onBack}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm transition-all duration-200 hover:-translate-x-0.5 cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-emerald-700 font-extrabold text-xs sm:text-sm border border-slate-200 hover:border-emerald-300 transition-all duration-200 hover:-translate-x-0.5 cursor-pointer shadow-xs group"
         >
-          <ArrowLeft className="w-4 h-4 text-emerald-600" />
+          <ArrowLeft className="w-4 h-4 text-emerald-600 group-hover:-translate-x-1 transition-transform" />
+          <LayoutDashboard className="w-4 h-4 text-emerald-600" />
           <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
         </button>
 
@@ -735,6 +737,19 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
           </motion.div>
         </motion.div>
       )}
+
+      {/* Return to Dashboard Bottom CTA */}
+      <div className="flex justify-center pt-2 pb-6">
+        <button
+          type="button"
+          onClick={onBack}
+          className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer active:scale-98 group"
+        >
+          <ArrowLeft className="w-5 h-5 text-emerald-100 group-hover:-translate-x-1 transition-transform" />
+          <LayoutDashboard className="w-5 h-5 text-emerald-100" />
+          <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+        </button>
+      </div>
 
     </div>
   );

@@ -12,7 +12,9 @@ import {
   Building2,
   ChevronRight,
   Award,
-  Crown
+  Crown,
+  ArrowLeft,
+  LayoutDashboard
 } from 'lucide-react';
 import { AccountTier } from '../types';
 import { TIER_PRICES } from '../data/tierPlans';
@@ -23,6 +25,7 @@ export const WalletHubView: React.FC = () => {
     transactions, 
     addBalance, 
     withdrawBalance, 
+    setActiveTab,
     showToast 
   } = useApp();
 
@@ -160,16 +163,26 @@ export const WalletHubView: React.FC = () => {
       {/* Top Banner */}
       <HeroBanner variant="wallet" />
 
-      {/* Account Header */}
-      <div className="flex items-center justify-between flex-wrap gap-2.5 pb-1">
+      {/* Top Navigation & Account Header */}
+      <div className="flex items-center justify-between flex-wrap gap-3 bg-white p-3 sm:p-4 rounded-2xl border border-slate-200/90 shadow-xs">
+        <button
+          type="button"
+          onClick={() => setActiveTab('dashboard')}
+          className="inline-flex items-center gap-2 px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-emerald-50 text-slate-800 hover:text-emerald-700 font-extrabold text-xs sm:text-sm border border-slate-200 hover:border-emerald-300 transition-all duration-200 hover:-translate-x-0.5 cursor-pointer shadow-xs group"
+        >
+          <ArrowLeft className="w-4 h-4 text-emerald-600 group-hover:-translate-x-1 transition-transform" />
+          <LayoutDashboard className="w-4 h-4 text-emerald-600" />
+          <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+        </button>
+
         <div className="flex items-center gap-2">
-          <span className="text-xs font-black text-slate-700">অ্যাকাউন্ট ভিউ:</span>
-          <span className={`text-xs font-black px-3.5 py-1 rounded-full border shadow-xs flex items-center gap-1.5 ${
+          <span className="text-xs font-black text-slate-600 hidden sm:inline">অ্যাকাউন্ট ভিউ:</span>
+          <span className={`text-xs font-black px-3.5 py-1.5 rounded-xl border shadow-2xs flex items-center gap-1.5 ${
             selectedViewTier === 'personal' 
-              ? 'bg-blue-50 text-blue-800 border-blue-300' 
+              ? 'bg-blue-50 text-blue-800 border-blue-200' 
               : selectedViewTier === 'sub_admin'
-              ? 'bg-purple-50 text-purple-800 border-purple-300'
-              : 'bg-emerald-50 text-emerald-800 border-emerald-300'
+              ? 'bg-purple-50 text-purple-800 border-purple-200'
+              : 'bg-emerald-50 text-emerald-800 border-emerald-200'
           }`}>
             <span>{selectedViewTier === 'personal' ? '👤' : selectedViewTier === 'business' ? '💼' : '★'}</span>
             <span>{selectedViewTier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন প্যানেল' : 'বিজনেস অ্যাকাউন্ট'}</span>
@@ -241,6 +254,15 @@ export const WalletHubView: React.FC = () => {
                   <span>লেনদেন ইতিহাস</span>
                 </button>
               </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('dashboard')}
+                className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 hover:border-blue-300 text-xs font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs group"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-blue-600 group-hover:-translate-x-0.5 transition-transform" />
+                <LayoutDashboard className="w-3.5 h-3.5 text-blue-600" />
+                <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+              </button>
             </div>
           </div>
         )}
@@ -310,6 +332,15 @@ export const WalletHubView: React.FC = () => {
                   <span>লেনদেন ইতিহাস</span>
                 </button>
               </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('dashboard')}
+                className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-emerald-50 text-slate-700 hover:text-emerald-700 border border-slate-200 hover:border-emerald-300 text-xs font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs group"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-emerald-600 group-hover:-translate-x-0.5 transition-transform" />
+                <LayoutDashboard className="w-3.5 h-3.5 text-emerald-600" />
+                <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+              </button>
             </div>
           </div>
         )}
@@ -379,6 +410,15 @@ export const WalletHubView: React.FC = () => {
                   <span>লেনদেন ইতিহাস</span>
                 </button>
               </div>
+              <button
+                type="button"
+                onClick={() => setActiveTab('dashboard')}
+                className="w-full py-2.5 px-3 rounded-xl bg-white hover:bg-purple-50 text-slate-700 hover:text-purple-700 border border-slate-200 hover:border-purple-300 text-xs font-black flex items-center justify-center gap-2 transition-all cursor-pointer shadow-2xs group"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 text-purple-600 group-hover:-translate-x-0.5 transition-transform" />
+                <LayoutDashboard className="w-3.5 h-3.5 text-purple-600" />
+                <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+              </button>
             </div>
           </div>
         )}
@@ -959,6 +999,19 @@ export const WalletHubView: React.FC = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* Return to Dashboard Bottom CTA */}
+      <div className="flex justify-center pt-2 pb-6">
+        <button
+          type="button"
+          onClick={() => setActiveTab('dashboard')}
+          className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white font-black text-sm sm:text-base shadow-lg shadow-emerald-600/25 hover:shadow-xl hover:shadow-emerald-600/35 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer active:scale-98 group"
+        >
+          <ArrowLeft className="w-5 h-5 text-emerald-100 group-hover:-translate-x-1 transition-transform" />
+          <LayoutDashboard className="w-5 h-5 text-emerald-100" />
+          <span>মূল ড্যাশবোর্ডে ফিরে যান</span>
+        </button>
       </div>
 
     </div>

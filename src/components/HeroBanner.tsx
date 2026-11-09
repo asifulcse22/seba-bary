@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useApp } from '../context/AppContext';
-import { Rocket, ShieldCheck, Sparkles, LogIn, TrendingUp, CheckCircle2, Camera } from 'lucide-react';
+import { Rocket, ShieldCheck, Sparkles, LogIn, TrendingUp, CheckCircle2, Camera, ArrowLeft } from 'lucide-react';
 import { UserAvatar } from './UserAvatar';
 
 interface HeroBannerProps {
@@ -159,14 +159,19 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ variant = 'home' }) => {
               </span>
             </button>
           ) : (
-            <div className="flex items-center gap-2 bg-emerald-500/25 hover:bg-emerald-500/35 backdrop-blur-md px-4 sm:px-5 py-2.5 rounded-2xl border border-emerald-300/40 hover:border-emerald-300/70 shadow-lg hover:shadow-emerald-400/25 text-white transition-all duration-300">
-              <span className="text-xs sm:text-sm md:text-base font-extrabold text-emerald-100">
-                স্মার্ট হোন, সফল হোন...
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className="group flex items-center gap-2.5 bg-white/15 hover:bg-white/25 active:bg-white/30 backdrop-blur-md px-4 sm:px-5 py-2.5 rounded-2xl border border-white/30 hover:border-emerald-300/60 shadow-lg hover:shadow-emerald-400/30 text-white transition-all duration-300 hover:scale-105 active:scale-95 cursor-pointer"
+              title="মূল ড্যাশবোর্ডে ফিরে যান"
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-300 group-hover:-translate-x-1 transition-transform" />
+              <span className="text-xs sm:text-sm md:text-base font-extrabold text-emerald-100 group-hover:text-white transition-colors">
+                মূল ড্যাশবোর্ডে ফিরে যান
               </span>
-              <span className="text-xl sm:text-2xl transition-transform duration-300 hover:scale-110">
-                📈
+              <span className="text-xl sm:text-2xl transition-transform duration-300 group-hover:scale-110">
+                🏠
               </span>
-            </div>
+            </button>
           )}
         </div>
 
