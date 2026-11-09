@@ -1,7 +1,5 @@
 // ============================================================================
 // 💰 টিয়ার প্ল্যানের মূল প্রাইসিং ও কনফিগারেশন
-// এখানে যে কোনো প্ল্যানের মূল্য (Price) বা তথ্য পরিবর্তন করলে পুরো ওয়েবসাইটে
-// (কার্ড, মোডাল, ডিপোজিট, রেজিস্ট্রেশন) স্বয়ংক্রিয়ভাবে আপডেট হয়ে যাবে।
 // ============================================================================
 
 export interface TierFeature {
@@ -28,18 +26,16 @@ export interface TierPlanConfig {
   features: TierFeature[];
 }
 
-// 🎯 ১ জায়গায় দাম পরিবর্তন করলেই পুরো সাইটে আপডেট হবে:
 export const TIER_PRICES = {
-  personal: 500,      // পার্সোনাল অ্যাকাউন্ট মূল্য (৳)
-  business: 1450,     // বিজনেস অ্যাকাউন্ট মূল্য (৳)
-  sub_admin: 2950,    // সাব অ্যাডমিন প্যানেল মূল্য (৳)
+  personal: 500,
+  business: 1450,
+  sub_admin: 2950,
 };
 
-// 🎯 প্রতিটি প্ল্যানের ডিসকাউন্ট রেট:
 export const TIER_DISCOUNTS = {
-  personal: 0,        // রেগুলার প্রাইস
-  business: 0.15,     // ১৫% ডিসকাউন্ট
-  sub_admin: 0.35,    // ৩৫% পাইকারি ডিসকাউন্ট
+  personal: 0,
+  business: 0.15,
+  sub_admin: 0.35,
 };
 
 export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', TierPlanConfig> => {
@@ -138,4 +134,3 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
     }
   };
 };
-

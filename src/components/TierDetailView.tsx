@@ -60,8 +60,8 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   const [depositError, setDepositError] = useState<string | null>(null);
 
   // বিকাশ ও নগদ নাম্বার
-  const bkashNumber = '01712-345678';
-  const nagadNumber = '01712-345678';
+  const bkashNumber = '';
+  const nagadNumber = '';
   const currentDepositNumber = depositMethod === 'bKash' ? bkashNumber : nagadNumber;
 
   const handleCopyNumber = async () => {
@@ -113,12 +113,24 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   const isPersonalUnlocked = tier !== 'personal' || personalBalance > 0;
 
   // Filter services by tier relevance:
-  // For Personal, strictly show only NID, Birth Reg, and TIN checks and related check services!
   const personalCategories = ['all', 'nid', 'birth', 'tax'];
 
   const sourceServices = tier === 'personal' ? personalServices : services;
 
   const filteredServices = sourceServices.filter(svc => {
+    // 🎯 পার্সোনাল অ্যাকাউন্ট থেকে nid-server-copy এবং jonmo-nibondhon-copy রিমুভ করা হয়েছে
+    if (
+      tier === 'personal' &&
+      (svc.id === 'nid-server-copy' ||
+       svc.id === 'jonmo-nibondhon-copy' ||
+       svc.id === 'nid_server_copy' ||
+       svc.id === 'jonmo_nibondhon_copy' ||
+       svc.title === 'NID সার্ভার কপি' ||
+       svc.title === 'জন্ম নিবন্ধন কপি')
+    ) {
+      return false;
+    }
+
     // If personal, show strictly personal categories
     if (tier === 'personal' && !personalCategories.includes(svc.category)) {
       return false;
@@ -328,7 +340,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                   </span>
                 </h3>
                 <p className="text-xs sm:text-sm text-amber-900/90 font-medium">
-                  আপনার পার্সোনাল অ্যাকাউন্টের বর্তমান ব্যালেন্স ৳ ০। ব্যক্তিগত NID সার্ভার কপি, ভোটার তথ্য, জন্ম নিবন্ধন ও অন্যান্য সেবা সচল করতে bKash বা Nagad দিয়ে এখনই ডিপোজিট করুন।
+                  আপনার পার্সোনাল অ্যাকাউন্টের বর্তমান ব্যালেন্স ৳ ০। ব্যক্তিগত NID, ভোটার তথ্য, জন্ম নিবন্ধন ও অন্যান্য সেবা সচল করতে bKash বা Nagad দিয়ে এখনই ডিপোজিট করুন।
                 </p>
               </div>
             </div>
@@ -583,7 +595,6 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
 
       {/* ============================================================== */}
       {/* 8. SERVICES CATALOG GRID */}
-      {/* If personal & locked: Blurred / overlay lock display */}
       {/* ============================================================== */}
       <div className="relative">
         
@@ -666,7 +677,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                 পার্সোনাল সার্ভিসগুলো দেখতে ও আবেদন করতে ডিপোজিট করুন
               </h3>
               <p className="text-xs text-slate-600 font-medium">
-                ডিপোজিট সফল হলেই উপরের সকল সেবা আনলক হবে এবং আপনি তাৎক্ষণিক সার্ভার কপি ও আবেদন করতে পারবেন।
+                ডিপোজিট সফল হলেই উপরের সকল সেবা আনলক হবে এবং আপনি তাৎক্ষণিক আবেদন করতে পারবেন।
               </p>
               <button
                 onClick={() => {
