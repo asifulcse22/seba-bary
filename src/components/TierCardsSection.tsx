@@ -120,7 +120,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* Wallet Balance */}
-          <div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
+          {/*<div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
             <div className="p-1 sm:p-3 rounded-xl sm:rounded-2xl bg-white border border-blue-200/90 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-2">
               <div className="flex items-center gap-1 sm:gap-2.5 text-center sm:text-left">
                 <div className="w-5 h-5 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-tr from-blue-600 to-sky-500 text-white flex items-center justify-center font-black text-[10px] sm:text-sm shadow-2xs shrink-0">
@@ -149,6 +149,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </button>
             </div>
           </div>
+          */}
 
           {/* Action button */}
           <div className="p-1.5 sm:p-5 pt-0">
@@ -233,7 +234,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* Wallet Balance */}
-          <div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
+          {/*<div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
             <div className="p-1 sm:p-3 rounded-xl sm:rounded-2xl bg-white border border-emerald-200/90 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-2">
               <div className="flex items-center gap-1 sm:gap-2.5 text-center sm:text-left">
                 <div className="w-5 h-5 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 text-white flex items-center justify-center font-black text-[10px] sm:text-sm shadow-2xs shrink-0">
@@ -262,6 +263,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </button>
             </div>
           </div>
+          */}
 
           {/* Action button */}
           <div className="p-1.5 sm:p-5 pt-0">
@@ -346,7 +348,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* Wallet Balance */}
-          <div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
+          {/*<div className="px-1.5 sm:px-5 pb-1.5 sm:pb-3">
             <div className="p-1 sm:p-3 rounded-xl sm:rounded-2xl bg-white border border-purple-200/90 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-1 sm:gap-2">
               <div className="flex items-center gap-1 sm:gap-2.5 text-center sm:text-left">
                 <div className="w-5 h-5 sm:w-9 sm:h-9 rounded-lg sm:rounded-xl bg-gradient-to-tr from-purple-700 to-indigo-600 text-white flex items-center justify-center font-black text-[10px] sm:text-sm shadow-2xs shrink-0">
@@ -375,6 +377,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </button>
             </div>
           </div>
+          */}
 
           {/* Action button */}
           <div className="p-1.5 sm:p-5 pt-0">
