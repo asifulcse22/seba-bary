@@ -25,7 +25,9 @@ import {
   ArrowRight,
   TrendingUp,
   FileText,
-  LayoutDashboard
+  LayoutDashboard,
+  Copy,
+  Check
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -53,8 +55,46 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   const [depositMethod, setDepositMethod] = useState<'bKash' | 'Nagad'>('bKash');
   const [trxId, setTrxId] = useState('');
   const [senderPhone, setSenderPhone] = useState('');
+  const [copiedNumber, setCopiedNumber] = useState(false);
   const [isDepositing, setIsDepositing] = useState(false);
   const [depositError, setDepositError] = useState<string | null>(null);
+
+  // বিকাশ ও নগদ নাম্বার
+  const bkashNumber = '01712-345678';
+  const nagadNumber = '01712-345678';
+  const currentDepositNumber = depositMethod === 'bKash' ? bkashNumber : nagadNumber;
+
+  const handleCopyNumber = async () => {
+    const rawDigits = currentDepositNumber.replace(/[^0-9]/g, '');
+    let isCopied = false;
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(rawDigits);
+        isCopied = true;
+      } catch {
+        isCopied = false;
+      }
+    }
+    if (!isCopied) {
+      try {
+        const tempInput = document.createElement('textarea');
+        tempInput.value = rawDigits;
+        tempInput.style.position = 'fixed';
+        tempInput.style.left = '-9999px';
+        tempInput.style.top = '-9999px';
+        document.body.appendChild(tempInput);
+        tempInput.focus();
+        tempInput.select();
+        isCopied = document.execCommand('copy');
+        document.body.removeChild(tempInput);
+      } catch {
+        isCopied = false;
+      }
+    }
+    setCopiedNumber(true);
+    showToast('নাম্বার কপি হয়েছে!');
+    setTimeout(() => setCopiedNumber(false), 2000);
+  };
 
   // Search and category filter
   const [searchQuery, setSearchQuery] = useState('');

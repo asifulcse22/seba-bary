@@ -64,7 +64,7 @@ export const WalletHubView: React.FC = () => {
   const [withdrawAmount, setWithdrawAmount] = useState('');
   const [isWithdrawSubmitting, setIsWithdrawSubmitting] = useState(false);
 
-  // বিকাশ ও নগদের আলাদা আলাদা নাম্বার (আপনার আসল নম্বর দিন)
+  // বিকাশ ও নগদের নাম্বার (ব্যবহারকারী কপি করে সেন্ড মানি / পেমেন্ট করবেন)
   const bkashNumber = '';
   const nagadNumber = '';
 
@@ -528,7 +528,7 @@ export const WalletHubView: React.FC = () => {
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[11px] font-bold text-slate-600">
-                    {depositMethod} পার্সোনাল নাম্বার (Send Money করুন)
+                    {depositMethod === 'bKash' ? 'bKash মার্চেন্ট / পার্সোনাল নাম্বার' : 'নগদ পার্সোনাল নাম্বার'} (Send Money করুন)
                   </span>
                   <span className="text-[10px] text-slate-400 font-semibold">(ট্যাপ করে কপি)</span>
                 </div>
