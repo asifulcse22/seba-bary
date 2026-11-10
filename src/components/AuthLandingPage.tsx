@@ -188,7 +188,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
   };
 
   return (
-    <div className="relative h-screen h-[100dvh] max-h-screen w-full flex flex-col justify-between overflow-hidden selection:bg-emerald-300 selection:text-emerald-950">
+    <div className="fixed inset-0 h-[100dvh] max-h-[100dvh] w-full flex flex-col justify-between overflow-hidden selection:bg-emerald-300 selection:text-emerald-950">
       
       {/* BACKGROUND MESH GRADIENT */}
       <div className="fixed inset-0 -z-30 overflow-hidden bg-gradient-to-br from-[#071836] via-[#0b2b64] to-[#043328]">
@@ -225,7 +225,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       {/* ============================================================== */}
       {/* 🎯 TOP HEADER: স্পিনার লোগো + ডাবল টাইপরাইটার */}
       {/* ============================================================== */}
-      <header className="relative z-20 w-full max-w-7xl mx-auto px-3.5 sm:px-6 pt-1.5 sm:pt-2 pb-1 flex items-center justify-between shrink-0">
+      <header className="relative z-20 w-full max-w-7xl mx-auto px-3.5 sm:px-6 pt-2 pb-1 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 group cursor-pointer">
           
           {/* স্পিনার ঘূর্ণায়মান লোগো */}
@@ -290,10 +290,10 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </header>
 
       {/* 
-        🌟 CENTER HERO AREA: মোবাইলে উপরের কোনো গ্যাপ থাকবে না, একদম পারফেক্ট সেন্ট্রাল প্লেসমেন্ট 🌟
+        🌟 CENTER HERO AREA: সম্পূর্ণ ১ স্ক্রিনে ফিট (কোনো স্ক্রোল নেই, কোনো বড় ফাঁকা নেই) 🌟
       */}
-      <main className="relative z-20 flex-1 flex flex-col justify-start lg:justify-center items-center px-3 sm:px-6 pt-1 sm:pt-2 pb-1 overflow-hidden">
-        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-2 lg:gap-8">
+      <main className="relative z-20 flex-1 flex flex-col justify-center items-center px-3 sm:px-6 my-auto overflow-hidden">
+        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3 lg:gap-8">
           
           {/* ========================================================= */}
           {/* DESKTOP ONLY: টাইটেল ও ৪টি বড় ২x২ বক্স (মোবাইলে হাইড থাকবে) */}
@@ -343,11 +343,11 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
           </div>
 
           {/* ========================================================= */}
-          {/* CENTER/RIGHT: লোগো + ব্যাজ + ফর্ম + মোবাইলে স্লিম উইজেট */}
+          {/* CENTER/RIGHT: লোগো + ব্যাজ + ফর্ম + সুবিন্যস্ত সিঙ্গেল উইজেট */}
           {/* ========================================================= */}
           <div className="w-full max-w-sm sm:max-w-md flex flex-col items-center">
             
-            {/* 🎯 লোগো ও ব্যাজ (কমপ্যাক্ট করা হয়েছে যাতে উপরে বড় গ্যাপ না থাকে) */}
+            {/* 🎯 লোগো ও ব্যাজ */}
             <div className="flex flex-col items-center mb-1.5 z-30 shrink-0">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -606,21 +606,21 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             </motion.div>
 
             {/* ============================================================== */}
-            {/* 🌟 শুধুমাত্র মোবাইলের জন্য: ১-লাইনের স্লিম ৪-কলাম উইজেট 🌟 */}
+            {/* 🌟 ১ম ছবির মতো একটিমাত্র স্লিম কার্ডে ৪টি স্ট্যাটস (ডিভাইডারসহ) 🌟 */}
             {/* ============================================================== */}
-            <div className="grid grid-cols-4 gap-1.5 w-full max-w-sm sm:max-w-md mt-1.5 shrink-0 lg:hidden">
+            <div className="w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl rounded-2xl p-1.5 sm:p-2 shadow-md border border-white/90 grid grid-cols-4 divide-x divide-slate-100 mt-2 shrink-0 lg:hidden">
               {statsData.map((stat, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col items-center justify-center p-1 sm:p-1.5 rounded-xl bg-white/95 backdrop-blur-md border border-white/90 shadow-2xs"
+                  className="flex flex-col items-center justify-center text-center px-0.5"
                 >
-                  <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-lg ${stat.badgeBg} flex items-center justify-center mb-0.5`}>
+                  <div className={`w-5 h-5 rounded-lg ${stat.badgeBg} flex items-center justify-center mb-0.5`}>
                     {stat.icon}
                   </div>
-                  <span className="text-[10px] sm:text-[11px] font-black text-slate-900 leading-tight">
+                  <span className="text-[10.5px] font-black text-slate-900 leading-tight">
                     {stat.count}
                   </span>
-                  <span className="text-[7.5px] sm:text-[8px] font-bold text-slate-500 leading-tight mt-0.5">
+                  <span className="text-[7.5px] font-bold text-slate-500 leading-tight mt-0.5">
                     {stat.label}
                   </span>
                 </div>
@@ -633,7 +633,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </main>
 
       {/* ============================================================== */}
-      {/* 🎯 COMPACT BOTTOM STRIP: স্ক্রিনে সবসময় দৃশ্যমান থাকবে */}
+      {/* 🎯 COMPACT BOTTOM STRIP: স্ক্রিনে সর্বদা সম্পূর্ণ দৃশ্যমান থাকবে */}
       {/* ============================================================== */}
       <footer className="relative z-20 w-full text-center py-1 sm:py-1.5 px-3 text-white/95 text-[9px] sm:text-xs border-t border-white/20 backdrop-blur-xs bg-slate-900/10 shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1">
