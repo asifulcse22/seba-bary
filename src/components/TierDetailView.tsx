@@ -27,7 +27,16 @@ import {
   FileText,
   LayoutDashboard,
   Copy,
-  Check
+  Check,
+  Zap,
+  CheckCheck,
+  BadgePercent,
+  Clock,
+  AlertTriangle,
+  Smartphone,
+  MapPin,
+  FileCode2,
+  DollarSign
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -151,11 +160,11 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
     return true;
   });
 
-  // Calculate pricing based on tier discount
+  // 🎯 Calculate pricing: Sub-Admin-এর জন্য ফ্ল্যাট ৫০% (অর্ধেক দাম)
   const getTierPrice = (basePrice: number) => {
     if (tier === 'personal') return basePrice;
     if (tier === 'business') return Math.round(basePrice * 0.85); // 15% discount
-    if (tier === 'sub_admin') return Math.round(basePrice * 0.65); // 35% wholesale discount
+    if (tier === 'sub_admin') return Math.round(basePrice * 0.50); // 🔥 ৫০% অর্ধেক দাম!
     return basePrice;
   };
 
@@ -211,16 +220,27 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       tag: 'বিজনেস অ্যাকাউন্ট হাব'
     },
     sub_admin: {
-      gradient: 'from-[#381666] via-[#542199] to-[#270e4a]',
+      gradient: 'from-[#320b63] via-[#4d168e] to-[#200542]',
       border: 'border-purple-500',
-      badge: 'bg-purple-700 text-white',
+      badge: 'bg-gradient-to-r from-amber-500 to-yellow-500 text-purple-950 font-black',
       balanceText: 'text-purple-900',
       accentGradient: 'from-purple-700 via-indigo-600 to-purple-800',
-      tag: 'Sub Admin Wholesale Panel'
+      tag: '💎 Sub Admin Wholesale Panel'
     }
   };
 
   const colors = tierColors[tier];
+
+  // সাব-এডমিনের স্পেশাল রেট চার্ট তালিকা
+  const halfRateServices = [
+    { title: 'নাম্বার টু লোকেশন', oldPrice: 170, newPrice: 85, icon: '📍' },
+    { title: 'সার্ভার কপি', oldPrice: 18, newPrice: 9, icon: '💻' },
+    { title: 'NID PDF', oldPrice: 33, newPrice: 16, icon: '🆔' },
+    { title: 'টিন সার্টিফিকেট', oldPrice: 59, newPrice: 29, icon: '📄' },
+    { title: 'সিম বায়োমেট্রিক', oldPrice: 49, newPrice: 24, icon: '📱' },
+    { title: '৩ মাস কল লিস্ট', oldPrice: 349, newPrice: 175, icon: '📞' },
+    { title: 'বিকাশ / নগদ ইনফো', oldPrice: 399, newPrice: 199, icon: '💳' },
+  ];
 
   return (
     <div className="space-y-6 animate-in fade-in duration-300">
@@ -245,10 +265,10 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
               ? 'bg-blue-50 text-blue-800 border-blue-200'
               : tier === 'business'
               ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-              : 'bg-purple-50 text-purple-800 border-purple-200'
+              : 'bg-purple-100 text-purple-900 border-purple-300 ring-2 ring-purple-200'
           }`}>
-            <span>{tier === 'personal' ? '👤' : tier === 'business' ? '💼' : '🌟'}</span>
-            <span>{tier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : tier === 'business' ? 'বিজনেস অ্যাকাউন্ট' : 'সাব-এডমিন প্যানেল'}</span>
+            <span>{tier === 'personal' ? '👤' : tier === 'business' ? '💼' : '👑'}</span>
+            <span>{tier === 'personal' ? 'পার্সোনাল অ্যাকাউন্ট' : tier === 'business' ? 'বিজনেস অ্যাকাউন্ট' : 'Sub Admin Wholesale Panel (৫০% ছাড়)'}</span>
           </span>
         </div>
       </div>
@@ -259,8 +279,8 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${colors.gradient} text-white p-5 sm:p-7 shadow-xl border-4 ${colors.border}`}>
         
         {/* Glow ambient background orbs */}
-        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-white/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-1/4 -mb-10 w-64 h-64 bg-emerald-400/15 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -mt-10 -mr-10 w-64 h-64 bg-amber-400/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-1/4 -mb-10 w-64 h-64 bg-purple-400/20 rounded-full blur-2xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
           
@@ -271,7 +291,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                 <UserAvatar user={user} size="xl" showRing={false} />
               </div>
               <span className="absolute -bottom-1 -right-1 text-xl">
-                {tier === 'personal' ? '👤' : tier === 'business' ? '💼' : '🌟'}
+                {tier === 'personal' ? '👤' : tier === 'business' ? '💼' : '👑'}
               </span>
             </div>
 
@@ -285,14 +305,14 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                 </span>
               </div>
 
-              <p className="text-xs sm:text-sm text-sky-100 font-semibold">
+              <p className="text-xs sm:text-sm text-purple-100 font-semibold">
                 মোবাইল: {user ? user.phone : 'লগইন করুন'} • একাউন্ট স্ট্যাটাস: <span className="text-emerald-300 font-bold">সক্রিয় 🟢</span>
               </p>
 
               <div className="flex items-center gap-2 pt-1 text-[11px] sm:text-xs text-white/90 font-medium">
                 {tier === 'personal' && <span>রেগুলার ডিজিটাল সেবা পোর্টাল • ১০০% নিরাপদ ও বিশ্বস্ত</span>}
                 {tier === 'business' && <span className="text-amber-200 font-bold">১৫% ফ্ল্যাট ছাড় সক্রিয় • কাস্টমার কাজের আনলিমিটেড এক্সেস</span>}
-                {tier === 'sub_admin' && <span className="text-yellow-200 font-bold">৩৫% হোলসেল পাইকারি রেট সক্রিয় • সাব-এডমিন রিসেলার ক্ষমতা</span>}
+                {tier === 'sub_admin' && <span className="text-amber-300 font-black">🔥 ৫০% ফ্ল্যাট ছাড় সক্রিয় • অর্ধেক রেটে পাইকারি সার্ভিস এক্সেস</span>}
               </div>
             </div>
           </div>
@@ -300,7 +320,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
           {/* Current Tier Wallet Balance Box */}
           <div className="bg-white/15 backdrop-blur-md border border-white/30 rounded-2xl p-4 sm:p-5 flex items-center justify-between gap-4 shrink-0 shadow-lg">
             <div>
-              <span className="text-xs font-bold text-sky-100 block">
+              <span className="text-xs font-bold text-purple-100 block">
                 {tier === 'personal' ? 'পার্সোনাল ওয়ালেট ব্যালেন্স' : tier === 'business' ? 'বিজনেস ওয়ালেট ব্যালেন্স' : 'Sub Admin ওয়ালেট ব্যালেন্স'}
               </span>
               <div className="flex items-baseline gap-1 mt-0.5">
@@ -312,9 +332,9 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
 
             <button
               onClick={onOpenRecharge}
-              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-emerald-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 hover:from-amber-400 hover:to-yellow-300 text-purple-950 font-black text-xs sm:text-sm flex items-center gap-1.5 shadow-md shadow-amber-600/30 hover:scale-105 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-4 h-4 text-purple-950" />
               <span>রিচার্জ করুন</span>
             </button>
           </div>
@@ -523,26 +543,43 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       )}
 
       {/* ============================================================== */}
-      {/* 6. SUB ADMIN TIER: NOTICE & PROMPT (ALWAYS UNLOCKED) */}
+      {/* 6. SUB ADMIN TIER: EXCLUSIVE 50% HALF-PRICE PROMO HEADER */}
       {/* ============================================================== */}
       {tier === 'sub_admin' && (
-        <div className="p-4 rounded-2xl bg-gradient-to-r from-purple-50 via-indigo-50 to-purple-100/70 border border-purple-300 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-full bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
-              <Award className="w-5 h-5 text-purple-600" />
+        <div className="rounded-3xl bg-gradient-to-br from-[#3b0764] via-[#581c87] to-[#1e1b4b] text-white p-5 sm:p-7 shadow-2xl border-2 border-amber-400 relative overflow-hidden">
+          {/* Decorative Glow */}
+          <div className="absolute top-0 right-0 w-72 h-72 bg-amber-400/15 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="relative z-10 space-y-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pb-3 border-b border-purple-400/40">
+              <div className="flex items-center gap-2.5">
+                <span className="text-2xl sm:text-3xl animate-bounce">💎</span>
+                <div>
+                  <h3 className="text-lg sm:text-2xl font-black text-amber-300 flex items-center gap-2">
+                    <span>SUB-ADMIN PANEL (স্পেশাল অফার) 🔥</span>
+                  </h3>
+                  <p className="text-xs sm:text-sm font-semibold text-purple-200">
+                    💰 ডিপোজিট: মাত্র <span className="text-amber-300 font-black">২৯৫০৳</span> (১ দিনেই এক্টিভ) • লাভ ১০০% আপনার পকেটে
+                  </p>
+                </div>
+              </div>
+              <div className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-amber-400 to-yellow-400 text-purple-950 font-black text-xs sm:text-sm shadow-md whitespace-nowrap">
+                ⚡ ৫০% ফ্ল্যাট ছাড় (অর্ধেক রেট)
+              </div>
             </div>
-            <div>
-              <h4 className="font-extrabold text-sm text-purple-950">
-                Sub Admin পাইকারি রেট হাব — সর্বোচ্চ ৩৫% পর্যন্ত পাইকারি ছাড়
-              </h4>
-              <p className="text-xs text-slate-600 font-medium">
-                সর্বনিম্ন পাইকারি মূল্যে সকল সরকারি ডিজিটাল সেবা। সাব-এজেন্টদের জন্য নিজস্ব রেট নির্ধারণ ও অর্ডার প্রসেসিং সুবিধা।
-              </p>
+
+            <div className="p-3 sm:p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-amber-400/40 flex items-center justify-between gap-2 flex-wrap">
+              <span className="text-xs sm:text-sm font-bold text-amber-200">
+                💥 সবচেয়ে বড় সুবিধা: বিজনেস একাউন্টের সব সার্ভিস পাবেন <strong>অর্ধেক দামে</strong>! নিয়ে ফুল প্রফিটে সেল করুন 💸
+              </span>
+              <button
+                onClick={onOpenRecharge}
+                className="px-4 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs transition-all shadow-md cursor-pointer"
+              >
+                এখনই ডিপোজিট করুন
+              </button>
             </div>
           </div>
-          <span className="px-3 py-1 rounded-full bg-purple-700 text-white text-xs font-black shrink-0">
-            ৩৫% পাইকারি রেট
-          </span>
         </div>
       )}
 
@@ -555,7 +592,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder={`${tier === 'personal' ? 'পার্সোনাল' : tier === 'business' ? 'বিজনেস' : 'Sub Admin'} সেবা খুঁজুন...`}
+              placeholder={`${tier === 'personal' ? 'পার্সোনাল' : tier === 'business' ? 'বিজনেস' : 'Sub Admin পাইকারি'} সেবা খুঁজুন...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 rounded-xl bg-white border border-slate-200 text-xs sm:text-sm font-medium focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition-all shadow-xs"
@@ -594,11 +631,9 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       </div>
 
       {/* ============================================================== */}
-      {/* 8. SERVICES CATALOG GRID */}
+      {/* 8. SERVICES CATALOG GRID (Sub Admin shows 50% discount automatically) */}
       {/* ============================================================== */}
       <div className="relative">
-        
-        {/* If personal and not unlocked, wrap grid in blurred locked overlay */}
         <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4 ${
           !isPersonalUnlocked ? 'opacity-60 pointer-events-none filter blur-[1.5px] select-none' : ''
         }`}>
@@ -610,7 +645,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
               <div
                 key={service.id}
                 onClick={() => isPersonalUnlocked && onSelectService(service)}
-                className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs hover:shadow-md hover:border-emerald-400 transition-all flex flex-col justify-between gap-3 group cursor-pointer"
+                className="bg-white rounded-2xl p-4 border border-slate-200/90 shadow-xs hover:shadow-md hover:border-purple-400 transition-all flex flex-col justify-between gap-3 group cursor-pointer"
               >
                 <div className="space-y-2.5">
                   <div className="flex items-start justify-between gap-2">
@@ -639,16 +674,16 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
 
                       {discountAmount > 0 && (
                         <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-md ${
-                          tier === 'business' ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-800'
+                          tier === 'business' ? 'bg-emerald-100 text-emerald-800' : 'bg-purple-100 text-purple-900 border border-purple-200 font-black'
                         }`}>
-                          সেভ ৳{discountAmount}
+                          {tier === 'sub_admin' ? `🔥 অর্ধেক দাম (সেভ ৳${discountAmount})` : `সেভ ৳${discountAmount}`}
                         </span>
                       )}
                     </div>
                   </div>
 
                   <div>
-                    <h4 className="font-extrabold text-sm text-slate-900 group-hover:text-emerald-700 transition-colors leading-snug">
+                    <h4 className="font-extrabold text-sm text-slate-900 group-hover:text-purple-700 transition-colors leading-snug">
                       {service.title}
                     </h4>
                     <p className="text-xs text-slate-500 mt-0.5 line-clamp-2 leading-relaxed">
@@ -657,7 +692,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-emerald-700">
+                <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-purple-700">
                   <span>আবেদন করুন</span>
                   <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -694,7 +729,169 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
       </div>
 
       {/* ============================================================== */}
-      {/* 9. PERSONAL TIER: RULES, RESTRICTIONS & RECOMMENDATION BOX */}
+      {/* 9. SUB ADMIN EXCLUSIVE: স্পেশাল অফার চার্ট, সুবিধা, ইনকাম আইডিয়া */}
+      {/* ============================================================== */}
+      {tier === 'sub_admin' && (
+        <div className="space-y-6 pt-4">
+          
+          {/* 9.1: 🔥 স্পেশাল অর্ধেক রেট চার্ট (প্রাইস কম্প্যারিজন) */}
+          <div className="rounded-3xl bg-gradient-to-br from-purple-50 via-white to-amber-50/50 border-2 border-purple-300 p-5 sm:p-7 shadow-lg space-y-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-3 border-b border-purple-200">
+              <div>
+                <h3 className="text-base sm:text-lg font-black text-purple-950 flex items-center gap-2">
+                  <span>🔥 সাব-এডমিন স্পেশাল অফার রেট চার্ট</span>
+                  <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-red-100 text-red-700 border border-red-200">
+                    ৫০% অফ
+                  </span>
+                </h3>
+                <p className="text-xs text-purple-800 font-semibold">
+                  অর্ধেক দামে সেবা নিয়ে ফুল প্রফিটে গ্রাহকদের কাছে বিক্রয় করুন
+                </p>
+              </div>
+              <span className="text-xs font-bold text-slate-500">
+                লাইভ হোলসেল রেট
+              </span>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+              {halfRateServices.map((item, idx) => (
+                <div key={idx} className="p-3 rounded-2xl bg-white border border-purple-100 shadow-xs flex flex-col justify-between hover:border-purple-300 transition-all">
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg">{item.icon}</span>
+                    <span className="text-xs font-black text-slate-800 leading-tight">
+                      {item.title}
+                    </span>
+                  </div>
+                  <div className="mt-2 pt-2 border-t border-slate-100 flex items-baseline justify-between">
+                    <span className="text-xs text-slate-400 line-through">
+                      ৳{item.oldPrice}
+                    </span>
+                    <span className="text-sm sm:text-base font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-lg border border-emerald-200">
+                      🔥 ৳{item.newPrice}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="p-3 rounded-xl bg-purple-900 text-white text-center text-xs sm:text-sm font-bold shadow-xs">
+              💸 মানে আপনি প্রতিটি সার্ভিসে <strong>অর্ধেক মূল্যে</strong> সাব-এডমিন হিসেবে কিনে ফুল প্রফিটে বিক্রি করতে পারবেন!
+            </div>
+          </div>
+
+          {/* 9.2: 🚀 আপনি কী কী পাবেন? */}
+          <div className="rounded-3xl bg-white border-2 border-purple-200 p-5 sm:p-7 shadow-lg space-y-4">
+            <h3 className="text-base sm:text-lg font-black text-purple-950 flex items-center gap-2 pb-2 border-b border-purple-100">
+              <span className="text-xl">🚀</span>
+              <span>Sub Admin হিসেবে আপনি কী কী পাবেন?</span>
+            </h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              {[
+                { title: 'নিজের নামে Dashboard', desc: 'ব্যক্তিগত ব্রান্ডিং ও স্বয়ংক্রিয় প্যানেল', icon: '💻' },
+                { title: 'সব সার্ভিস এক জায়গায়', desc: 'সরকারি ও বাণিজ্যিক সব ডিজিটাল সার্ভিস', icon: '📦' },
+                { title: 'নিজে অর্ডার + নিজে ডেলিভারি', desc: 'কারো ওপর নির্ভর না করে সরাসরি হ্যান্ডলিং', icon: '⚡' },
+                { title: 'লাভ ১০০% আপনার', desc: 'কোনো কমিশন কাটা যাবে না, সম্পূর্ণ প্রফিট আপনার', icon: '💰' },
+                { title: 'মোবাইল দিয়েই কাজ সম্ভব', desc: 'ল্যাপটপ ছাড়াই স্মার্টফোন দিয়ে ফুল অপারেট', icon: '📱' },
+                { title: 'কোনো অফিস / দোকান লাগবে না', desc: 'ঘরে বসেই পার্টটাইম বা ফুলটাইম পরিচালনা', icon: '🏠' },
+              ].map((benefit, i) => (
+                <div key={i} className="p-3.5 rounded-2xl bg-purple-50/60 border border-purple-100 flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center shrink-0 font-bold text-sm shadow-2xs">
+                    ✓
+                  </div>
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-black text-purple-950">{benefit.title}</h4>
+                    <p className="text-[11px] text-slate-600 mt-0.5">{benefit.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* 9.3: 💼 কার জন্য পারফেক্ট? এবং 💸 ইনকাম আইডিয়া (রিয়েল) */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            
+            {/* কার জন্য পারফেক্ট? */}
+            <div className="rounded-3xl bg-gradient-to-br from-indigo-50/90 via-white to-purple-50 p-5 sm:p-6 border-2 border-indigo-200 shadow-md space-y-3.5">
+              <h4 className="text-sm sm:text-base font-black text-indigo-950 flex items-center gap-2 pb-2 border-b border-indigo-100">
+                <span>💼 কার জন্য এই প্যানেল পারফেক্ট?</span>
+              </h4>
+              <ul className="space-y-2 text-xs sm:text-sm font-bold text-slate-800">
+                <li className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <span className="text-emerald-600 text-base">✔️</span>
+                  <span>দোকানদার (Flexiload / Computer shop / সাইবার ক্যাফে)</span>
+                </li>
+                <li className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <span className="text-emerald-600 text-base">✔️</span>
+                  <span>অনলাইনে ঘরে বসে স্বাধীন ইনকাম করতে চান যারা</span>
+                </li>
+                <li className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <span className="text-emerald-600 text-base">✔️</span>
+                  <span>ছাত্র-ছাত্রী / পার্টটাইম বাড়তি কাজের সন্ধানী</span>
+                </li>
+                <li className="flex items-center gap-2.5 p-2 rounded-xl bg-white border border-indigo-100 shadow-2xs">
+                  <span className="text-emerald-600 text-base">✔️</span>
+                  <span>যারা নিজের গ্রাহকদের সর্বোচ্চ মূল্যে সার্ভিস দিয়ে বড় প্রফিট রাখতে চান</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* 💸 ইনকাম আইডিয়া (রিয়েল) */}
+            <div className="rounded-3xl bg-gradient-to-br from-amber-50 via-yellow-50/60 to-orange-50 p-5 sm:p-6 border-2 border-amber-300 shadow-md space-y-3.5 flex flex-col justify-between">
+              <div className="space-y-3">
+                <h4 className="text-sm sm:text-base font-black text-amber-950 flex items-center gap-2 pb-2 border-b border-amber-200">
+                  <span>💸 ইনকাম আইডিয়া (বাস্তব হিসাব)</span>
+                </h4>
+                <div className="space-y-2.5">
+                  <div className="p-3 rounded-2xl bg-white border border-amber-200 flex items-center justify-between">
+                    <span className="text-xs sm:text-sm font-bold text-slate-700">👉 দিনে মাত্র ৫টি সাধারণ অর্ডার</span>
+                    <span className="text-xs sm:text-sm font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                      ৯০০৳ – ১৮০০৳ দৈনিক লাভ
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white flex items-center justify-between shadow-md">
+                    <span className="text-xs sm:text-sm font-bold">👉 মাসে সম্ভাব্য নেট ইনকাম</span>
+                    <span className="text-sm sm:text-base font-black text-amber-300">
+                      ১৮,০০০৳ – ৩০,০০০৳+ 🔥
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="pt-2 text-[11px] font-semibold text-amber-900/80">
+                💡 কোনো অতিরিক্ত ইনভেস্টমেন্ট বা ঝুঁকি নেই, যেকোনো সময় অর্ডার সম্পন্ন করুন।
+              </div>
+            </div>
+
+          </div>
+
+          {/* 9.4: 🚨 LIMITED OFFER সতর্কতা ও কল-টু-অ্যাকশন */}
+          <div className="rounded-3xl bg-gradient-to-r from-red-600 via-rose-600 to-red-700 text-white p-5 sm:p-6 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="space-y-1 text-center sm:text-left">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[11px] font-black uppercase">
+                <span>🚨 LIMITED OFFER</span>
+              </div>
+              <h4 className="text-base sm:text-lg font-black text-white">
+                ⚠️ মাত্র কয়েকটি সিট খালি • আগে আসলে আগে পাবেন
+              </h4>
+              <p className="text-xs text-rose-100 font-medium">
+                💥 আজ এই অফারে সাব-এডমিন না নিলে পরে আফসোস করবেন! ডিপোজিট করে আজই প্যানেল সক্রিয় করুন।
+              </p>
+            </div>
+
+            <button
+              onClick={onOpenRecharge}
+              className="px-6 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-purple-950 font-black text-xs sm:text-sm shadow-xl transition-all hover:scale-105 active:scale-95 cursor-pointer whitespace-nowrap"
+            >
+              🔥 ২৯৫০৳ ডিপোজিট করে এক্টিভ করুন
+            </button>
+          </div>
+
+        </div>
+      )}
+
+      {/* ============================================================== */}
+      {/* 10. PERSONAL TIER: RULES, RESTRICTIONS & RECOMMENDATION BOX */}
       {/* ============================================================== */}
       {tier === 'personal' && (
         <motion.div

@@ -35,7 +35,7 @@ export const TIER_PRICES = {
 export const TIER_DISCOUNTS = {
   personal: 0,
   business: 0.15,
-  sub_admin: 0.35,
+  sub_admin: 0.50,
 };
 
 export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', TierPlanConfig> => {
@@ -112,12 +112,12 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
       theme: 'from-purple-700 via-indigo-600 to-amber-600',
       borderClass: 'border-purple-500',
       accentColor: 'purple',
-      discountRate: '৩৫% পাইকারি ছাড়',
+      discountRate: '৫০% বিশেষ ছাড় (অর্ধেক দাম)',
       discountPercentage: TIER_DISCOUNTS.sub_admin,
       features: [
         {
-          title: 'সব সার্ভিস পাইকারি রেটে পাবেন (৩৫% পর্যন্ত সর্বোচ্চ ছাড়)',
-          subText: '➔ প্রতি কাজে খরচ সর্বনিম্ন, বাকি পুরো লাভই আপনার পকেটে',
+          title: 'সব সার্ভিস পাবেন অর্ধেক দামে (৫০% ফ্ল্যাট ছাড়)',
+          subText: '➔ অর্ধেক রেটে কিনে ১০০% লাভে ফুল প্রফিটে বিক্রি করুন',
           iconType: 'check'
         },
         {

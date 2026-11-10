@@ -237,8 +237,12 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="absolute top-0 left-1/2 -translate-x-1/2 -mt-0.5 z-10">
             <div className="px-1.5 sm:px-4 py-0.5 sm:py-1 rounded-b-lg sm:rounded-b-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-amber-950 font-black text-[8px] sm:text-xs tracking-tight sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b border-amber-600 whitespace-nowrap">
               <Award className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-amber-700 text-amber-950" />
-              <span className="hidden sm:inline">RECOMMENDED</span>
-              <span className="sm:hidden">সেরা</span>
+              {/*<span className="hidden sm:inline">RECOMMENDED</span>
+              <span className="sm:hidden">সেরা</span> */}
+
+              {/* নতুন ৫০% অফার ব্যানার (যদি চান) */}
+              <span className="hidden sm:inline">৫০% স্পেশাল অফার 🔥</span>
+              <span className="sm:hidden">৫০% অফ 🔥</span>
             </div>
           </div>
 
