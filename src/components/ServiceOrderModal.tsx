@@ -36,8 +36,24 @@ export const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [completedOrder, setCompletedOrder] = useState<ServiceOrder | null>(null);
 
-  const finalPrice = getDiscountedPrice(service.price);
-  const hasSufficientBalance = (user?.walletBalance ?? 0) >= finalPrice;
+  // 🎯 অ্যাকাউন্ট টিয়ার নির্ধারণ
+  const isSubAdmin = user?.activeTier === 'sub_admin';
+  const isBusiness = user?.activeTier === 'business';
+  const isPersonal = user?.activeTier === 'personal' || (!isBusiness && !isSubAdmin);
+
+  // 🎯 সঠিক টিয়ার প্রাইসিং নির্ধারণ:
+  // - Sub-Admin: ৫০% (অর্ধেক দাম)
+  // - Business & Personal: রেগুলার সম্পূর্ণ মূল্য (কোনো সেভ বা ডিসকাউন্ট নেই)
+  const finalPrice = isSubAdmin 
+    ? Math.round(service.price * 0.50) 
+    : service.price;
+
+  // বর্তমান টিয়ারের সঠিক ওয়ালেট ব্যালেন্স চেক
+  const activeWalletBalance = 
+    (user?.tierBalances && user.activeTier && user.tierBalances[user.activeTier as keyof typeof user.tierBalances]) ?? 
+    user?.walletBalance ?? 0;
+
+  const hasSufficientBalance = activeWalletBalance >= finalPrice;
 
   // Potential profit for business/sub admin
   const retailChargeNum = parseFloat(customerRetailCharge);
@@ -173,20 +189,28 @@ export const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({
                 <div>
                   <span className="text-[11px] font-bold text-slate-500">সার্ভিস ফি (অফিসিয়াল)</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-black text-emerald-700">৳{finalPrice}</span>
-                    {service.price > finalPrice && (
-                      <span className="text-xs text-slate-400 line-through">৳{service.price}</span>
+                    {/* সাব-এডমিন হলে অর্ধেক দাম ও ডিসকাউন্ট দেখাবে */}
+                    {isSubAdmin ? (
+                      <>
+                        <span className="text-xl font-black text-purple-700">৳{finalPrice}</span>
+                        <span className="text-xs text-slate-400 line-through">৳{service.price}</span>
+                        <span className="text-[10px] font-black text-purple-900 bg-purple-100 border border-purple-200 px-2 py-0.5 rounded-md ml-1">
+                          🔥 ৫০% ছাড় (অর্ধেক রেট)
+                        </span>
+                      </>
+                    ) : (
+                      /* পার্সোনাল ও বিজনেস অ্যাকাউন্টে কোনো সেভ ব্যাজ বা কাটা দাগ থাকবে না — শুধুই রেগুলার রেট */
+                      <span className="text-xl font-black text-emerald-700">
+                        ৳{service.price}
+                      </span>
                     )}
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.2 rounded-md ml-1">
-                      {user?.activeTier === 'personal' ? 'Regular' : user?.activeTier === 'business' ? '১৫% ডিসকাউন্ট' : '৩৫% ডিসকাউন্ট'}
-                    </span>
                   </div>
                 </div>
 
                 <div className="text-right">
                   <span className="text-[11px] font-bold text-slate-500">আপনার ওয়ালেট</span>
                   <div className={`text-base font-black ${hasSufficientBalance ? 'text-slate-800' : 'text-red-600'}`}>
-                    ৳{(user?.walletBalance ?? 0).toLocaleString('bn-BD')}
+                    ৳{activeWalletBalance.toLocaleString('bn-BD')}
                   </div>
                 </div>
               </div>
@@ -207,9 +231,9 @@ export const ServiceOrderModal: React.FC<ServiceOrderModalProps> = ({
                 </div>
               )}
 
-              {/* Business / Sub-admin customer details field */}
-              {(user?.activeTier === 'business' || user?.activeTier === 'sub_admin') && (
-                <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2.5">
+              {/* 🎯 শুধুমাত্র Business এবং Sub-Admin-এর জন্য কাস্টমারের তথ্য বক্স দৃশ্যমান থাকবে (Personal-এ সম্পূর্ণ হাইড থাকবে) */}
+              {!isPersonal && (isBusiness || isSubAdmin) && (
+                <div className="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200/80 space-y-2.5 animate-in fade-in">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-amber-900 flex items-center gap-1.5">
                       <UserCheck className="w-3.5 h-3.5 text-amber-600" />
