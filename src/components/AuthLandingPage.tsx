@@ -18,9 +18,7 @@ import {
   UserCheck,
   CreditCard,
   Sparkles,
-  Shield,
-  Zap,
-  CheckCircle2
+  Shield
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -114,9 +112,9 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       glow: 'shadow-emerald-500/15'
     },
     {
-      count: '৬.৩৯L',
+      count: '৬.৩৯',
       desktopCount: '৬,৩৯,১৪৮',
-      label: 'ব্যবহারকারী',
+      label: 'গ্রাহক',
       fullLabel: 'মোট ব্যবহারকারী',
       icon: <Users className="w-3.5 h-3.5 sm:w-5 sm:h-5 text-amber-500" />,
       badgeBg: 'bg-amber-50 border border-amber-200/90',
@@ -141,7 +139,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
     }
   ];
 
-  // মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করার জনপ্রিয় সার্ভিসেস চিপস
+  // মোবাইলে ওপরের ফাঁকা জায়গা সুন্দর করার হাইলাইট চিপস
   const topServicePills = [
     { name: 'NID সেবা', icon: '🆔' },
     { name: 'জন্ম নিবন্ধন', icon: '👶' },
@@ -301,21 +299,20 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </header>
 
       {/* 
-        🌟 CENTER HERO AREA: সুন্দরভাবে ব্যালেন্সড ও নো-স্ক্রোল 🌟
+        🌟 CENTER HERO AREA: justify-evenly দিয়ে পুরো স্ক্রিন পারফেক্ট ব্যালেন্সড 🌟
       */}
-      <main className="relative z-20 flex-1 flex flex-col justify-center items-center px-3 sm:px-6 my-auto overflow-hidden">
+      <main className="relative z-20 flex-1 flex flex-col justify-evenly items-center px-3 sm:px-6 overflow-hidden">
         <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-2 lg:gap-8">
           
           {/* ========================================================= */}
           {/* DESKTOP ONLY: টাইটেল ও ৪টি বড় ২x২ বক্স */}
           {/* ========================================================= */}
           <div className="hidden lg:flex lg:flex-col lg:max-w-xl text-left space-y-4">
-            
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5 }}
-              className="space-y-1"
+              className="space-y-1.5"
             >
               <h1 className="text-3xl md:text-4xl font-black text-white tracking-tight drop-shadow-md leading-tight">
                 SHEBA BARY <span className="text-emerald-300">— সেবা বাড়ি</span>
@@ -350,7 +347,6 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 ))}
               </div>
             </div>
-
           </div>
 
           {/* ========================================================= */}
@@ -358,13 +354,13 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
           {/* ========================================================= */}
           <div className="w-full max-w-sm sm:max-w-md flex flex-col items-center">
             
-            {/* 🎯 মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করার নতুন সেকশন */}
-            <div className="w-full flex flex-col items-center text-center mb-1.5 lg:hidden">
+            {/* 🎯 মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করা সেকশন */}
+            <div className="w-full flex flex-col items-center text-center mb-1 lg:hidden">
               <div className="flex items-center gap-1.5 flex-wrap justify-center mb-1">
                 {topServicePills.map((pill, i) => (
                   <span 
                     key={i} 
-                    className="px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sky-200 font-bold text-[9px] shadow-2xs"
+                    className="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-200 font-bold text-[10px] shadow-2xs"
                   >
                     {pill.icon} {pill.name}
                   </span>
@@ -390,7 +386,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 <motion.div 
                   animate={{ y: [0, -3, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative w-10 h-10 sm:w-13 sm:h-13 rounded-full bg-white p-0.5 shadow-xl flex items-center justify-center cursor-pointer group"
+                  className="relative w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white p-0.5 shadow-xl flex items-center justify-center cursor-pointer group"
                 >
                   <img 
                     src="/images/sheba-logo.png" 
@@ -401,8 +397,8 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
               </motion.div>
 
               {/* লোগোর নিচে ব্যাজ */}
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-300 text-[10px] sm:text-xs font-bold shadow-xs">
-                <Sparkles className="w-3 h-3 text-amber-300" />
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-300 text-[10.5px] sm:text-xs font-bold shadow-xs">
+                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>বাংলাদেশের বিশ্বস্ত ডিজিটাল সেবা প্ল্যাটফর্ম</span>
               </div>
             </div>
@@ -411,7 +407,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             <motion.div 
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="w-full bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-[0_12px_40px_-15px_rgba(2,132,199,0.35)] border border-white/90 p-2.5 sm:p-4 text-slate-800 ring-1 ring-sky-400/20 shrink-0"
+              className="w-full bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-[0_12px_40px_-15px_rgba(2,132,199,0.35)] border border-white/90 p-3 sm:p-4 text-slate-800 ring-1 ring-sky-400/20 shrink-0"
             >
               {/* Tab Switcher */}
               <div className="relative p-0.5 sm:p-1 bg-sky-50/90 rounded-xl sm:rounded-2xl flex items-center mb-1.5 sm:mb-2 border border-sky-100">
@@ -425,7 +421,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     mode === 'login' ? 'text-white font-black' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <LogIn className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <LogIn className="w-3.5 h-3.5" />
                   <span>লগইন</span>
                 </button>
 
@@ -459,7 +455,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mb-1.5 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10px] font-semibold flex items-center gap-1"
+                    className="mb-1.5 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10.5px] font-semibold flex items-center gap-1"
                   >
                     <div className="w-3.5 h-3.5 rounded-full bg-red-200 text-red-700 flex items-center justify-center shrink-0 font-bold text-[8px]">!</div>
                     <div className="flex-1 leading-tight">{errorMessage}</div>
@@ -468,7 +464,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-1 sm:space-y-2">
+              <form onSubmit={handleSubmit} className="space-y-1.5 sm:space-y-2">
                 
                 {/* Full Name (Register Only) */}
                 {mode === 'register' && (
@@ -478,7 +474,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     exit={{ opacity: 0, height: 0 }}
                     className="space-y-0.5"
                   >
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-700">
+                    <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
                       আপনার পূর্ণ নাম <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
@@ -488,10 +484,10 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       <input
                         type="text"
                         required
-                        placeholder="Enter your full name"
+                        placeholder="আপনার নাম লিখুন"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full pl-8 pr-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                        className="w-full pl-8 pr-2.5 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
                       />
                     </div>
                   </motion.div>
@@ -499,7 +495,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
 
                 {/* Mobile Number */}
                 <div className="space-y-0.5">
-                  <label className="block text-[10px] sm:text-xs font-bold text-slate-700">
+                  <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
                     মোবাইল নম্বর <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -512,7 +508,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       placeholder="017XXXXXXXX"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-8 pr-2.5 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                      className="w-full pl-8 pr-2.5 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
                     />
                   </div>
                 </div>
@@ -520,13 +516,13 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 {/* Password */}
                 <div className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <label className="block text-[10px] sm:text-xs font-bold text-slate-700">
+                    <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
                       পাসওয়ার্ড <span className="text-red-500">*</span>
                     </label>
                     {mode === 'login' && (
                       <span 
                         onClick={() => setErrorMessage('পাসওয়ার্ড রিসেটের জন্য হেল্পলাইন 01992-867758 নম্বরে যোগাযোগ করুন।')}
-                        className="text-[9px] sm:text-[10px] text-sky-600 hover:text-sky-700 cursor-pointer font-semibold"
+                        className="text-[10px] sm:text-[11px] text-sky-600 hover:text-sky-700 cursor-pointer font-semibold"
                       >
                         ভুলে গেছেন?
                       </span>
@@ -542,7 +538,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       placeholder="পাসওয়ার্ড লিখুন"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-8 pr-8 py-1 sm:py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                      className="w-full pl-8 pr-8 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
                     />
                     <button
                       type="button"
@@ -562,9 +558,9 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       id="termsCheck"
                       checked={agreeTerms}
                       onChange={(e) => setAgreeTerms(e.target.checked)}
-                      className="w-3 h-3 text-emerald-600 rounded border-slate-300 focus:ring-emerald-400"
+                      className="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-400"
                     />
-                    <label htmlFor="termsCheck" className="cursor-pointer text-[9px] sm:text-[10px] leading-tight select-none">
+                    <label htmlFor="termsCheck" className="cursor-pointer text-[10px] sm:text-[11px] leading-tight select-none">
                       আমি <span className="font-bold text-slate-800">সেবা বাড়ি</span>-র নিয়মে একমত।
                     </label>
                   </div>
@@ -574,22 +570,22 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-0.5 sm:mt-1 py-1.5 sm:py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-75"
+                  className="w-full mt-1 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-75"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       <span>যাচাই হচ্ছে...</span>
                     </div>
                   ) : mode === 'login' ? (
                     <>
                       <span>লগইন করুন</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-4 h-4" />
                     </>
                   ) : (
                     <>
                       <span>রেজিস্ট্রেশন সম্পন্ন করুন</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
+                      <ArrowRight className="w-4 h-4" />
                     </>
                   )}
                 </button>
@@ -598,7 +594,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
               {/* Switch link */}
               <div className="mt-1.5 text-center">
                 {mode === 'login' ? (
-                  <p className="text-[10px] sm:text-xs text-slate-600">
+                  <p className="text-[10.5px] sm:text-xs text-slate-600">
                     নতুন ব্যবহারকারী?{' '}
                     <button
                       type="button"
@@ -612,7 +608,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     </button>
                   </p>
                 ) : (
-                  <p className="text-[10px] sm:text-xs text-slate-600">
+                  <p className="text-[10.5px] sm:text-xs text-slate-600">
                     ইতিমধ্যে অ্যাকাউন্ট আছে?{' '}
                     <button
                       type="button"
@@ -642,19 +638,19 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                   <div className={`w-5 h-5 rounded-lg ${stat.badgeBg} flex items-center justify-center mb-0.5`}>
                     {stat.icon}
                   </div>
-                  <span className="text-[10.5px] font-black text-slate-900 leading-tight">
+                  <span className="text-[11px] font-black text-slate-900 leading-tight">
                     {stat.count}
                   </span>
-                  <span className="text-[7.5px] font-bold text-slate-500 leading-tight mt-0.5">
+                  <span className="text-[8.5px] font-bold text-slate-600 leading-tight mt-0.5">
                     {stat.label}
                   </span>
                 </div>
               ))}
             </div>
 
-            {/* 🎯 নিচের ফাঁকা অংশ ভরাট করতে স্মার্ট ট্রাস্ট ট্যাগ */}
-            <div className="flex items-center justify-center gap-1.5 text-[9px] font-bold text-emerald-300 mt-2 lg:hidden">
-              <Shield className="w-3 h-3 text-emerald-400" />
+            {/* 🎯 নিচের স্মার্ট সিকিউরিটি ব্যাজ */}
+            <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-emerald-300 mt-1.5 lg:hidden">
+              <Shield className="w-3.5 h-3.5 text-emerald-400" />
               <span>১০০% নিরাপদ ও সুরক্ষিত ডিজিটাল সেবা গেটওয়ে</span>
             </div>
 
@@ -664,28 +660,28 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </main>
 
       {/* ============================================================== */}
-      {/* 🎯 COMPACT BOTTOM STRIP */}
+      {/* 🎯 COMPACT BOTTOM STRIP (হেল্পলাইন নম্বরসহ) */}
       {/* ============================================================== */}
-      <footer className="relative z-20 w-full text-center py-1 sm:py-1.5 px-3 text-white/95 text-[9px] sm:text-xs border-t border-white/20 backdrop-blur-xs bg-slate-900/10 shrink-0">
+      <footer className="relative z-20 w-full text-center py-1.5 px-3 text-white/95 text-[9.5px] sm:text-xs border-t border-white/20 backdrop-blur-xs bg-slate-900/10 shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1">
-          <div className="flex items-center gap-1.5 sm:gap-4 font-bold text-[8.5px] sm:text-xs">
+          <div className="flex items-center gap-1.5 sm:gap-4 font-bold text-[9px] sm:text-xs">
             <span className="flex items-center gap-0.5 sm:gap-1">
-              <ShieldCheck className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-300" />
+              <ShieldCheck className="w-3 h-3 text-emerald-300" />
               নিরাপদ সেবা
             </span>
             <span>•</span>
             <span className="flex items-center gap-0.5 sm:gap-1">
-              <Headphones className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-sky-300" />
+              <Headphones className="w-3 h-3 text-sky-300" />
               দ্রুত সাপোর্ট
             </span>
             <span>•</span>
             <span className="flex items-center gap-0.5 sm:gap-1">
-              <Award className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-yellow-300" />
+              <Award className="w-3 h-3 text-yellow-300" />
               বিশ্বস্ত সেবা
             </span>
           </div>
 
-          <div className="text-[8.5px] sm:text-xs text-sky-100 font-semibold">
+          <div className="text-[9px] sm:text-xs text-sky-100 font-bold">
             <span>হেল্পলাইন:</span>
           </div>
         </div>
