@@ -163,7 +163,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   // 🎯 Calculate pricing: Sub-Admin-এর জন্য ফ্ল্যাট ৫০% (অর্ধেক দাম)
   const getTierPrice = (basePrice: number) => {
     if (tier === 'personal') return basePrice;
-    if (tier === 'business') return Math.round(basePrice * 0.85); // 15% discount
+    if (tier === 'business') return basePrice;
     if (tier === 'sub_admin') return Math.round(basePrice * 0.50); // 🔥 ৫০% অর্ধেক দাম!
     return basePrice;
   };

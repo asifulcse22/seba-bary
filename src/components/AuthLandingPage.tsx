@@ -17,7 +17,10 @@ import {
   Users,
   UserCheck,
   CreditCard,
-  Sparkles
+  Sparkles,
+  Shield,
+  Zap,
+  CheckCircle2
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -138,6 +141,14 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
     }
   ];
 
+  // মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করার জনপ্রিয় সার্ভিসেস চিপস
+  const topServicePills = [
+    { name: 'NID সেবা', icon: '🆔' },
+    { name: 'জন্ম নিবন্ধন', icon: '👶' },
+    { name: 'TIN চেক', icon: '📄' },
+    { name: 'সিম বায়োমেট্রিক', icon: '📱' }
+  ];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMessage(null);
@@ -223,7 +234,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </div>
 
       {/* ============================================================== */}
-      {/* 🎯 TOP HEADER: স্পিনার লোগো + ডাবল টাইপরাইটার */}
+      {/* 🎯 TOP HEADER */}
       {/* ============================================================== */}
       <header className="relative z-20 w-full max-w-7xl mx-auto px-3.5 sm:px-6 pt-2 pb-1 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-2 sm:gap-3 group cursor-pointer">
@@ -290,13 +301,13 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </header>
 
       {/* 
-        🌟 CENTER HERO AREA: সম্পূর্ণ ১ স্ক্রিনে ফিট (কোনো স্ক্রোল নেই, কোনো বড় ফাঁকা নেই) 🌟
+        🌟 CENTER HERO AREA: সুন্দরভাবে ব্যালেন্সড ও নো-স্ক্রোল 🌟
       */}
       <main className="relative z-20 flex-1 flex flex-col justify-center items-center px-3 sm:px-6 my-auto overflow-hidden">
-        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-3 lg:gap-8">
+        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-2 lg:gap-8">
           
           {/* ========================================================= */}
-          {/* DESKTOP ONLY: টাইটেল ও ৪টি বড় ২x২ বক্স (মোবাইলে হাইড থাকবে) */}
+          {/* DESKTOP ONLY: টাইটেল ও ৪টি বড় ২x২ বক্স */}
           {/* ========================================================= */}
           <div className="hidden lg:flex lg:flex-col lg:max-w-xl text-left space-y-4">
             
@@ -343,11 +354,25 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
           </div>
 
           {/* ========================================================= */}
-          {/* CENTER/RIGHT: লোগো + ব্যাজ + ফর্ম + সুবিন্যস্ত সিঙ্গেল উইজেট */}
+          {/* CENTER/RIGHT: মোবাইলে ফাঁকা জায়গা ভরাট করা কন্টেন্ট + ফর্ম */}
           {/* ========================================================= */}
           <div className="w-full max-w-sm sm:max-w-md flex flex-col items-center">
             
-            {/* 🎯 লোগো ও ব্যাজ */}
+            {/* 🎯 মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করার নতুন সেকশন */}
+            <div className="w-full flex flex-col items-center text-center mb-1.5 lg:hidden">
+              <div className="flex items-center gap-1.5 flex-wrap justify-center mb-1">
+                {topServicePills.map((pill, i) => (
+                  <span 
+                    key={i} 
+                    className="px-2 py-0.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sky-200 font-bold text-[9px] shadow-2xs"
+                  >
+                    {pill.icon} {pill.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* লোগো ও লোগোর নিচের ব্যাজ */}
             <div className="flex flex-col items-center mb-1.5 z-30 shrink-0">
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -414,7 +439,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     mode === 'register' ? 'text-white font-black' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
-                  <UserPlus className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <UserPlus className="w-3.5 h-3.5" />
                   <span>রেজিস্ট্রেশন</span>
                 </button>
 
@@ -436,7 +461,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     exit={{ opacity: 0, height: 0 }}
                     className="mb-1.5 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10px] font-semibold flex items-center gap-1"
                   >
-                    <div className="w-3 h-3 rounded-full bg-red-200 text-red-700 flex items-center justify-center shrink-0 font-bold text-[8px]">!</div>
+                    <div className="w-3.5 h-3.5 rounded-full bg-red-200 text-red-700 flex items-center justify-center shrink-0 font-bold text-[8px]">!</div>
                     <div className="flex-1 leading-tight">{errorMessage}</div>
                   </motion.div>
                 )}
@@ -606,7 +631,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             </motion.div>
 
             {/* ============================================================== */}
-            {/* 🌟 ১ম ছবির মতো একটিমাত্র স্লিম কার্ডে ৪টি স্ট্যাটস (ডিভাইডারসহ) 🌟 */}
+            {/* 🌟 সিঙ্গেল স্লিম কার্ডে ৪টি স্ট্যাটস 🌟 */}
             {/* ============================================================== */}
             <div className="w-full max-w-sm sm:max-w-md bg-white/95 backdrop-blur-xl rounded-2xl p-1.5 sm:p-2 shadow-md border border-white/90 grid grid-cols-4 divide-x divide-slate-100 mt-2 shrink-0 lg:hidden">
               {statsData.map((stat, idx) => (
@@ -627,13 +652,19 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
               ))}
             </div>
 
+            {/* 🎯 নিচের ফাঁকা অংশ ভরাট করতে স্মার্ট ট্রাস্ট ট্যাগ */}
+            <div className="flex items-center justify-center gap-1.5 text-[9px] font-bold text-emerald-300 mt-2 lg:hidden">
+              <Shield className="w-3 h-3 text-emerald-400" />
+              <span>১০০% নিরাপদ ও সুরক্ষিত ডিজিটাল সেবা গেটওয়ে</span>
+            </div>
+
           </div>
 
         </div>
       </main>
 
       {/* ============================================================== */}
-      {/* 🎯 COMPACT BOTTOM STRIP: স্ক্রিনে সর্বদা সম্পূর্ণ দৃশ্যমান থাকবে */}
+      {/* 🎯 COMPACT BOTTOM STRIP */}
       {/* ============================================================== */}
       <footer className="relative z-20 w-full text-center py-1 sm:py-1.5 px-3 text-white/95 text-[9px] sm:text-xs border-t border-white/20 backdrop-blur-xs bg-slate-900/10 shrink-0">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1">
@@ -655,7 +686,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
           </div>
 
           <div className="text-[8.5px] sm:text-xs text-sky-100 font-semibold">
-            <span>হেল্পলাইন: </span>
+            <span>হেল্পলাইন:</span>
           </div>
         </div>
       </footer>

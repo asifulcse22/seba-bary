@@ -34,7 +34,7 @@ export const TIER_PRICES = {
 
 export const TIER_DISCOUNTS = {
   personal: 0,
-  business: 0.15,
+  business: 0,
   sub_admin: 0.50,
 };
 
@@ -83,7 +83,7 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
       theme: 'from-emerald-600 via-teal-600 to-green-600',
       borderClass: 'border-emerald-500',
       accentColor: 'emerald',
-      discountRate: '১৫% বিশেষ ছাড়',
+      discountRate: 'রেগুলার মূল্য',
       discountPercentage: TIER_DISCOUNTS.business,
       features: [
         {
