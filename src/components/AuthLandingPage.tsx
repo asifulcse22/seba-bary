@@ -121,7 +121,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       glow: 'shadow-amber-500/15'
     },
     {
-      count: '৫.৭K',
+      count: '৫.৭',
       desktopCount: '৫,৭২৫',
       label: 'লেনদেন',
       fullLabel: 'মোট লেনদেন',

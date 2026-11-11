@@ -59,6 +59,21 @@
       "subAdminBalance": 0,
       "avatarUrl": "",
       "createdAt": "2026-11-06T13:28:28.801Z"
+    },
+    {
+      "id": "usr_1794384273939",
+      "name": "qwer",
+      "displayNameEn": "Hello, qwer",
+      "phone": "01723456798",
+      "email": "01723456798@smarthubbd.com",
+      "passwordHash": "ff957848f6a4941696c11531041679ba343c82c3040b15bbdedecf8ed4f2fbc3",
+      "activeTier": "personal",
+      "walletBalance": 0,
+      "personalBalance": 0,
+      "businessBalance": 0,
+      "subAdminBalance": 0,
+      "avatarUrl": "",
+      "createdAt": "2026-11-11T08:04:33.939Z"
     }
   ],
   "transactions": [
