@@ -69,8 +69,8 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
   const [depositError, setDepositError] = useState<string | null>(null);
 
   // বিকাশ ও নগদ নাম্বার (ব্যবহারকারী কপি করে সেন্ড মানি করবেন)
-  const bkashNumber = '01712-345678';
-  const nagadNumber = '01712-345678';
+  const bkashNumber = '01603054567';
+  const nagadNumber = '01350084236';
   const currentDepositNumber = depositMethod === 'bKash' ? bkashNumber : nagadNumber;
 
   const handleCopyNumber = async () => {
@@ -454,7 +454,7 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
                   <input
                     type="text"
                     required
-                    placeholder="TrxID (যেমন: 9J2KLA82)"
+                    placeholder="TrxID ()"
                     value={trxId}
                     onChange={(e) => setTrxId(e.target.value)}
                     className="w-full px-3 py-2 rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium mb-1.5 uppercase"
@@ -657,8 +657,13 @@ export const TierDetailView: React.FC<TierDetailViewProps> = ({
             />
           </div>
 
+          {/* 🟢 পরিবর্তন করুন (বিজনেস: ৩১ টি, সাব-এডমিন: ৭২ টি): */}
           <div className="text-xs font-bold text-slate-600 flex items-center gap-1.5 self-end sm:self-auto">
-            <span>মোট সেবা: <strong>{filteredServices.length}</strong> টি</span>
+            <span>
+              মোট সেবা: <strong>
+                {tier === 'business' ? '৩১' : tier === 'sub_admin' ? '৭২' : filteredServices.length}
+              </strong> টি
+            </span>
           </div>
         </div>
 

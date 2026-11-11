@@ -79,7 +79,7 @@ export const getTierPlans = (): Record<'personal' | 'business' | 'sub_admin', Ti
       priceFormatted: `৳ ${TIER_PRICES.business.toLocaleString('en-US')}`,
       topBadge: 'সবচেয়ে জনপ্রিয় 🔥',
       badgeType: 'popular',
-      subtitle: 'নিজের কাজের পাশাপাশি কাস্টমারের কাজও করতে পারবেন',
+      subtitle: 'গ্রাহকসেবা থেকে ব্যবসা পরিচালনা—\nসবকিছু এক অ্যাকাউন্টে!\nSEBA BARY',
       theme: 'from-emerald-600 via-teal-600 to-green-600',
       borderClass: 'border-emerald-500',
       accentColor: 'emerald',

@@ -143,11 +143,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal, onGoToAuth }) =
                 aria-label="নোটিফিকেশন"
               >
                 <Bell className="w-5 h-5 text-slate-700" />
-                {user && user.unreadNotifications > 0 && (
+                {/*{user && user.unreadNotifications > 0 && (
                   <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white">
                     {user.unreadNotifications}
                   </span>
-                )}
+                )} */}
               </button>
 
               {notificationOpen && (

@@ -89,11 +89,19 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* Subtitle Area */}
-              <div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
+              {/*<div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
                 <p className="text-[9px] sm:text-xs md:text-sm font-bold text-slate-700 leading-tight sm:leading-snug break-words">
                   {plans.personal.subtitle}
                 </p>
+              </div> */}
+
+              {/* 🎯 পার্সোনাল কার্ডের স্টাইলিশ সাবটাইটেল ব্যাজ */}
+            <div className="min-h-[36px] sm:min-h-[44px] flex items-center justify-center mt-1 px-1">
+              <div className="inline-flex items-center justify-center gap-1 px-2.5 sm:px-3.5 py-1 rounded-full bg-gradient-to-r from-blue-50 to-sky-50 border border-blue-200 text-blue-900 font-bold text-[9.5px] sm:text-xs shadow-2xs text-center leading-tight">
+                <span>👤</span>
+                <span>{plans.personal.subtitle}</span>
               </div>
+            </div>
             </div>
 
             {/* Features List */}
@@ -177,10 +185,18 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* Subtitle Area */}
-              <div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
+              {/*<div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
                 <p className="text-[9px] sm:text-xs md:text-sm font-bold text-slate-700 leading-tight sm:leading-snug break-words">
                   {plans.business.subtitle}
                 </p>
+              </div> */}
+
+              {/* 🎯 বিজনেস কার্ডের স্টাইলিশ সাবটাইটেল ব্যাজ */}
+              <div className="min-h-[36px] sm:min-h-[44px] flex items-center justify-center mt-1 px-1">
+                <div className="inline-flex items-center justify-center gap-1 px-2.5 sm:px-3.5 py-1 rounded-full bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 text-emerald-950 font-bold text-[9.5px] sm:text-xs shadow-2xs text-center leading-tight">
+                  <span>💼</span>
+                  <span>{plans.business.subtitle}</span>
+                </div>
               </div>
             </div>
 
@@ -269,10 +285,18 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* Subtitle / Badge Area */}
-              <div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
+              {/*<div className="min-h-[32px] sm:min-h-[42px] flex items-center justify-center mt-0.5 sm:mt-1">
                 <span className="px-2 sm:px-3 py-0.5 rounded-full bg-purple-100 border border-purple-300 text-purple-900 text-[8px] sm:text-xs font-black">
                   {plans.sub_admin.badgeUnderPrice}
                 </span>
+              </div> */}
+
+              {/* 🎯 সাব-এডমিন কার্ডের স্টাইলিশ সাবটাইটেল / ভ্যালু ব্যাজ */}
+              <div className="min-h-[36px] sm:min-h-[44px] flex items-center justify-center mt-1 px-1">
+                <div className="inline-flex items-center justify-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-purple-100 via-indigo-50 to-amber-50 border border-purple-300 text-purple-950 font-black text-[9.5px] sm:text-xs shadow-2xs text-center leading-tight">
+                  <span className="text-amber-500 text-xs sm:text-sm">👑</span>
+                  <span>{plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}</span>
+                </div>
               </div>
             </div>
 
