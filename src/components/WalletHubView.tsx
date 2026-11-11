@@ -65,8 +65,8 @@ export const WalletHubView: React.FC = () => {
   const [isWithdrawSubmitting, setIsWithdrawSubmitting] = useState(false);
 
   // বিকাশ ও নগদের নাম্বার (ব্যবহারকারী কপি করে সেন্ড মানি / পেমেন্ট করবেন)
-  const bkashNumber = '';
-  const nagadNumber = '';
+  const bkashNumber = '01712-345678';
+  const nagadNumber = '01712-345678';
 
   // নির্বাচিত মেথড অনুযায়ী বর্তমান নাম্বার
   const currentDepositNumber = depositMethod === 'bKash' ? bkashNumber : nagadNumber;

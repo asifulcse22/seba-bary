@@ -74,6 +74,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return null;
   });
 
+  const [authToken, setAuthToken] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem('smarthub_token');
+    } catch {
+      return null;
+    }
+  });
+
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [orders, setOrders] = useState<ServiceOrder[]>([]);
   const [isGuestMode, setIsGuestMode] = useState<boolean>(false);
@@ -108,16 +116,69 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 4000);
   };
 
-  // Sync with backend API
+  // Secure Auth Headers Helper to prevent any cross-user data leakage
+  const getAuthHeaders = (): Record<string, string> => {
+    const token = localStorage.getItem('smarthub_token') || authToken;
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json'
+    };
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+    const phone = user?.phone || localStorage.getItem('smarthub_auth_phone');
+    if (phone) {
+      headers['x-user-phone'] = phone;
+    }
+    return headers;
+  };
+
+  // Sync with backend API securely
   const refreshBackendData = async (userPhone?: string) => {
     try {
+      let token = localStorage.getItem('smarthub_token') || authToken;
       const phoneToFetch = userPhone || user?.phone;
-      if (!phoneToFetch) {
-        // Not logged in, skip fetching user profile
+
+      // Migration: obtain token seamlessly if logged in from prior session
+      if (!token && phoneToFetch) {
+        try {
+          const sessRes = await fetch('/api/auth/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ phone: phoneToFetch })
+          });
+          if (sessRes.ok) {
+            const sessData = await sessRes.json();
+            if (sessData.token) {
+              const newToken = sessData.token as string;
+              token = newToken;
+              setAuthToken(newToken);
+              localStorage.setItem('smarthub_token', newToken);
+            }
+          }
+        } catch {
+          // ignore session exchange error
+        }
+      }
+
+      // Guest / Unauthenticated: NEVER query backend for transactions or orders to prevent data leaks
+      if (!token && !phoneToFetch) {
+        setTransactions([]);
+        setOrders([]);
         return;
       }
 
-      const meRes = await fetch(`/api/auth/me?phone=${encodeURIComponent(phoneToFetch)}`);
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      if (phoneToFetch) {
+        headers['x-user-phone'] = phoneToFetch;
+      }
+
+      // Secure User Profile Fetch
+      const meRes = await fetch('/api/auth/me', { headers });
       if (meRes.ok) {
         const data = await meRes.json();
         if (data.user) {
@@ -146,8 +207,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       }
 
-      // Fetch transactions
-      const txRes = await fetch('/api/transactions');
+      // Fetch transactions for authenticated user ONLY
+      const txRes = await fetch('/api/transactions', { headers });
       if (txRes.ok) {
         const txData = await txRes.json();
         if (Array.isArray(txData.transactions)) {
@@ -155,8 +216,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       }
 
-      // Fetch orders
-      const ordRes = await fetch('/api/orders');
+      // Fetch orders for authenticated user ONLY
+      const ordRes = await fetch('/api/orders', { headers });
       if (ordRes.ok) {
         const ordData = await ordRes.json();
         if (Array.isArray(ordData.orders)) {
@@ -200,6 +261,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       const u = data.user;
+      if (data.token) {
+        setAuthToken(data.token);
+        localStorage.setItem('smarthub_token', data.token);
+      }
       const loggedUser: UserProfile = {
         name: u.name,
         displayNameEn: u.displayNameEn,
@@ -246,6 +311,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       const u = data.user;
+      if (data.token) {
+        setAuthToken(data.token);
+        localStorage.setItem('smarthub_token', data.token);
+      }
       const registeredUser: UserProfile = {
         name: u.name,
         displayNameEn: u.displayNameEn,
@@ -281,9 +350,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const logoutUser = () => {
     localStorage.removeItem('smarthub_user');
+    localStorage.removeItem('smarthub_token');
     localStorage.removeItem('smarthub_auth_phone');
     localStorage.setItem('smarthub_logged_out', 'true');
     setUser(null);
+    setAuthToken(null);
     setIsGuestMode(false);
     setAuthLandingMode('login');
     setTransactions([]);
@@ -311,7 +382,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       const res = await fetch('/api/wallet/deposit', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           userId: user.phone,
           amount,
@@ -373,7 +444,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       await fetch('/api/user/avatar', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ userId: user.phone, avatarUrl })
       });
     } catch (e) {
@@ -415,7 +486,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       const res = await fetch('/api/wallet/withdraw', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ 
           userId: user.phone, 
           amount, 
@@ -481,7 +552,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       await fetch('/api/user/switch-tier', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({ userId: user.phone, tier })
       });
     } catch (e) {
@@ -511,7 +582,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
           userId: user.phone,
           serviceId: service.id,

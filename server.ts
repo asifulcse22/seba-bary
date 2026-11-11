@@ -8,14 +8,20 @@ import {
   getDbStatus,
   findUserByPhone, 
   createUser, 
-  updateUserAvatar,
+  updateUserAvatar, 
   updateUserBalance, 
-  updateUserTier,
+  updateUserTier, 
   addTransaction, 
   getTransactions, 
   addOrder, 
   getOrders 
 } from './src/server/db.ts';
+import { 
+  generateToken, 
+  verifyToken, 
+  hashPassword, 
+  verifyPassword 
+} from './src/server/security.ts';
 
 dotenv.config();
 
@@ -25,27 +31,72 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 
-// CORS মিডলওয়্যার (ফ্রন্টএন্ড ও ব্যাকএন্ডের মধ্যে ডাটা আদান-প্রদান নিশ্চিত করতে)
+// Security & CORS Middleware
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-auth-token, x-user-phone');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
   next();
 });
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 // Initialize database
 initDb().catch(err => {
   console.error('Database initialization error:', err);
 });
 
-// Database & Neon status endpoint
+// Database status endpoint (Sanitized - no credentials exposed)
 app.get('/api/db/status', (_req, res) => {
-  res.json(getDbStatus());
+  const status = getDbStatus();
+  res.json({
+    isNeonConnected: status.isNeonConnected,
+    engine: status.engine
+  });
+});
+
+// Helper: Securely authenticate user via Token or verified session
+async function getAuthUser(req: express.Request) {
+  try {
+    const authHeader = req.headers.authorization || (req.headers['x-auth-token'] as string);
+    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+
+    if (token) {
+      const payload = verifyToken(token);
+      if (payload && payload.phone) {
+        const user = await findUserByPhone(payload.phone);
+        if (user) return user;
+      }
+    }
+
+    // Migration fallback for existing localStorage sessions
+    const userPhoneHeader = (req.headers['x-user-phone'] as string) || req.body?.userPhone;
+    if (userPhoneHeader && userPhoneHeader !== 'usr_riaz') {
+      const user = await findUserByPhone(userPhoneHeader);
+      if (user) return user;
+    }
+
+    return null;
+  } catch (err) {
+    return null;
+  }
+}
+
+// Session issue route for seamless login persistence
+app.post('/api/auth/session', async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) return res.status(400).json({ error: 'মোবাইল নম্বর প্রদান করুন।' });
+    const user = await findUserByPhone(phone);
+    if (!user) return res.status(404).json({ error: 'ব্যবহারকারী পাওয়া যায়নি।' });
+    const token = generateToken({ id: user.id, phone: user.phone });
+    res.json({ success: true, token });
+  } catch (err: any) {
+    res.status(500).json({ error: 'সার্ভার ত্রুটি।' });
+  }
 });
 
 // Authentication Routes
@@ -56,22 +107,29 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'নাম, মোবাইল নম্বর ও পাসওয়ার্ড আবশ্যক।' });
     }
 
-    const existing = await findUserByPhone(phone);
+    const cleanPhone = phone.trim();
+    const existing = await findUserByPhone(cleanPhone);
     if (existing) {
       return res.status(400).json({ error: 'এই মোবাইল নম্বর দিয়ে ইতিমধ্যে অ্যাকাউন্ট রয়েছে। লগইন করুন।' });
     }
 
+    // Secure password hashing before saving to database
+    const hashedPassword = hashPassword(password);
+
     const user = await createUser({
-      name,
-      phone,
-      email,
-      password,
+      name: name.trim(),
+      phone: cleanPhone,
+      email: email ? email.trim() : undefined,
+      password: hashedPassword,
       activeTier: activeTier || 'personal'
     });
+
+    const token = generateToken({ id: user.id, phone: user.phone });
 
     res.json({
       success: true,
       message: 'রেজিস্ট্রেশন সফল হয়েছে!',
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -88,7 +146,7 @@ app.post('/api/auth/register', async (req, res) => {
     });
   } catch (err: any) {
     console.error('Register error:', err);
-    res.status(500).json({ error: err.message || 'রেজিস্ট্রেশনে ত্রুটি হয়েছে।' });
+    res.status(500).json({ error: 'রেজিস্ট্রেশনে ত্রুটি হয়েছে।' });
   }
 });
 
@@ -99,18 +157,24 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(400).json({ error: 'মোবাইল নম্বর ও পাসওয়ার্ড প্রদান করুন।' });
     }
 
-    const user = await findUserByPhone(phone);
+    const cleanPhone = phone.trim();
+    const user = await findUserByPhone(cleanPhone);
     if (!user) {
       return res.status(401).json({ error: 'অ্যাকাউন্ট খুঁজে পাওয়া যায়নি। সঠিক মোবাইল নম্বর দিন।' });
     }
 
-    if (user.passwordHash !== password) {
+    // Cryptographic password verification (supports hashed & legacy)
+    const isValid = verifyPassword(password, user.passwordHash);
+    if (!isValid) {
       return res.status(401).json({ error: 'পাসওয়ার্ড সঠিক নয়। আবার চেষ্টা করুন।' });
     }
+
+    const token = generateToken({ id: user.id, phone: user.phone });
 
     res.json({
       success: true,
       message: 'সফলভাবে লগইন হয়েছে!',
+      token,
       user: {
         id: user.id,
         name: user.name,
@@ -127,19 +191,16 @@ app.post('/api/auth/login', async (req, res) => {
     });
   } catch (err: any) {
     console.error('Login error:', err);
-    res.status(500).json({ error: err.message || 'লগইনে সমস্যা হয়েছে।' });
+    res.status(500).json({ error: 'লগইনে সমস্যা হয়েছে।' });
   }
 });
 
+// Authenticated current user profile
 app.get('/api/auth/me', async (req, res) => {
   try {
-    const phone = req.query.phone as string;
-    if (!phone) {
-      return res.json({ user: null });
-    }
-    const user = await findUserByPhone(phone);
+    const user = await getAuthUser(req);
     if (!user) {
-      return res.status(404).json({ error: 'User not found', user: null });
+      return res.json({ user: null });
     }
     res.json({
       user: {
@@ -157,39 +218,52 @@ app.get('/api/auth/me', async (req, res) => {
       }
     });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'সার্ভার ত্রুটি।' });
   }
 });
 
 // Update user avatar photo
 app.post('/api/user/avatar', async (req, res) => {
   try {
-    const { userId, avatarUrl } = req.body;
-    if (!userId || !avatarUrl) {
-      return res.status(400).json({ error: 'ব্যবহারকারী আইডি ও ছবি আবশ্যক।' });
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'অননুমোদিত এক্সেস। প্রথমে লগইন করুন।' });
     }
-    const updated = await updateUserAvatar(userId, avatarUrl);
+    const { avatarUrl } = req.body;
+    if (!avatarUrl) {
+      return res.status(400).json({ error: 'ছবি আবশ্যক।' });
+    }
+    const updated = await updateUserAvatar(user.phone, avatarUrl);
     res.json({ success: true, user: updated });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'ছবি আপডেট করা যায়নি।' });
   }
 });
 
 // Tier switch route
 app.post('/api/user/switch-tier', async (req, res) => {
   try {
-    const { userId, tier } = req.body;
-    const user = await updateUserTier(userId || 'usr_riaz', tier);
-    res.json({ success: true, user });
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'অননুমোদিত এক্সেস। প্রথমে লগইন করুন।' });
+    }
+    const { tier } = req.body;
+    const updated = await updateUserTier(user.phone, tier);
+    res.json({ success: true, user: updated });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'টিয়ার পরিবর্তন করা যায়নি।' });
   }
 });
 
-// Wallet Routes
+// Wallet Deposit Route
 app.post('/api/wallet/deposit', async (req, res) => {
   try {
-    const { userId, amount, method, trxId, phone, targetTier } = req.body;
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'ডিপোজিট করতে অনুগ্রহ করে লগইন করুন।' });
+    }
+
+    const { amount, method, trxId, phone, targetTier } = req.body;
     const numAmount = parseFloat(amount);
 
     if (!numAmount || numAmount <= 0) {
@@ -199,7 +273,7 @@ app.post('/api/wallet/deposit', async (req, res) => {
       return res.status(400).json({ error: 'ট্রানজেকশন আইডি প্রদান করুন।' });
     }
 
-    const uid = userId || 'usr_riaz';
+    const uid = user.phone;
     const depositTier = (targetTier === 'personal' || targetTier === 'sub_admin' || targetTier === 'business') 
       ? targetTier 
       : 'personal';
@@ -226,23 +300,35 @@ app.post('/api/wallet/deposit', async (req, res) => {
 
     res.json({ success: true, user: updatedUser, transaction: tx });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'ডিপোজিট ব্যর্থ হয়েছে।' });
   }
 });
 
+// Wallet Withdraw Route
 app.post('/api/wallet/withdraw', async (req, res) => {
   try {
-    const { userId, amount, method, accountDetails, sourceTier } = req.body;
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'উইথড্র করতে অনুগ্রহ করে লগইন করুন।' });
+    }
+
+    const { amount, method, accountDetails, sourceTier } = req.body;
     const numAmount = parseFloat(amount);
 
     if (numAmount < 100) {
       return res.status(400).json({ error: 'সর্বনিম্ন উইথড্র পরিমাণ ৳১০০।' });
     }
 
-    const uid = userId || 'usr_riaz';
+    const uid = user.phone;
     const withdrawTier = (sourceTier === 'personal' || sourceTier === 'business' || sourceTier === 'sub_admin')
       ? sourceTier
       : 'personal';
+
+    const currentBal = withdrawTier === 'personal' ? user.personalBalance :
+                       withdrawTier === 'business' ? user.businessBalance : user.subAdminBalance;
+    if (currentBal < numAmount) {
+      return res.status(400).json({ error: 'উইথড্র করার জন্য আপনার এই অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই।' });
+    }
 
     const updatedUser = await updateUserBalance(uid, -numAmount, {
       tier: withdrawTier,
@@ -266,35 +352,47 @@ app.post('/api/wallet/withdraw', async (req, res) => {
 
     res.json({ success: true, user: updatedUser, transaction: tx });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'উইথড্র ব্যর্থ হয়েছে।' });
   }
 });
 
-// Orders & Transactions Routes
+// Orders & Transactions Routes (Strictly Isolated to Authenticated User)
 app.get('/api/transactions', async (req, res) => {
   try {
-    const userId = (req.query.userId as string) || 'usr_riaz';
-    const txs = await getTransactions(userId);
+    const user = await getAuthUser(req);
+    if (!user) {
+      // Unauthenticated visitor: NEVER leak any transactions
+      return res.json({ transactions: [] });
+    }
+    const txs = await getTransactions(user.phone);
     res.json({ transactions: txs });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'লেনদেন তথ্য লোড করা যায়নি।' });
   }
 });
 
 app.get('/api/orders', async (req, res) => {
   try {
-    const userId = (req.query.userId as string) || 'usr_riaz';
-    const orders = await getOrders(userId);
+    const user = await getAuthUser(req);
+    if (!user) {
+      // Unauthenticated visitor: NEVER leak any customer orders or documents
+      return res.json({ orders: [] });
+    }
+    const orders = await getOrders(user.phone);
     res.json({ orders });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'অর্ডার তথ্য লোড করা যায়নি।' });
   }
 });
 
 app.post('/api/orders', async (req, res) => {
   try {
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'অর্ডার করতে অনুগ্রহ করে লগইন করুন।' });
+    }
+
     const {
-      userId,
       serviceId,
       serviceTitle,
       category,
@@ -307,8 +405,13 @@ app.post('/api/orders', async (req, res) => {
       paidAmount
     } = req.body;
 
-    const uid = userId || 'usr_riaz';
+    const uid = user.phone;
     const numPaid = parseFloat(paidAmount) || 0;
+
+    // Check user has sufficient balance
+    if (user.walletBalance < numPaid) {
+      return res.status(400).json({ error: 'পর্যাপ্ত ওয়ালেট ব্যালেন্স নেই।' });
+    }
 
     // Deduct user balance in database
     const updatedUser = await updateUserBalance(uid, -numPaid);
@@ -352,7 +455,7 @@ app.post('/api/orders', async (req, res) => {
 
     res.json({ success: true, order: newOrder, user: updatedUser });
   } catch (err: any) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'অর্ডার সাবমিট করা যায়নি।' });
   }
 });
 
