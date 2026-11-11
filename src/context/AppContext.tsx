@@ -39,9 +39,15 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // 🎯 ১. নিরাপদ ইনিশিয়াল স্টেট: টোকেন ছাড়া কখনোই কোনো ইউজার লোড হবে না
   const [user, setUser] = useState<UserProfile | null>(() => {
     try {
-      // If user has explicitly logged out, keep logged out
+      const token = localStorage.getItem('smarthub_token');
+      // টোকেন না থাকলে নতুন ভিজিটরের জন্য সবসময় null থাকবে (লগইন ছাড়া ঢুকতে পারবে না)
+      if (!token) {
+        return null;
+      }
+
       const loggedOutFlag = localStorage.getItem('smarthub_logged_out');
       if (loggedOutFlag === 'true') {
         return null;
@@ -51,11 +57,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (saved && saved !== 'null' && saved !== 'undefined') {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.phone) {
-          // Sanitize old dummy photo
           if (parsed.avatarUrl && parsed.avatarUrl.includes('photo-1507003211169-0a1dd7228f2d')) {
             parsed.avatarUrl = '';
           }
-          // Sanitize old demo balance 811551
           if (parsed.walletBalance >= 800000) {
             parsed.walletBalance = 0;
             if (parsed.tierBalances) {
@@ -70,7 +74,6 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     } catch (e) {
       console.warn('Failed to parse saved user', e);
     }
-    // Brand new visitors start clean (not logged in) so they see guest greeting
     return null;
   });
 
@@ -116,7 +119,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }, 4000);
   };
 
-  // Secure Auth Headers Helper to prevent any cross-user data leakage
+  // Secure Auth Headers Helper
   const getAuthHeaders = (): Record<string, string> => {
     const token = localStorage.getItem('smarthub_token') || authToken;
     const headers: Record<string, string> = {
@@ -132,53 +135,42 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return headers;
   };
 
-  // Sync with backend API securely
+  // 🎯 ২. সিকিউর ব্যাকএন্ড সিঙ্ক: লগইন টোকেন ছাড়া কখনোই অন্য কোনো ইউজারের ডাটা ফেচ হবে না
   const refreshBackendData = async (userPhone?: string) => {
     try {
-      let token = localStorage.getItem('smarthub_token') || authToken;
-      const phoneToFetch = userPhone || user?.phone;
+      const token = localStorage.getItem('smarthub_token') || authToken;
 
-      // Migration: obtain token seamlessly if logged in from prior session
-      if (!token && phoneToFetch) {
-        try {
-          const sessRes = await fetch('/api/auth/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ phone: phoneToFetch })
-          });
-          if (sessRes.ok) {
-            const sessData = await sessRes.json();
-            if (sessData.token) {
-              const newToken = sessData.token as string;
-              token = newToken;
-              setAuthToken(newToken);
-              localStorage.setItem('smarthub_token', newToken);
-            }
-          }
-        } catch {
-          // ignore session exchange error
-        }
-      }
-
-      // Guest / Unauthenticated: NEVER query backend for transactions or orders to prevent data leaks
-      if (!token && !phoneToFetch) {
+      // টোকেন না থাকলে সরাসরি স্টেট ক্লিয়ার করে রিটার্ন করবে (লগইন ছাড়া ডাটাবেজ এক্সেস ব্লক)
+      if (!token) {
+        setUser(null);
         setTransactions([]);
         setOrders([]);
         return;
       }
 
+      const phoneToFetch = userPhone || user?.phone;
       const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
       if (phoneToFetch) {
         headers['x-user-phone'] = phoneToFetch;
       }
 
       // Secure User Profile Fetch
       const meRes = await fetch('/api/auth/me', { headers });
+
+      // Token invalid or missing => clear everything and stop
+      if (meRes.status === 401 || meRes.status === 403) {
+        setUser(null);
+        setAuthToken(null);
+        setTransactions([]);
+        setOrders([]);
+        localStorage.removeItem('smarthub_user');
+        localStorage.removeItem('smarthub_token');
+        return;
+      }
+
       if (meRes.ok) {
         const data = await meRes.json();
         if (data.user) {
@@ -190,7 +182,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             phone: u.phone,
             email: u.email,
             avatarUrl: (u.avatarUrl && !u.avatarUrl.includes('photo-1507003211169-0a1dd7228f2d')) ? u.avatarUrl : '',
-            activeTier: u.activeTier,
+            activeTier: u.activeTier || 'personal',
             walletBalance: sanitizedBalance,
             tierBalances: {
               personal: (u.personalBalance >= 800000) ? 0 : (Number(u.personalBalance) || 0),
@@ -202,11 +194,23 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
               business: true,
               sub_admin: true
             },
-            unreadNotifications: 2
+            unreadNotifications: 0 // 🎯 ফিক্স: নোটিফিকেশন ২ এর সমস্যা দূর করা হয়েছে
           });
+        } else {
+          // কোনো কারণে ডাটা না পেলে সেশন ক্লিয়ার
+          setUser(null);
+          setTransactions([]);
+          setOrders([]);
+          localStorage.removeItem('smarthub_user');
+          localStorage.removeItem('smarthub_token');
+          return;
         }
+      } else {
+        // Other server error => silent fail
+        return;
       }
 
+      // Reached here => user verified, now fetch data
       // Fetch transactions for authenticated user ONLY
       const txRes = await fetch('/api/transactions', { headers });
       if (txRes.ok) {
@@ -234,12 +238,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && authToken) {
       localStorage.setItem('smarthub_user', JSON.stringify(user));
     } else {
       localStorage.removeItem('smarthub_user');
     }
-  }, [user]);
+  }, [user, authToken]);
 
   const getDiscountedPrice = (basePrice: number): number => {
     const tier = user?.activeTier || 'personal';
@@ -271,7 +275,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         phone: u.phone,
         email: u.email,
         avatarUrl: (u.avatarUrl && !u.avatarUrl.includes('photo-1507003211169-0a1dd7228f2d')) ? u.avatarUrl : '',
-        activeTier: u.activeTier,
+        activeTier: u.activeTier || 'personal',
         walletBalance: u.walletBalance,
         tierBalances: {
           personal: u.personalBalance || 0,
@@ -283,7 +287,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           business: true,
           sub_admin: true
         },
-        unreadNotifications: 2
+        unreadNotifications: 0
       };
 
       localStorage.removeItem('smarthub_logged_out');
@@ -321,7 +325,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         phone: u.phone,
         email: u.email,
         avatarUrl: (u.avatarUrl && !u.avatarUrl.includes('photo-1507003211169-0a1dd7228f2d')) ? u.avatarUrl : '',
-        activeTier: u.activeTier,
+        activeTier: u.activeTier || 'personal',
         walletBalance: 0,
         tierBalances: {
           personal: 0,
@@ -333,7 +337,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           business: true,
           sub_admin: true
         },
-        unreadNotifications: 1
+        unreadNotifications: 0
       };
 
       localStorage.removeItem('smarthub_logged_out');
@@ -348,10 +352,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   };
 
+  // 🎯 ৩. সম্পূর্ণ ক্লিন লগআউট
   const logoutUser = () => {
-    localStorage.removeItem('smarthub_user');
-    localStorage.removeItem('smarthub_token');
-    localStorage.removeItem('smarthub_auth_phone');
+    localStorage.clear(); // ব্রাউজারের সমস্ত লোকাল সেশন একবারে ক্লিয়ার
     localStorage.setItem('smarthub_logged_out', 'true');
     setUser(null);
     setAuthToken(null);

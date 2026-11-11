@@ -311,34 +311,10 @@ export async function initDb() {
         );
       `);
 
-      // Populate Neon with users from local store so newly registered accounts (e.g. Asiful Islam) exist in Neon
-      const store = loadLocalStore();
-      if (Array.isArray(store.users)) {
-        for (const u of store.users) {
-          const userCheck = await client.query('SELECT id FROM users WHERE phone = $1', [u.phone]);
-          if (userCheck.rows.length === 0) {
-            await client.query(`
-              INSERT INTO users (id, name, display_name_en, phone, email, password_hash, active_tier, wallet_balance, personal_balance, business_balance, sub_admin_balance, avatar_url, created_at)
-              VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
-            `, [
-              u.id,
-              u.name,
-              u.displayNameEn || `Hello, ${u.name}`,
-              u.phone,
-              u.email,
-              u.passwordHash,
-              u.activeTier || 'business',
-              u.walletBalance || 0,
-              u.personalBalance || 0,
-              u.businessBalance || 0,
-              u.subAdminBalance || 0,
-              u.avatarUrl || '',
-              u.createdAt || new Date().toISOString()
-            ]);
-            console.log(`[Neon PostgreSQL] Populated user to Neon: ${u.name} (${u.phone})`);
-          }
-        }
-      }
+      // NOTE: Local store migration to Neon is intentionally DISABLED.
+      // Users are only created in Neon when they explicitly register via /api/register.
+      // This prevents test/seed accounts from leaking into production database on every restart.
+      console.log('[Neon PostgreSQL] Schema ready. No local-to-Neon migration (security: users register via API only).');
 
       client.release();
     } catch (err) {

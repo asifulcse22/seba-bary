@@ -35,7 +35,7 @@ const PORT = Number(process.env.PORT) || 3000;
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-auth-token, x-user-phone');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') {
     return res.sendStatus(200);
   }
@@ -49,7 +49,7 @@ initDb().catch(err => {
   console.error('Database initialization error:', err);
 });
 
-// Database status endpoint (Sanitized - no credentials exposed)
+// Database status endpoint (Sanitized)
 app.get('/api/db/status', (_req, res) => {
   const status = getDbStatus();
   res.json({
@@ -58,40 +58,39 @@ app.get('/api/db/status', (_req, res) => {
   });
 });
 
-// Helper: Securely authenticate user via Token or verified session
+// 🎯 ১. নিরাপদ অথেন্টিকেশন হেল্পার: শুধুমাত্র ভ্যালিড JWT Token যাচাই করবে (কোনো ব্যাকডোর নেই)
 async function getAuthUser(req: express.Request) {
   try {
-    const authHeader = req.headers.authorization || (req.headers['x-auth-token'] as string);
-    const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
-
-    if (token) {
-      const payload = verifyToken(token);
-      if (payload && payload.phone) {
-        const user = await findUserByPhone(payload.phone);
-        if (user) return user;
-      }
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+      return null;
     }
 
-    // Migration fallback for existing localStorage sessions
-    const userPhoneHeader = (req.headers['x-user-phone'] as string) || req.body?.userPhone;
-    if (userPhoneHeader && userPhoneHeader !== 'usr_riaz') {
-      const user = await findUserByPhone(userPhoneHeader);
-      if (user) return user;
+    const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
+    if (!token) {
+      return null;
     }
 
-    return null;
+    // টোকেন ক্রিপ্টোগ্রাফিক্যালি ডিকোড ও যাচাই
+    const payload = verifyToken(token);
+    if (!payload || !payload.phone) {
+      return null;
+    }
+
+    const user = await findUserByPhone(payload.phone);
+    return user || null;
   } catch (err) {
     return null;
   }
 }
 
-// Session issue route for seamless login persistence
+// Session route (Strictly Protected)
 app.post('/api/auth/session', async (req, res) => {
   try {
-    const { phone } = req.body;
-    if (!phone) return res.status(400).json({ error: 'মোবাইল নম্বর প্রদান করুন।' });
-    const user = await findUserByPhone(phone);
-    if (!user) return res.status(404).json({ error: 'ব্যবহারকারী পাওয়া যায়নি।' });
+    const user = await getAuthUser(req);
+    if (!user) {
+      return res.status(401).json({ error: 'অননুমোদিত এক্সেস।' });
+    }
     const token = generateToken({ id: user.id, phone: user.phone });
     res.json({ success: true, token });
   } catch (err: any) {
@@ -99,7 +98,7 @@ app.post('/api/auth/session', async (req, res) => {
   }
 });
 
-// Authentication Routes
+// Authentication Routes: Register
 app.post('/api/auth/register', async (req, res) => {
   try {
     const { name, phone, password, activeTier, email } = req.body;
@@ -113,7 +112,7 @@ app.post('/api/auth/register', async (req, res) => {
       return res.status(400).json({ error: 'এই মোবাইল নম্বর দিয়ে ইতিমধ্যে অ্যাকাউন্ট রয়েছে। লগইন করুন।' });
     }
 
-    // Secure password hashing before saving to database
+    // Secure password hashing
     const hashedPassword = hashPassword(password);
 
     const user = await createUser({
@@ -150,6 +149,7 @@ app.post('/api/auth/register', async (req, res) => {
   }
 });
 
+// Authentication Routes: Login
 app.post('/api/auth/login', async (req, res) => {
   try {
     const { phone, password } = req.body;
@@ -163,7 +163,7 @@ app.post('/api/auth/login', async (req, res) => {
       return res.status(401).json({ error: 'অ্যাকাউন্ট খুঁজে পাওয়া যায়নি। সঠিক মোবাইল নম্বর দিন।' });
     }
 
-    // Cryptographic password verification (supports hashed & legacy)
+    // Cryptographic password verification
     const isValid = verifyPassword(password, user.passwordHash);
     if (!isValid) {
       return res.status(401).json({ error: 'পাসওয়ার্ড সঠিক নয়। আবার চেষ্টা করুন।' });
@@ -195,12 +195,12 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
-// Authenticated current user profile
+// 🎯 ২. কারেন্ট ইউজার প্রোফাইল: কোনো টোকেন না থাকলে 401 রিটার্ন করবে
 app.get('/api/auth/me', async (req, res) => {
   try {
     const user = await getAuthUser(req);
     if (!user) {
-      return res.json({ user: null });
+      return res.status(401).json({ user: null, error: 'অননুমোদিত এক্সেস।' });
     }
     res.json({
       user: {
@@ -356,12 +356,11 @@ app.post('/api/wallet/withdraw', async (req, res) => {
   }
 });
 
-// Orders & Transactions Routes (Strictly Isolated to Authenticated User)
+// Orders & Transactions Routes
 app.get('/api/transactions', async (req, res) => {
   try {
     const user = await getAuthUser(req);
     if (!user) {
-      // Unauthenticated visitor: NEVER leak any transactions
       return res.json({ transactions: [] });
     }
     const txs = await getTransactions(user.phone);
@@ -375,7 +374,6 @@ app.get('/api/orders', async (req, res) => {
   try {
     const user = await getAuthUser(req);
     if (!user) {
-      // Unauthenticated visitor: NEVER leak any customer orders or documents
       return res.json({ orders: [] });
     }
     const orders = await getOrders(user.phone);
@@ -408,14 +406,11 @@ app.post('/api/orders', async (req, res) => {
     const uid = user.phone;
     const numPaid = parseFloat(paidAmount) || 0;
 
-    // Check user has sufficient balance
     if (user.walletBalance < numPaid) {
       return res.status(400).json({ error: 'পর্যাপ্ত ওয়ালেট ব্যালেন্স নেই।' });
     }
 
-    // Deduct user balance in database
     const updatedUser = await updateUserBalance(uid, -numPaid);
-
     const token = `SHB-${category ? category.toUpperCase() : 'SRV'}-${Math.floor(10000 + Math.random() * 90000)}`;
 
     const newOrder = await addOrder({
@@ -437,7 +432,6 @@ app.post('/api/orders', async (req, res) => {
       remarks: 'আবেদন গৃহীত হয়েছে, ডাটাবেজ যাচাইকরণ চলমান।'
     });
 
-    // Record order transaction
     await addTransaction({
       id: `TRX-${Date.now().toString().slice(-5)}`,
       userId: uid,
@@ -459,7 +453,7 @@ app.post('/api/orders', async (req, res) => {
   }
 });
 
-// Mount Vite or serve static
+// Start Server
 async function startServer() {
   if (process.env.NODE_ENV !== 'production') {
     const { createServer } = await import('vite');
@@ -482,5 +476,4 @@ async function startServer() {
 
 startServer();
 
-// Cloudflare Workers / Serverless এক্সপোর্ট
 export default app;
