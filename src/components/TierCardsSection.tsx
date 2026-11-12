@@ -63,25 +63,25 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               <User className="w-4 h-4 sm:w-7 sm:h-7 text-white stroke-[2.5]" />
             </div>
             {/* টাইটেল */}
-            <div className="px-1.5 sm:px-3 py-0.5 rounded-full bg-gradient-to-r from-blue-600 to-sky-600 text-white font-black text-[7.5px] sm:text-xs shadow-sm mb-1 leading-tight text-center">
+            <div className="px-1.5 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-blue-600 to-sky-600 text-white font-black text-[7.5px] sm:text-sm shadow-sm mb-1 leading-tight text-center">
               পার্সোনাল অ্যাকাউন্ট
             </div>
             {/* মূল্য */}
-            <div className="text-[15px] sm:text-2xl md:text-3xl font-black text-blue-800 leading-tight mb-1">
+            <div className="text-[15px] sm:text-3xl md:text-4xl font-black text-blue-800 leading-tight mb-1">
               {plans.personal.priceFormatted}
             </div>
             {/* সাবটাইটেল — মোবাইলে লুকানো */}
-            <div className="hidden sm:block text-[9px] sm:text-xs text-blue-700 font-semibold mb-2 leading-tight">
+            <div className="hidden sm:block text-xs sm:text-sm text-blue-700 font-semibold mb-2 leading-tight">
               {plans.personal.subtitle}
             </div>
             {/* ফিচার লিস্ট — মোবাইলে ২টি, desktop এ সব */}
-            <div className="w-full border-t border-blue-100 pt-1.5 sm:pt-2 flex flex-col gap-1 sm:gap-2 text-left">
+            <div className="w-full border-t border-blue-100 pt-1.5 sm:pt-3 flex flex-col gap-1 sm:gap-3 text-left">
               {plans.personal.features.map((feat, idx) => (
-                <div key={idx} className={`flex items-start gap-1 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 text-white stroke-[3.5]" />
+                <div key={idx} className={`flex items-start gap-1 sm:gap-2 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
+                  <div className="w-3 h-3 sm:w-5 sm:h-5 rounded-full bg-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-1.5 h-1.5 sm:w-3 sm:h-3 text-white stroke-[3.5]" />
                   </div>
-                  <span className="text-[7.5px] sm:text-[11px] font-bold text-slate-800 leading-tight">
+                  <span className="text-[7.5px] sm:text-sm font-bold text-slate-800 leading-tight">
                     {feat.title}
                   </span>
                 </div>
@@ -93,7 +93,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-3.5 pt-0">
             <button
               onClick={() => onOpenDetails('personal')}
-              className="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-[8px] sm:text-sm flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-blue-500 hover:to-indigo-500 hover:shadow-blue-400/50 hover:shadow-md active:scale-95 group"
+              className="w-full py-1.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-blue-500 hover:to-indigo-500 hover:shadow-blue-400/50 hover:shadow-md active:scale-95 group"
             >
               <span className="group-hover:tracking-wide transition-all duration-200">বিস্তারিত</span>
               <span className="group-hover:translate-x-0.5 transition-transform duration-200">&gt;</span>
@@ -119,22 +119,22 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             <div className="w-8 h-8 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center mb-1 ring-2 sm:ring-4 ring-white shadow-sm">
               <Briefcase className="w-4 h-4 sm:w-7 sm:h-7 text-white stroke-[2.5]" />
             </div>
-            <div className="px-1.5 sm:px-3 py-0.5 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[7.5px] sm:text-xs shadow-sm mb-1 leading-tight text-center">
+            <div className="px-1.5 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[7.5px] sm:text-sm shadow-sm mb-1 leading-tight text-center">
               বিজনেস অ্যাকাউন্ট
             </div>
-            <div className="text-[15px] sm:text-2xl md:text-3xl font-black text-emerald-800 leading-tight mb-1">
+            <div className="text-[15px] sm:text-3xl md:text-4xl font-black text-emerald-800 leading-tight mb-1">
               {plans.business.priceFormatted}
             </div>
-            <div className="hidden sm:block text-[9px] sm:text-xs text-emerald-700 font-semibold mb-2 leading-tight">
+            <div className="hidden sm:block text-xs sm:text-sm text-emerald-700 font-semibold mb-2 leading-tight">
               {plans.business.subtitle}
             </div>
-            <div className="w-full border-t border-emerald-100 pt-1.5 sm:pt-2 flex flex-col gap-1 sm:gap-2 text-left">
+            <div className="w-full border-t border-emerald-100 pt-1.5 sm:pt-3 flex flex-col gap-1 sm:gap-3 text-left">
               {plans.business.features.map((feat, idx) => (
-                <div key={idx} className={`flex items-start gap-1 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 text-white stroke-[3.5]" />
+                <div key={idx} className={`flex items-start gap-1 sm:gap-2 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
+                  <div className="w-3 h-3 sm:w-5 sm:h-5 rounded-full bg-emerald-600 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-1.5 h-1.5 sm:w-3 sm:h-3 text-white stroke-[3.5]" />
                   </div>
-                  <span className="text-[7.5px] sm:text-[11px] font-bold text-slate-800 leading-tight">
+                  <span className="text-[7.5px] sm:text-sm font-bold text-slate-800 leading-tight">
                     {feat.title}
                   </span>
                 </div>
@@ -145,7 +145,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-3.5 pt-0">
             <button
               onClick={() => onOpenDetails('business')}
-              className="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[8px] sm:text-sm flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-emerald-500 hover:to-teal-500 hover:shadow-emerald-400/50 hover:shadow-md active:scale-95 group"
+              className="w-full py-1.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-emerald-500 hover:to-teal-500 hover:shadow-emerald-400/50 hover:shadow-md active:scale-95 group"
             >
               <span className="group-hover:tracking-wide transition-all duration-200">বিস্তারিত</span>
               <span className="group-hover:translate-x-0.5 transition-transform duration-200">&gt;</span>
@@ -170,22 +170,22 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             <div className="w-8 h-8 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-purple-700 to-indigo-600 flex items-center justify-center mb-1 ring-2 sm:ring-4 ring-white shadow-sm">
               <Award className="w-4 h-4 sm:w-7 sm:h-7 text-amber-300 fill-amber-300/30 stroke-[2.2]" />
             </div>
-            <div className="px-1.5 sm:px-3 py-0.5 rounded-full bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-black text-[7.5px] sm:text-xs shadow-sm mb-1 leading-tight text-center">
+            <div className="px-1.5 sm:px-4 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-purple-700 to-indigo-700 text-white font-black text-[7.5px] sm:text-sm shadow-sm mb-1 leading-tight text-center">
               Sub Admin Panel
             </div>
-            <div className="text-[15px] sm:text-2xl md:text-3xl font-black text-purple-900 leading-tight mb-1">
+            <div className="text-[15px] sm:text-3xl md:text-4xl font-black text-purple-900 leading-tight mb-1">
               {plans.sub_admin.priceFormatted}
             </div>
-            <div className="hidden sm:block text-[9px] sm:text-xs text-purple-700 font-semibold mb-2 leading-tight">
+            <div className="hidden sm:block text-xs sm:text-sm text-purple-700 font-semibold mb-2 leading-tight">
               {plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}
             </div>
-            <div className="w-full border-t border-purple-100 pt-1.5 sm:pt-2 flex flex-col gap-1 sm:gap-2 text-left">
+            <div className="w-full border-t border-purple-100 pt-1.5 sm:pt-3 flex flex-col gap-1 sm:gap-3 text-left">
               {plans.sub_admin.features.map((feat, idx) => (
-                <div key={idx} className={`flex items-start gap-1 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
-                  <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-purple-700 flex items-center justify-center shrink-0 mt-0.5">
-                    <Check className="w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 text-white stroke-[3.5]" />
+                <div key={idx} className={`flex items-start gap-1 sm:gap-2 ${idx >= 2 ? 'hidden sm:flex' : ''}`}>
+                  <div className="w-3 h-3 sm:w-5 sm:h-5 rounded-full bg-purple-700 flex items-center justify-center shrink-0 mt-0.5">
+                    <Check className="w-1.5 h-1.5 sm:w-3 sm:h-3 text-white stroke-[3.5]" />
                   </div>
-                  <span className="text-[7.5px] sm:text-[11px] font-bold text-slate-800 leading-tight">
+                  <span className="text-[7.5px] sm:text-sm font-bold text-slate-800 leading-tight">
                     {feat.title}
                   </span>
                 </div>
@@ -196,7 +196,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-3.5 pt-0">
             <button
               onClick={() => onOpenDetails('sub_admin')}
-              className="w-full py-1.5 sm:py-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-700 to-indigo-600 text-white font-black text-[8px] sm:text-sm flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-purple-600 hover:to-indigo-500 hover:shadow-purple-400/50 hover:shadow-md active:scale-95 group"
+              className="w-full py-1.5 sm:py-3 rounded-lg sm:rounded-xl bg-gradient-to-r from-purple-700 to-indigo-600 text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 shadow-sm cursor-pointer transition-all duration-200 hover:from-purple-600 hover:to-indigo-500 hover:shadow-purple-400/50 hover:shadow-md active:scale-95 group"
             >
               <span className="group-hover:tracking-wide transition-all duration-200">বিস্তারিত</span>
               <span className="group-hover:translate-x-0.5 transition-transform duration-200">&gt;</span>
