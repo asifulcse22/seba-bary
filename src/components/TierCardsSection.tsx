@@ -7,11 +7,7 @@ import {
   Briefcase, 
   Award,
   Star, 
-  CheckCircle2, 
-  ShieldCheck, 
-  Zap, 
-  Headphones, 
-  Handshake 
+  CheckCircle2
 } from 'lucide-react';
 import { getTierPlans } from '../data/tierPlans';
 
@@ -66,21 +62,22 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
       </div>
 
       {/* ============================================================== */}
-      {/* 🎯 ২. ৩টি কার্ড — মোবাইলেও পাশাপাশি ৩ কলাম, স্ক্রল ছাড়া */}
+      {/* 🎯 ২. ৩টি কার্ড — মোবাইলেও পাশাপাশি ৩ কলাম */}
+      {/* items-start: মোবাইলে কার্ড কনটেন্ট অনুযায়ী উচ্চতা নেবে, ডেস্কটপে সমান */}
       {/* ============================================================== */}
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-2">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-start sm:items-stretch pt-2">
         
         {/* ============================================================== */}
         {/* --- Card 1: পার্সোনাল অ্যাকাউন্ট (নীল থিম) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
             user?.activeTier === 'personal' ? 'ring-2 sm:ring-4 ring-blue-400/50' : ''
           }`}
         >
           {/* সক্রিয় মোড ব্যাজ */}
           {user?.activeTier === 'personal' && (
-            <div className="absolute top-1 right-1 sm:top-3 sm:right-3 px-1.5 sm:px-3 py-0.5 sm:py-1 bg-blue-600 text-white text-[6px] sm:text-[10px] font-black rounded-full flex items-center gap-0.5 sm:gap-1 shadow-md z-20">
+            <div className="absolute top-1 right-1 sm:top-3 sm:right-3 px-1.5 sm:px-3 py-0.5 sm:py-1 bg-blue-600 text-white text-[7px] sm:text-[10px] font-black rounded-full flex items-center gap-0.5 sm:gap-1 shadow-md z-20">
               <CheckCircle2 className="w-2 h-2 sm:w-3 sm:h-3 text-blue-200" />
               <span>সক্রিয় মোড</span>
             </div>
@@ -100,7 +97,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* ক্যাপসুল ব্যাজ */}
-              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#0a48a3] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#0a48a3] text-white font-black text-[8px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.personal.name}
               </div>
 
@@ -112,7 +109,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
+              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.personal.subtitle}
               </div>
 
@@ -130,7 +127,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                     <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#0070e0] text-white flex items-center justify-center shrink-0 shadow-xs">
                       <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[8px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -143,11 +140,11 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('personal')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-blue-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-blue-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span className="text-[8px] sm:text-lg">➔</span>
+              <span className="text-[9px] sm:text-lg">➔</span>
               <span>বিস্তারিত দেখুন</span>
-              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
+              <span className="text-[9px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
@@ -156,13 +153,13 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 2: বিজনেস অ্যাকাউন্ট (সবুজ থিম - সবচেয়ে জনপ্রিয়) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
             user?.activeTier === 'business' ? 'ring-2 sm:ring-4 ring-emerald-400/50' : ''
           }`}
         >
           {/* লাল রিবন: ★ সবচেয়ে জনপ্রিয় ★ */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
-            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#d32f2f] via-[#e53935] to-[#d32f2f] text-white font-black text-[6px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#9a0007] whitespace-nowrap">
+            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#d32f2f] via-[#e53935] to-[#d32f2f] text-white font-black text-[7px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#9a0007] whitespace-nowrap">
               <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300" />
               <span>সবচেয়ে জনপ্রিয়</span>
               <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300" />
@@ -183,7 +180,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* ক্যাপসুল ব্যাজ */}
-              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#007e33] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#007e33] text-white font-black text-[8px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.business.name}
               </div>
 
@@ -195,7 +192,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
+              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.business.subtitle}
               </div>
 
@@ -213,7 +210,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                     <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#00c853] text-white flex items-center justify-center shrink-0 shadow-xs">
                       <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[8px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -226,11 +223,11 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('business')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-green-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-green-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span className="text-[8px] sm:text-lg">➔</span>
+              <span className="text-[9px] sm:text-lg">➔</span>
               <span>বিস্তারিত দেখুন</span>
-              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
+              <span className="text-[9px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
@@ -239,13 +236,13 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 3: Sub Admin Panel (পার্পল থিম - Recommended) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
             user?.activeTier === 'sub_admin' ? 'ring-2 sm:ring-4 ring-purple-400/50' : ''
           }`}
         >
           {/* গোল্ডেন রিবন: ★ Recommended */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
-            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#fbc02d] via-[#f57f17] to-[#fbc02d] text-amber-950 font-black text-[6px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#b26a00] whitespace-nowrap">
+            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#fbc02d] via-[#f57f17] to-[#fbc02d] text-amber-950 font-black text-[7px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#b26a00] whitespace-nowrap">
               <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-950 text-amber-950" />
               <span>Recommended</span>
             </div>
@@ -265,7 +262,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
 
               {/* ক্যাপসুল ব্যাজ */}
-              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#4a148c] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#4a148c] text-white font-black text-[8px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.sub_admin.name}
               </div>
 
@@ -277,7 +274,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
+              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}
               </div>
 
@@ -295,7 +292,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                     <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#8e24aa] text-white flex items-center justify-center shrink-0 shadow-xs">
                       <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[8px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -308,11 +305,11 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('sub_admin')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-purple-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-purple-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span className="text-[8px] sm:text-lg">➔</span>
+              <span className="text-[9px] sm:text-lg">➔</span>
               <span>বিস্তারিত দেখুন</span>
-              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
+              <span className="text-[9px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
