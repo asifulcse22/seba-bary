@@ -20,12 +20,247 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
   const plans = getTierPlans();
 
   return (
-    <section className="space-y-3 sm:space-y-8 max-w-6xl mx-auto px-1.5 sm:px-4 py-2 sm:py-6">
+    <section className="tier-section space-y-3 sm:space-y-8 max-w-6xl mx-auto px-1.5 sm:px-4 py-2 sm:py-6">
+
+      <style>{`
+        /* Mobile: keep all three plans visible together without page scrolling. */
+        @media (max-width: 640px) {
+          .tier-section {
+            box-sizing: border-box;
+            width: 100%;
+            height: 100svh;
+            min-height: 0;
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 7px 5px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 8px !important;
+            overflow: hidden;
+          }
+
+          .tier-header {
+            flex: 0 0 auto;
+            width: 100%;
+            max-width: 100%;
+            padding: 0 2px;
+          }
+
+          .tier-header > div:first-child {
+            gap: 0;
+          }
+
+          .tier-header > div:first-child > div:nth-child(2) {
+            gap: 5px;
+            padding: 6px 10px;
+            border-radius: 999px;
+          }
+
+          .tier-header > div:first-child > div:nth-child(2) span:first-child {
+            font-size: 15px;
+          }
+
+          .tier-header > div:first-child > div:nth-child(2) span:last-child {
+            font-size: 12px;
+          }
+
+          .tier-header > div:first-child > div:nth-child(2) span:nth-child(2) {
+            font-size: clamp(9px, 2.8vw, 12px);
+            white-space: nowrap;
+          }
+
+          .tier-header > div:last-child {
+            margin-top: 4px;
+          }
+
+          .tier-header > div:last-child > span {
+            max-width: 100%;
+            padding: 4px 8px;
+            font-size: clamp(7px, 2.1vw, 9px);
+            line-height: 1.2;
+          }
+
+          .tier-header > div:last-child svg {
+            width: 11px;
+            height: 11px;
+          }
+
+          .tier-grid {
+            flex: 1 1 auto;
+            min-height: 0;
+            width: 100%;
+            padding-top: 0 !important;
+            gap: 5px !important;
+            align-items: stretch;
+          }
+
+          .tier-card {
+            height: 100%;
+            min-height: 0;
+            min-width: 0;
+            border-width: 2px !important;
+            border-radius: 20px !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+          }
+
+          .tier-card-main {
+            min-height: 0;
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+          }
+
+          .tier-card-main > div:first-child {
+            padding-top: 25px !important;
+            padding-bottom: 2px !important;
+          }
+
+          .tier-card-main > div:first-child > div:first-child {
+            width: 58px !important;
+            height: 29px !important;
+          }
+
+          .tier-card-main > div:first-child > div:nth-child(2) {
+            width: 42px !important;
+            height: 42px !important;
+            padding: 3px !important;
+          }
+
+          .tier-card-main > div:first-child > div:nth-child(2) svg {
+            width: 21px !important;
+            height: 21px !important;
+          }
+
+          .tier-card-main > div:first-child > div:nth-child(3) {
+            max-width: 94%;
+            padding: 2px 5px !important;
+            font-size: clamp(6px, 1.8vw, 8px) !important;
+            white-space: normal;
+            text-align: center;
+            line-height: 1.15;
+          }
+
+          .tier-card-main > div:first-child > div:nth-child(4) {
+            margin-top: 2px !important;
+            font-size: clamp(19px, 6vw, 27px) !important;
+            line-height: 1.05;
+            white-space: nowrap;
+          }
+
+          .tier-card-main > div:nth-child(2) {
+            min-height: 0;
+            flex: 1 1 auto;
+            padding-left: 5px !important;
+            padding-right: 5px !important;
+            padding-bottom: 2px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:first-child {
+            min-height: 35px !important;
+            padding: 4px 3px !important;
+            border-radius: 9px !important;
+            font-size: clamp(6px, 1.8vw, 8px) !important;
+            line-height: 1.2;
+            overflow-wrap: anywhere;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(2) {
+            padding: 0 !important;
+            gap: 4px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(2) span {
+            width: 5px !important;
+            height: 5px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) {
+            min-height: 0;
+            flex: 1 1 auto;
+            padding-top: 0 !important;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 7px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div {
+            align-items: flex-start !important;
+            gap: 4px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div {
+            width: 13px !important;
+            height: 13px !important;
+            margin-top: 1px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div svg {
+            width: 9px !important;
+            height: 9px !important;
+          }
+
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) span {
+            font-size: clamp(6px, 1.75vw, 7.5px) !important;
+            line-height: 1.25 !important;
+            overflow-wrap: anywhere;
+          }
+
+          .tier-card-footer {
+            flex: 0 0 auto;
+            padding: 5px !important;
+          }
+
+          .tier-card-footer button {
+            min-height: 31px;
+            padding: 5px 2px !important;
+            gap: 2px !important;
+            font-size: clamp(7px, 2vw, 9px) !important;
+            line-height: 1.1;
+          }
+
+          .tier-card-footer button span:first-child {
+            font-size: 10px;
+          }
+
+          /* Keep the ribbons legible without making the cards taller. */
+          .tier-card > div:first-child {
+            max-width: 96%;
+          }
+        }
+
+        @media (max-width: 640px) and (max-height: 620px) {
+          .tier-section {
+            gap: 5px !important;
+            padding-top: 3px !important;
+            padding-bottom: 3px !important;
+          }
+          .tier-header > div:last-child { display: none; }
+          .tier-card-main > div:first-child { padding-top: 21px !important; }
+          .tier-card-main > div:nth-child(2) { gap: 3px !important; }
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) { gap: 4px !important; }
+          .tier-card-footer button { min-height: 27px; }
+        }
+
+        @media (max-width: 360px) {
+          .tier-grid { gap: 3px !important; }
+          .tier-card { border-radius: 15px !important; }
+          .tier-card-main > div:nth-child(2) { padding-left: 3px !important; padding-right: 3px !important; }
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div { gap: 3px !important; }
+          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div { width: 11px !important; height: 11px !important; }
+        }
+      `}</style>
       
       {/* ============================================================== */}
       {/* 👑 ১. শীর্ষ ব্যানার */}
       {/* ============================================================== */}
-      <div className="text-center space-y-2 max-w-3xl mx-auto relative px-1">
+      <div className="tier-header text-center space-y-2 max-w-3xl mx-auto relative px-1">
         
         <div className="flex items-center justify-center gap-1.5 sm:gap-4 relative">
           {/* বামপাশের স্পিড ড্যাশ লাইন */}
@@ -64,13 +299,13 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
       {/* ============================================================== */}
       {/* 🎯 ২. ৩টি কার্ড (মোবাইলে কমপ্যাক্ট হাইট ও সুন্দর অনুপাত) */}
       {/* ============================================================== */}
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-1 sm:pt-2">
+      <div className="tier-grid grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-1 sm:pt-2">
         
         {/* ============================================================== */}
         {/* --- Card 1: পার্সোনাল অ্যাকাউন্ট (নীল থিম) --- */}
         {/* ============================================================== */}
         <div 
-          className={`w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'personal' ? 'ring-2 sm:ring-4 ring-blue-400/50' : ''
           }`}
         >
@@ -82,7 +317,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           )}
 
-          <div>
+          <div className="tier-card-main">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-3 sm:pt-7 pb-1 sm:pb-2 flex flex-col items-center">
               <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#0091ff] via-[#38bdf8] to-transparent rounded-b-full opacity-90 -z-0"></div>
@@ -135,7 +370,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('personal')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-blue-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
@@ -151,7 +386,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 2: বিজনেস অ্যাকাউন্ট (সবুজ থিম - সবচেয়ে জনপ্রিয়) --- */}
         {/* ============================================================== */}
         <div 
-          className={`w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'business' ? 'ring-2 sm:ring-4 ring-emerald-400/50' : ''
           }`}
         >
@@ -164,7 +399,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          <div>
+          <div className="tier-card-main">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-4 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
               <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#00c853] via-[#69f0ae] to-transparent rounded-b-full opacity-90 -z-0"></div>
@@ -217,7 +452,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('business')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-green-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
@@ -233,7 +468,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 3: Sub Admin Panel (পার্পল থিম - Recommended) --- */}
         {/* ============================================================== */}
         <div 
-          className={`w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'sub_admin' ? 'ring-2 sm:ring-4 ring-purple-400/50' : ''
           }`}
         >
@@ -245,7 +480,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          <div>
+          <div className="tier-card-main">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-4 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
               <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#9c27b0] via-[#ce93d8] to-transparent rounded-b-full opacity-90 -z-0"></div>
@@ -298,7 +533,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('sub_admin')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-purple-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
