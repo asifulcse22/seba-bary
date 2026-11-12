@@ -14,7 +14,11 @@ import {
   Award,
   Crown,
   ArrowLeft,
-  LayoutDashboard
+  LayoutDashboard,
+  Sparkles,
+  ShieldCheck,
+  Zap,
+  Clock
 } from 'lucide-react';
 import { AccountTier } from '../types';
 import { TIER_PRICES } from '../data/tierPlans';
@@ -673,184 +677,354 @@ export const WalletHubView: React.FC = () => {
           </form>
         </div>
 
-        {/* Right Column: উইথড্র করুন (Withdraw Form) */}
-        <div 
-          id="withdraw-form" 
-          className={`rounded-3xl bg-white border shadow-md p-4 sm:p-6 space-y-4 transition-all ${
-            selectedViewTier === 'personal'
-              ? 'border-blue-200/90'
-              : selectedViewTier === 'business'
-              ? 'border-emerald-200/90'
-              : 'border-purple-200/90'
-          }`}
-        >
-          <div className={`flex items-center justify-between pb-2 border-b ${
-            selectedViewTier === 'personal'
-              ? 'border-blue-100'
-              : selectedViewTier === 'business'
-              ? 'border-emerald-100'
-              : 'border-purple-100'
-          }`}>
-            <div className="flex items-center gap-2">
-              <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm ${
-                selectedViewTier === 'personal'
-                  ? 'bg-blue-100 text-blue-700'
-                  : selectedViewTier === 'business'
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-purple-100 text-purple-700'
-              }`}>
-                💳
+        {/* Right Column: Personal Animated Showcase OR Business/Sub-Admin Withdraw Form */}
+        {selectedViewTier === 'personal' ? (
+          <div 
+            id="withdraw-form"
+            className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#022f66] via-[#044a9e] to-[#011e42] text-white p-5 sm:p-7 shadow-xl border-2 border-blue-400/50 flex flex-col justify-between space-y-5 animate-in fade-in zoom-in-95 duration-300 min-h-[460px]"
+          >
+            <style>{`
+              @keyframes pw-particle {
+                0% { transform: translateY(15px) scale(0.7) rotate(0deg); opacity: 0; }
+                25% { opacity: 0.9; }
+                75% { opacity: 0.9; }
+                100% { transform: translateY(-140px) scale(1.15) rotate(240deg); opacity: 0; }
+              }
+              @keyframes pw-glow {
+                0%, 100% { transform: scale(1); opacity: 0.45; }
+                50% { transform: scale(1.25); opacity: 0.8; }
+              }
+              @keyframes pw-spin {
+                to { transform: rotate(360deg); }
+              }
+              @keyframes pw-shimmer {
+                0% { background-position: -200% 0; }
+                100% { background-position: 200% 0; }
+              }
+              .pw-particle-item { position: absolute; bottom: 10px; animation: pw-particle linear infinite; pointer-events: none; }
+              .pw-glow-orb { animation: pw-glow 4s ease-in-out infinite; }
+              .pw-spinning { animation: pw-spin 12s linear infinite; }
+              .pw-shimmer-txt {
+                background-size: 200% 100%;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                animation: pw-shimmer 3s linear infinite;
+              }
+            `}</style>
+
+            {/* Glowing Ambient Orbs */}
+            <div className="pw-glow-orb absolute -top-12 -right-12 w-48 h-48 rounded-full bg-cyan-400/25 blur-3xl pointer-events-none" />
+            <div className="pw-glow-orb absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-blue-500/30 blur-3xl pointer-events-none" style={{ animationDelay: '2s' }} />
+
+            {/* Floating Particles */}
+            {[
+              { left: '10%', delay: '0s', dur: '5s', icon: '✨', size: 'text-base' },
+              { left: '28%', delay: '1.5s', dur: '6s', icon: '⚡', size: 'text-sm' },
+              { left: '50%', delay: '0.8s', dur: '5.5s', icon: '💎', size: 'text-xs' },
+              { left: '72%', delay: '2.2s', dur: '6.5s', icon: '🛡️', size: 'text-sm' },
+              { left: '88%', delay: '1.1s', dur: '5.2s', icon: '✨', size: 'text-base' },
+            ].map((p, i) => (
+              <span
+                key={i}
+                className={`pw-particle-item ${p.size} select-none drop-shadow`}
+                style={{ left: p.left, animationDelay: p.delay, animationDuration: p.dur }}
+              >
+                {p.icon}
+              </span>
+            ))}
+
+            <div className="relative z-10 space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/15">
+                <div className="flex items-center gap-2.5">
+                  <div className="relative w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-500 to-cyan-400 flex items-center justify-center text-lg shadow-md shadow-blue-500/30">
+                    <span className="relative">👤</span>
+                  </div>
+                  <div>
+                    <h3 className="text-base sm:text-lg font-black text-white flex items-center gap-1.5">
+                      <span>পার্সোনাল স্মার্ট সেবা হাব</span>
+                      <Sparkles className="w-4 h-4 text-amber-300 fill-amber-300" />
+                    </h3>
+                    <p className="text-[11px] text-blue-200 font-medium">ব্যক্তিগত গ্রাহক পোর্টাল</p>
+                  </div>
+                </div>
+
+                <span className="px-2.5 py-1 rounded-full text-[10px] font-black bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                  <span>১০০% ডিরেক্ট সার্ভিস</span>
+                </span>
               </div>
-              <h2 className="text-base sm:text-lg font-black text-slate-800">
-                {selectedViewTier === 'personal' 
-                  ? 'পার্সোনাল থেকে উইথড্র করুন' 
-                  : selectedViewTier === 'business' 
-                  ? 'বিজনেস থেকে উইথড্র করুন' 
-                  : 'সাব-এডমিন থেকে উইথড্র করুন'}
-              </h2>
+
+              {/* Animated Center Spotlight */}
+              <div className="py-2.5 px-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md flex items-center gap-3.5">
+                <div className="relative w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center shrink-0">
+                  <div className="pw-spinning absolute inset-0 rounded-full border-2 border-dashed border-cyan-400/60" />
+                  <div className="absolute inset-1.5 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-700 shadow-inner flex items-center justify-center text-2xl">
+                    ⚡
+                  </div>
+                </div>
+
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold text-cyan-300 uppercase tracking-wider block">
+                    উইথড্র প্রয়োজন নেই
+                  </span>
+                  <h4 
+                    className="pw-shimmer-txt text-xs sm:text-sm font-black tracking-tight"
+                    style={{
+                      backgroundImage: 'linear-gradient(90deg, #ffffff 0%, #38bdf8 30%, #fef08a 60%, #ffffff 100%)'
+                    }}
+                  >
+                    সরাসরি আবেদন ও তাত্ক্ষণিক ডেলিভারি!
+                  </h4>
+                  <p className="text-[11px] text-blue-100/80 leading-relaxed font-medium">
+                    পার্সোনাল অ্যাকাউন্টে কোনো ব্যালেন্স জমা রাখতে হয় না, সরাসরি যেকোনো সেবায় আবেদন করুন।
+                  </p>
+                </div>
+              </div>
+
+              {/* 3 Animated Micro Feature Pills */}
+              <div className="space-y-2">
+                {[
+                  {
+                    icon: <Zap className="w-4 h-4 text-amber-300 shrink-0" />,
+                    title: 'কোনো ওয়ালেট লক নেই',
+                    desc: 'কোনো অগ্রিম ডিপোজিট ছাড়াই সরাসরি সেবা নিতে পারবেন'
+                  },
+                  {
+                    icon: <Clock className="w-4 h-4 text-cyan-300 shrink-0" />,
+                    title: '১-৫ মিনিটে দ্রুত ডেলিভারি',
+                    desc: 'অটোমেটিক সার্ভার ভেরিফিকেশনে তাৎক্ষণিক ডিজিটাল কপি'
+                  },
+                  {
+                    icon: <ShieldCheck className="w-4 h-4 text-emerald-300 shrink-0" />,
+                    title: '১০০% অফিসিয়াল ও অথেনটিক',
+                    desc: 'সরকারি ডেটাবেজ ও এনক্রিপ্টেড প্রটোকলে সরাসরি কানেক্টেড'
+                  }
+                ].map((item, i) => (
+                  <div
+                    key={i}
+                    className="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-start gap-2.5 group"
+                  >
+                    <div className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                      {item.icon}
+                    </div>
+                    <div className="min-w-0">
+                      <span className="text-xs font-black text-white block">{item.title}</span>
+                      <span className="text-[10px] text-blue-200/80 font-medium block leading-tight">{item.desc}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Upgrade Notice for Earning / Withdraw */}
+              <div className="p-3 rounded-2xl bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 border border-amber-400/30 flex items-center justify-between gap-2">
+                <div className="space-y-0.5">
+                  <span className="text-xs font-black text-amber-300 flex items-center gap-1">
+                    <span>💼 ইনকাম ও উইথড্র করতে চান?</span>
+                  </span>
+                  <p className="text-[10px] text-amber-100/90 font-medium">
+                    কাস্টমারের কাজ করতে বিজনেস বা সাব-এডমিন একাউন্টে স্যুইচ করুন
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => handleSelectViewTier('business')}
+                    className="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[10px] font-black shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+                  >
+                    💼 বিজনেস
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleSelectViewTier('sub_admin')}
+                    className="px-2.5 py-1 rounded-lg bg-purple-700 hover:bg-purple-600 text-white text-[10px] font-black shadow-xs transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+                  >
+                    ★ সাব-এডমিন
+                  </button>
+                </div>
+              </div>
             </div>
-            <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
-              selectedViewTier === 'personal'
-                ? 'bg-blue-50 text-blue-700 border-blue-200'
-                : selectedViewTier === 'business'
-                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                : 'bg-purple-50 text-purple-700 border-purple-200'
+
+            {/* Bottom Direct CTA */}
+            <button
+              type="button"
+              onClick={() => setActiveTab('dashboard')}
+              className="relative z-10 w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-500 via-sky-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer group"
+            >
+              <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
+              <span>পার্সোনাল সেবাগুলো দেখুন ও আবেদন করুন</span>
+              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </div>
+        ) : (
+          <div 
+            id="withdraw-form" 
+            className={`rounded-3xl bg-white border shadow-md p-4 sm:p-6 space-y-4 transition-all ${
+              selectedViewTier === 'business'
+                ? 'border-emerald-200/90'
+                : 'border-purple-200/90'
+            }`}
+          >
+            <div className={`flex items-center justify-between pb-2 border-b ${
+              selectedViewTier === 'business'
+                ? 'border-emerald-100'
+                : 'border-purple-100'
             }`}>
-              {selectedViewTier === 'personal' ? '👤 পার্সোনাল' : selectedViewTier === 'sub_admin' ? '★ সাব-এডমিন' : '💼 বিজনেস'}
-            </span>
-          </div>
-
-          <p className="text-xs font-semibold text-slate-600">
-            আপনার পছন্দ অনুযায়ী যেকোনো মাধ্যমে টাকা তুলুন।
-          </p>
-
-          {/* 4 Method Selectors */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-            <button
-              type="button"
-              onClick={() => setWithdrawMethod('bKash')}
-              className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                withdrawMethod === 'bKash'
-                  ? 'border-pink-500 bg-pink-50 text-pink-800 ring-2 ring-pink-200'
-                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-              }`}
-            >
-              <span className="text-lg">৳</span>
-              <span className="text-xs font-bold mt-1">bKash</span>
-              <span className="text-[10px] text-slate-400">বিকাশ</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setWithdrawMethod('Nagad')}
-              className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                withdrawMethod === 'Nagad'
-                  ? 'border-orange-500 bg-orange-50 text-orange-800 ring-2 ring-orange-200'
-                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-              }`}
-            >
-              <span className="text-lg">💸</span>
-              <span className="text-xs font-bold mt-1">নগদ</span>
-              <span className="text-[10px] text-slate-400">Nagad</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setWithdrawMethod('Bank')}
-              className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                withdrawMethod === 'Bank'
-                  ? 'border-blue-600 bg-blue-50 text-blue-800 ring-2 ring-blue-200'
-                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-              }`}
-            >
-              <Building2 className="w-5 h-5 text-blue-600" />
-              <span className="text-xs font-bold mt-1">ব্যাংক</span>
-              <span className="text-[10px] text-slate-400">ট্রান্সফার</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setWithdrawMethod('Card')}
-              className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
-                withdrawMethod === 'Card'
-                  ? 'border-indigo-600 bg-indigo-50 text-indigo-800 ring-2 ring-indigo-200'
-                  : 'border-slate-200 hover:bg-slate-50 text-slate-700'
-              }`}
-            >
-              <CreditCard className="w-5 h-5 text-indigo-600" />
-              <span className="text-xs font-bold mt-1">কার্ড</span>
-              <span className="text-[10px] text-slate-400">ডেবিট/ক্রেডিট</span>
-            </button>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleWithdrawSubmit} className="space-y-3">
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1">
-                {withdrawMethod === 'Bank' ? 'ব্যাংক একাউন্ট নম্বর ও নাম' : withdrawMethod === 'Card' ? 'কার্ড নম্বর' : `${withdrawMethod} নাম্বার`}
-              </label>
-              <input
-                type="text"
-                value={withdrawAccount}
-                onChange={(e) => setWithdrawAccount(e.target.value)}
-                placeholder={withdrawMethod === 'Bank' ? 'একাউন্ট নং, ব্যাংক ও ব্রাঞ্চ নাম' : '01XXXXXXXXX'}
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm font-medium transition-all"
-              />
-            </div>
-
-            <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-xs font-bold text-slate-700">
-                  উইথড্র করার পরিমাণ (টাকা)
-                </label>
-                <span className={`text-[11px] font-bold ${
-                  selectedViewTier === 'personal' ? 'text-blue-700' : selectedViewTier === 'business' ? 'text-emerald-700' : 'text-purple-700'
+              <div className="flex items-center gap-2">
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center font-bold text-sm ${
+                  selectedViewTier === 'business'
+                    ? 'bg-emerald-100 text-emerald-700'
+                    : 'bg-purple-100 text-purple-700'
                 }`}>
-                  সর্বোচ্চ: ৳{(user?.tierBalances?.[selectedViewTier] ?? 0).toLocaleString('bn-BD')}
-                </span>
+                  💳
+                </div>
+                <h2 className="text-base sm:text-lg font-black text-slate-800">
+                  {selectedViewTier === 'business' 
+                    ? 'বিজনেস থেকে উইথড্র করুন' 
+                    : 'সাব-এডমিন থেকে উইথড্র করুন'}
+                </h2>
               </div>
-              <input
-                type="number"
-                value={withdrawAmount}
-                onChange={(e) => setWithdrawAmount(e.target.value)}
-                placeholder="ন্যূনতম ৳১০০"
-                min="100"
-                max={user?.tierBalances?.[selectedViewTier] ?? undefined}
-                required
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm font-medium transition-all"
-              />
+              <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border ${
+                selectedViewTier === 'business'
+                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                  : 'bg-purple-50 text-purple-700 border-purple-200'
+              }`}>
+                {selectedViewTier === 'sub_admin' ? '★ সাব-এডমিন' : '💼 বিজনেস'}
+              </span>
             </div>
 
-            {/* Info Notes */}
-            <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 space-y-1 text-xs text-blue-900">
-              <div className="flex items-center gap-1.5 font-semibold">
-                <span className="w-3.5 h-3.5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px]">
-                  i
-                </span>
-                <span>উইথড্র অনুরোধ করার পর দ্রুত প্রসেস করা হবে।</span>
-              </div>
-              <div className="flex items-center gap-1.5 text-slate-600 font-medium">
-                <Check className="w-3.5 h-3.5 text-emerald-600" />
-                <span>সর্বনিম্ন উইথড্র পরিমাণ: ৳১০০</span>
-              </div>
+            <p className="text-xs font-semibold text-slate-600">
+              আপনার পছন্দ অনুযায়ী যেকোনো মাধ্যমে টাকা তুলুন।
+            </p>
+
+            {/* 4 Method Selectors */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <button
+                type="button"
+                onClick={() => setWithdrawMethod('bKash')}
+                className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                  withdrawMethod === 'bKash'
+                    ? 'border-pink-500 bg-pink-50 text-pink-800 ring-2 ring-pink-200'
+                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                }`}
+              >
+                <span className="text-lg">৳</span>
+                <span className="text-xs font-bold mt-1">bKash</span>
+                <span className="text-[10px] text-slate-400">বিকাশ</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setWithdrawMethod('Nagad')}
+                className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                  withdrawMethod === 'Nagad'
+                    ? 'border-orange-500 bg-orange-50 text-orange-800 ring-2 ring-orange-200'
+                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                }`}
+              >
+                <span className="text-lg">💸</span>
+                <span className="text-xs font-bold mt-1">নগদ</span>
+                <span className="text-[10px] text-slate-400">Nagad</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setWithdrawMethod('Bank')}
+                className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                  withdrawMethod === 'Bank'
+                    ? 'border-blue-600 bg-blue-50 text-blue-800 ring-2 ring-blue-200'
+                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                }`}
+              >
+                <Building2 className="w-5 h-5 text-blue-600" />
+                <span className="text-xs font-bold mt-1">ব্যাংক</span>
+                <span className="text-[10px] text-slate-400">ট্রান্সফার</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setWithdrawMethod('Card')}
+                className={`p-2 rounded-xl border flex flex-col items-center justify-center text-center transition-all cursor-pointer ${
+                  withdrawMethod === 'Card'
+                    ? 'border-indigo-600 bg-indigo-50 text-indigo-800 ring-2 ring-indigo-200'
+                    : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                }`}
+              >
+                <CreditCard className="w-5 h-5 text-indigo-600" />
+                <span className="text-xs font-bold mt-1">কার্ড</span>
+                <span className="text-[10px] text-slate-400">ডেবিট/ক্রেডিট</span>
+              </button>
             </div>
 
-            <button
-              type="submit"
-              disabled={isWithdrawSubmitting}
-              className={`w-full py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all duration-300 cursor-pointer disabled:opacity-60 ${
-                selectedViewTier === 'personal'
-                  ? 'bg-gradient-to-r from-blue-600 via-sky-600 to-indigo-600 hover:from-blue-500 hover:via-sky-500 hover:to-indigo-500 shadow-blue-600/20 hover:shadow-blue-500/35 hover:-translate-y-0.5 active:translate-y-0'
-                  : selectedViewTier === 'business'
-                  ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-600 shadow-emerald-600/20 hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0'
-                  : 'bg-gradient-to-r from-purple-700 via-indigo-600 to-amber-600 hover:from-purple-600 hover:via-indigo-500 hover:to-amber-500 shadow-purple-600/20 hover:shadow-purple-500/35 hover:-translate-y-0.5 active:translate-y-0'
-              }`}
-            >
-              {isWithdrawSubmitting ? 'প্রসেসিং হচ্ছে...' : `${selectedViewTier === 'personal' ? 'পার্সোনাল' : selectedViewTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস'} একাউন্ট থেকে উইথড্র করুন ➔`}
-            </button>
-          </form>
-        </div>
+            {/* Form */}
+            <form onSubmit={handleWithdrawSubmit} className="space-y-3">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  {withdrawMethod === 'Bank' ? 'ব্যাংক একাউন্ট নম্বর ও নাম' : withdrawMethod === 'Card' ? 'কার্ড নম্বর' : `${withdrawMethod} নাম্বার`}
+                </label>
+                <input
+                  type="text"
+                  value={withdrawAccount}
+                  onChange={(e) => setWithdrawAccount(e.target.value)}
+                  placeholder={withdrawMethod === 'Bank' ? 'একাউন্ট নং, ব্যাংক ও ব্রাঞ্চ নাম' : '01XXXXXXXXX'}
+                  required
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm font-medium transition-all"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs font-bold text-slate-700">
+                    উইথড্র করার পরিমাণ (টাকা)
+                  </label>
+                  <span className={`text-[11px] font-bold ${
+                    selectedViewTier === 'business' ? 'text-emerald-700' : 'text-purple-700'
+                  }`}>
+                    সর্বোচ্চ: ৳{(user?.tierBalances?.[selectedViewTier] ?? 0).toLocaleString('bn-BD')}
+                  </span>
+                </div>
+                <input
+                  type="number"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  placeholder="ন্যূনতম ৳১০০"
+                  min="100"
+                  max={user?.tierBalances?.[selectedViewTier] ?? undefined}
+                  required
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none text-sm font-medium transition-all"
+                />
+              </div>
+
+              {/* Info Notes */}
+              <div className="p-2.5 rounded-xl bg-blue-50/70 border border-blue-200 space-y-1 text-xs text-blue-900">
+                <div className="flex items-center gap-1.5 font-semibold">
+                  <span className="w-3.5 h-3.5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px]">
+                    i
+                  </span>
+                  <span>উইথড্র অনুরোধ করার পর দ্রুত প্রসেস করা হবে।</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-600 font-medium">
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>সর্বনিম্ন উইথড্র পরিমাণ: ৳১০০</span>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isWithdrawSubmitting}
+                className={`w-full py-3.5 rounded-2xl text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg transition-all duration-300 cursor-pointer disabled:opacity-60 ${
+                  selectedViewTier === 'business'
+                    ? 'bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:via-teal-500 hover:to-cyan-600 shadow-emerald-600/20 hover:shadow-emerald-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                    : 'bg-gradient-to-r from-purple-700 via-indigo-600 to-amber-600 hover:from-purple-600 hover:via-indigo-500 hover:to-amber-500 shadow-purple-600/20 hover:shadow-purple-500/35 hover:-translate-y-0.5 active:translate-y-0'
+                }`}
+              >
+                {isWithdrawSubmitting ? 'প্রসেসিং হচ্ছে...' : `${selectedViewTier === 'sub_admin' ? 'সাব-এডমিন' : 'বিজনেস'} একাউন্ট থেকে উইথড্র করুন ➔`}
+              </button>
+            </form>
+          </div>
+        )}
 
       </div>
 
