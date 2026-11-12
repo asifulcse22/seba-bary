@@ -7,7 +7,11 @@ import {
   Briefcase, 
   Award,
   Star, 
-  CheckCircle2 
+  CheckCircle2, 
+  ShieldCheck, 
+  Zap, 
+  Headphones, 
+  Handshake 
 } from 'lucide-react';
 import { getTierPlans } from '../data/tierPlans';
 
@@ -20,249 +24,14 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
   const plans = getTierPlans();
 
   return (
-    <section className="tier-section space-y-3 sm:space-y-8 max-w-6xl mx-auto px-1.5 sm:px-4 py-2 sm:py-6">
-
-      <style>{`
-        /* Mobile: keep all three plans visible together without page scrolling. */
-        @media (max-width: 640px) {
-          .tier-section {
-            box-sizing: border-box;
-            width: 100%;
-            height: 100svh;
-            min-height: 0;
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 7px 5px !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 8px !important;
-            overflow: hidden;
-          }
-
-          .tier-header {
-            flex: 0 0 auto;
-            width: 100%;
-            max-width: 100%;
-            padding: 0 2px;
-          }
-
-          .tier-header > div:first-child {
-            gap: 0;
-          }
-
-          .tier-header > div:first-child > div:nth-child(2) {
-            gap: 5px;
-            padding: 6px 10px;
-            border-radius: 999px;
-          }
-
-          .tier-header > div:first-child > div:nth-child(2) span:first-child {
-            font-size: 15px;
-          }
-
-          .tier-header > div:first-child > div:nth-child(2) span:last-child {
-            font-size: 12px;
-          }
-
-          .tier-header > div:first-child > div:nth-child(2) span:nth-child(2) {
-            font-size: clamp(9px, 2.8vw, 12px);
-            white-space: nowrap;
-          }
-
-          .tier-header > div:last-child {
-            margin-top: 4px;
-          }
-
-          .tier-header > div:last-child > span {
-            max-width: 100%;
-            padding: 4px 8px;
-            font-size: clamp(7px, 2.1vw, 9px);
-            line-height: 1.2;
-          }
-
-          .tier-header > div:last-child svg {
-            width: 11px;
-            height: 11px;
-          }
-
-          .tier-grid {
-            flex: 1 1 auto;
-            min-height: 0;
-            width: 100%;
-            padding-top: 0 !important;
-            gap: 5px !important;
-            align-items: stretch;
-          }
-
-          .tier-card {
-            height: 100%;
-            min-height: 0;
-            min-width: 0;
-            border-width: 2px !important;
-            border-radius: 20px !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-          }
-
-          .tier-card-main {
-            min-height: 0;
-            flex: 1 1 auto;
-            display: flex;
-            flex-direction: column;
-          }
-
-          .tier-card-main > div:first-child {
-            padding-top: 25px !important;
-            padding-bottom: 2px !important;
-          }
-
-          .tier-card-main > div:first-child > div:first-child {
-            width: 58px !important;
-            height: 29px !important;
-          }
-
-          .tier-card-main > div:first-child > div:nth-child(2) {
-            width: 42px !important;
-            height: 42px !important;
-            padding: 3px !important;
-          }
-
-          .tier-card-main > div:first-child > div:nth-child(2) svg {
-            width: 21px !important;
-            height: 21px !important;
-          }
-
-          .tier-card-main > div:first-child > div:nth-child(3) {
-            max-width: 94%;
-            padding: 2px 5px !important;
-            font-size: clamp(6px, 1.8vw, 8px) !important;
-            white-space: normal;
-            text-align: center;
-            line-height: 1.15;
-          }
-
-          .tier-card-main > div:first-child > div:nth-child(4) {
-            margin-top: 2px !important;
-            font-size: clamp(19px, 6vw, 27px) !important;
-            line-height: 1.05;
-            white-space: nowrap;
-          }
-
-          .tier-card-main > div:nth-child(2) {
-            min-height: 0;
-            flex: 1 1 auto;
-            padding-left: 5px !important;
-            padding-right: 5px !important;
-            padding-bottom: 2px;
-            display: flex;
-            flex-direction: column;
-            gap: 5px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:first-child {
-            min-height: 35px !important;
-            padding: 4px 3px !important;
-            border-radius: 9px !important;
-            font-size: clamp(6px, 1.8vw, 8px) !important;
-            line-height: 1.2;
-            overflow-wrap: anywhere;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(2) {
-            padding: 0 !important;
-            gap: 4px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(2) span {
-            width: 5px !important;
-            height: 5px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) {
-            min-height: 0;
-            flex: 1 1 auto;
-            padding-top: 0 !important;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 7px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div {
-            align-items: flex-start !important;
-            gap: 4px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div {
-            width: 13px !important;
-            height: 13px !important;
-            margin-top: 1px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div svg {
-            width: 9px !important;
-            height: 9px !important;
-          }
-
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) span {
-            font-size: clamp(6px, 1.75vw, 7.5px) !important;
-            line-height: 1.25 !important;
-            overflow-wrap: anywhere;
-          }
-
-          .tier-card-footer {
-            flex: 0 0 auto;
-            padding: 5px !important;
-          }
-
-          .tier-card-footer button {
-            min-height: 31px;
-            padding: 5px 2px !important;
-            gap: 2px !important;
-            font-size: clamp(7px, 2vw, 9px) !important;
-            line-height: 1.1;
-          }
-
-          .tier-card-footer button span:first-child {
-            font-size: 10px;
-          }
-
-          /* Keep the ribbons legible without making the cards taller. */
-          .tier-card > div:first-child {
-            max-width: 96%;
-          }
-        }
-
-        @media (max-width: 640px) and (max-height: 620px) {
-          .tier-section {
-            gap: 5px !important;
-            padding-top: 3px !important;
-            padding-bottom: 3px !important;
-          }
-          .tier-header > div:last-child { display: none; }
-          .tier-card-main > div:first-child { padding-top: 21px !important; }
-          .tier-card-main > div:nth-child(2) { gap: 3px !important; }
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) { gap: 4px !important; }
-          .tier-card-footer button { min-height: 27px; }
-        }
-
-        @media (max-width: 360px) {
-          .tier-grid { gap: 3px !important; }
-          .tier-card { border-radius: 15px !important; }
-          .tier-card-main > div:nth-child(2) { padding-left: 3px !important; padding-right: 3px !important; }
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div { gap: 3px !important; }
-          .tier-card-main > div:nth-child(2) > div:nth-child(3) > div > div { width: 11px !important; height: 11px !important; }
-        }
-      `}</style>
+    <section className="space-y-4 sm:space-y-8 max-w-6xl mx-auto px-1.5 sm:px-4 py-4 sm:py-6">
       
       {/* ============================================================== */}
       {/* 👑 ১. শীর্ষ ব্যানার */}
       {/* ============================================================== */}
-      <div className="tier-header text-center space-y-2 max-w-3xl mx-auto relative px-1">
+      <div className="text-center space-y-3 max-w-3xl mx-auto relative">
         
-        <div className="flex items-center justify-center gap-1.5 sm:gap-4 relative">
+        <div className="flex items-center justify-center gap-2 sm:gap-4 relative">
           {/* বামপাশের স্পিড ড্যাশ লাইন */}
           <div className="hidden sm:flex items-center gap-1 opacity-80">
             <span className="w-5 h-1.5 bg-blue-500 rounded-full transform -rotate-12"></span>
@@ -271,12 +40,12 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* মূল নীল ক্রাউন ক্যাপসুল */}
-          <div className="inline-flex items-center gap-1.5 sm:gap-3 px-3.5 sm:px-8 py-2 sm:py-3.5 rounded-full bg-gradient-to-r from-[#003274] via-[#004e9c] to-[#002f6c] text-white shadow-xl border sm:border-2 border-blue-400/50">
-            <span className="text-lg sm:text-3xl text-amber-300 drop-shadow animate-bounce">👑</span>
-            <span className="text-xs sm:text-xl md:text-2xl font-black tracking-wide text-white drop-shadow">
+          <div className="inline-flex items-center gap-2 sm:gap-3 px-5 sm:px-8 py-2.5 sm:py-3.5 rounded-full bg-gradient-to-r from-[#003274] via-[#004e9c] to-[#002f6c] text-white shadow-xl border-2 border-blue-400/50">
+            <span className="text-2xl sm:text-3xl text-amber-300 drop-shadow animate-bounce">👑</span>
+            <span className="text-sm sm:text-xl md:text-2xl font-black tracking-wide text-white drop-shadow">
               কোন অ্যাকাউন্টটি আপনার জন্য ?
             </span>
-            <span className="text-base sm:text-2xl">🤔</span>
+            <span className="text-xl sm:text-2xl">🤔</span>
           </div>
 
           {/* ডানপাশের স্পিড ড্যাশ লাইন */}
@@ -289,78 +58,79 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
 
         {/* সাবটাইটেল সবুজ রিবন */}
         <div>
-          <span className="inline-flex items-center gap-1 sm:gap-2 px-3 sm:px-7 py-1 sm:py-2 rounded-full bg-[#dcfce7] border border-[#86efac] text-[#14532d] font-black text-[10px] sm:text-sm shadow-xs">
-            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#16a34a] fill-[#16a34a] text-white shrink-0" />
-            <span>১ মিনিটেই দেখে নিন এবং নিজের প্রয়োজন অনুযায়ী বেছে নিন।</span>
+          <span className="inline-flex items-center gap-2 px-5 sm:px-7 py-1.5 sm:py-2 rounded-full bg-[#dcfce7] border border-[#86efac] text-[#14532d] font-black text-xs sm:text-sm shadow-xs">
+            <CheckCircle2 className="w-4 h-4 text-[#16a34a] fill-[#16a34a] text-white" />
+            <span>১ মিনিটেই দেখে নিন এবং নিজের প্রয়োজন অনুযায়ী বেছে নিন।</span>
           </span>
         </div>
       </div>
 
       {/* ============================================================== */}
-      {/* 🎯 ২. ৩টি কার্ড (মোবাইলে কমপ্যাক্ট হাইট ও সুন্দর অনুপাত) */}
+      {/* 🎯 ২. ৩টি কার্ড — মোবাইলেও পাশাপাশি ৩ কলাম, স্ক্রল ছাড়া */}
       {/* ============================================================== */}
-      <div className="tier-grid grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-1 sm:pt-2">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-2">
         
         {/* ============================================================== */}
         {/* --- Card 1: পার্সোনাল অ্যাকাউন্ট (নীল থিম) --- */}
         {/* ============================================================== */}
         <div 
-          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'personal' ? 'ring-2 sm:ring-4 ring-blue-400/50' : ''
           }`}
         >
-          {/* সক্রিয় মোড ব্যাজ */}
+          {/* সক্রিয় মোড ব্যাজ */}
           {user?.activeTier === 'personal' && (
-            <div className="absolute top-1 sm:top-3 right-1 sm:right-3 px-1.5 sm:px-3 py-0.5 sm:py-1 bg-blue-600 text-white text-[7px] sm:text-[10px] font-black rounded-full flex items-center gap-0.5 sm:gap-1 shadow-md z-20">
+            <div className="absolute top-1 right-1 sm:top-3 sm:right-3 px-1.5 sm:px-3 py-0.5 sm:py-1 bg-blue-600 text-white text-[6px] sm:text-[10px] font-black rounded-full flex items-center gap-0.5 sm:gap-1 shadow-md z-20">
               <CheckCircle2 className="w-2 h-2 sm:w-3 sm:h-3 text-blue-200" />
-              <span className="hidden sm:inline">সক্রিয় মোড</span>
+              <span>সক্রিয় মোড</span>
             </div>
           )}
 
-          <div className="tier-card-main">
+          <div>
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-3 sm:pt-7 pb-1 sm:pb-2 flex flex-col items-center">
-              <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#0091ff] via-[#38bdf8] to-transparent rounded-b-full opacity-90 -z-0"></div>
+              {/* আর্চ ব্যাকড্রপ */}
+              <div className="absolute top-0 w-16 sm:w-40 h-9 sm:h-20 bg-gradient-to-b from-[#0091ff] via-[#38bdf8] to-transparent rounded-b-full opacity-90 -z-0"></div>
 
               {/* সার্কুলার আইকন */}
-              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-1 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#0070e0] flex items-center justify-center">
+              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-0.5 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#0070e0] flex items-center justify-center">
                 <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#0070e0] to-[#00a6ff] flex items-center justify-center">
                   <User className="w-5 h-5 sm:w-10 sm:h-10 text-white stroke-[2.5]" />
                 </div>
               </div>
 
-              {/* ক্যাপসুল ব্যাজ: পার্সোনাল অ্যাকাউন্ট */}
-              <div className="relative z-10 -mt-1.5 sm:-mt-2 px-2.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#0a48a3] text-white font-black text-[9px] sm:text-sm tracking-tight shadow-md whitespace-nowrap">
+              {/* ক্যাপসুল ব্যাজ */}
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#0a48a3] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.personal.name}
               </div>
 
               {/* প্রাইস */}
-              <div className="mt-0.5 sm:mt-2 text-base sm:text-5xl font-black text-[#0a48a3] tracking-tight">
+              <div className="mt-1 sm:mt-2 text-lg sm:text-5xl font-black text-[#0a48a3] tracking-tight">
                 {plans.personal.priceFormatted}
               </div>
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-bold sm:font-extrabold shadow-2xs leading-tight min-h-[28px] sm:min-h-0 flex items-center justify-center">
+              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.personal.subtitle}
               </div>
 
-              {/* ৩-ডট ডিভাইডার (•••) */}
+              {/* ৩-ডট ডিভাইডার */}
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 text-[#0091ff] py-0.5">
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#0091ff]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#0091ff]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#0091ff]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#0091ff]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#0091ff]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#0091ff]"></span>
               </div>
 
               {/* ফিচার লিস্ট */}
-              <div className="space-y-1 sm:space-y-3 pt-0.5 sm:pt-1">
+              <div className="space-y-1.5 sm:space-y-3 pt-0.5 sm:pt-1">
                 {plans.personal.features.map((feat, idx) => (
-                  <div key={idx} className="flex items-start sm:items-center gap-1 sm:gap-3">
-                    <div className="w-3.5 h-3.5 sm:w-6 sm:h-6 rounded-full bg-[#0070e0] text-white flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 shadow-xs">
-                      <Check className="w-2 sm:w-4 h-2 sm:h-4 stroke-[3.5]" />
+                  <div key={idx} className="flex items-center gap-1 sm:gap-3">
+                    <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#0070e0] text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="text-slate-900 font-bold sm:font-black text-[8px] sm:text-sm leading-snug">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -370,79 +140,80 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('personal')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-blue-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-blue-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span>➔</span>
-              <span>বিস্তারিত<span className="hidden sm:inline"> দেখুন</span></span>
-              <span className="font-bold">&gt;</span>
+              <span className="text-[8px] sm:text-lg">➔</span>
+              <span>বিস্তারিত দেখুন</span>
+              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
 
         {/* ============================================================== */}
-        {/* --- Card 2: বিজনেস অ্যাকাউন্ট (সবুজ থিম - সবচেয়ে জনপ্রিয়) --- */}
+        {/* --- Card 2: বিজনেস অ্যাকাউন্ট (সবুজ থিম - সবচেয়ে জনপ্রিয়) --- */}
         {/* ============================================================== */}
         <div 
-          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'business' ? 'ring-2 sm:ring-4 ring-emerald-400/50' : ''
           }`}
         >
-          {/* লাল রিবন: ★ সবচেয়ে জনপ্রিয় ★ */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-[95%] sm:w-auto">
-            <div className="relative px-1 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#d32f2f] via-[#e53935] to-[#d32f2f] text-white font-black text-[7px] sm:text-sm tracking-tight sm:tracking-wider flex items-center justify-center gap-0.5 sm:gap-1.5 shadow-sm sm:shadow-md border-b sm:border-b-2 border-[#9a0007] whitespace-nowrap">
-              <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300 shrink-0" />
+          {/* লাল রিবন: ★ সবচেয়ে জনপ্রিয় ★ */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
+            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#d32f2f] via-[#e53935] to-[#d32f2f] text-white font-black text-[6px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#9a0007] whitespace-nowrap">
+              <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300" />
               <span>সবচেয়ে জনপ্রিয়</span>
-              <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300 shrink-0" />
+              <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-300 text-amber-300" />
             </div>
           </div>
 
-          <div className="tier-card-main">
+          <div>
             {/* টপ আর্চ ও আইকন */}
-            <div className="relative pt-4 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
-              <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#00c853] via-[#69f0ae] to-transparent rounded-b-full opacity-90 -z-0"></div>
+            <div className="relative pt-5 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
+              {/* আর্চ ব্যাকড্রপ */}
+              <div className="absolute top-0 w-16 sm:w-40 h-9 sm:h-20 bg-gradient-to-b from-[#00c853] via-[#69f0ae] to-transparent rounded-b-full opacity-90 -z-0"></div>
 
               {/* সার্কুলার আইকন */}
-              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-1 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#00c853] flex items-center justify-center">
+              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-0.5 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#00c853] flex items-center justify-center">
                 <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#00c853] to-[#00e676] flex items-center justify-center">
                   <Briefcase className="w-5 h-5 sm:w-10 sm:h-10 text-white stroke-[2.5]" />
                 </div>
               </div>
 
-              {/* ক্যাপসুল ব্যাজ: বিজনেস অ্যাকাউন্ট */}
-              <div className="relative z-10 -mt-1.5 sm:-mt-2 px-2.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#007e33] text-white font-black text-[9px] sm:text-sm tracking-tight shadow-md whitespace-nowrap">
+              {/* ক্যাপসুল ব্যাজ */}
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#007e33] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.business.name}
               </div>
 
               {/* প্রাইস */}
-              <div className="mt-0.5 sm:mt-2 text-base sm:text-5xl font-black text-[#007e33] tracking-tight">
+              <div className="mt-1 sm:mt-2 text-lg sm:text-5xl font-black text-[#007e33] tracking-tight">
                 {plans.business.priceFormatted}
               </div>
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-bold sm:font-extrabold shadow-2xs leading-tight min-h-[28px] sm:min-h-0 flex items-center justify-center">
+              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.business.subtitle}
               </div>
 
-              {/* ৩-ডট ডিভাইডার (•••) */}
+              {/* ৩-ডট ডিভাইডার */}
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 text-[#00c853] py-0.5">
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#00c853]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#00c853]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#00c853]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
               </div>
 
               {/* ফিচার লিস্ট */}
-              <div className="space-y-1 sm:space-y-3 pt-0.5 sm:pt-1">
+              <div className="space-y-1.5 sm:space-y-3 pt-0.5 sm:pt-1">
                 {plans.business.features.map((feat, idx) => (
-                  <div key={idx} className="flex items-start sm:items-center gap-1 sm:gap-3">
-                    <div className="w-3.5 h-3.5 sm:w-6 sm:h-6 rounded-full bg-[#00c853] text-white flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 shadow-xs">
-                      <Check className="w-2 sm:w-4 h-2 sm:h-4 stroke-[3.5]" />
+                  <div key={idx} className="flex items-center gap-1 sm:gap-3">
+                    <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#00c853] text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="text-slate-900 font-bold sm:font-black text-[8px] sm:text-sm leading-snug">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -452,14 +223,14 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('business')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-green-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-green-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span>➔</span>
-              <span>বিস্তারিত<span className="hidden sm:inline"> দেখুন</span></span>
-              <span className="font-bold">&gt;</span>
+              <span className="text-[8px] sm:text-lg">➔</span>
+              <span>বিস্তারিত দেখুন</span>
+              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
@@ -468,62 +239,63 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 3: Sub Admin Panel (পার্পল থিম - Recommended) --- */}
         {/* ============================================================== */}
         <div 
-          className={`tier-card w-full relative rounded-2xl sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-md sm:shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
+          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col justify-between ${
             user?.activeTier === 'sub_admin' ? 'ring-2 sm:ring-4 ring-purple-400/50' : ''
           }`}
         >
           {/* গোল্ডেন রিবন: ★ Recommended */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20 w-[95%] sm:w-auto">
-            <div className="relative px-1 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#fbc02d] via-[#f57f17] to-[#fbc02d] text-amber-950 font-black text-[7px] sm:text-sm tracking-tight sm:tracking-wider flex items-center justify-center gap-0.5 sm:gap-1.5 shadow-sm sm:shadow-md border-b sm:border-b-2 border-[#b26a00] whitespace-nowrap">
-              <Star className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 fill-amber-950 text-amber-950 shrink-0" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 z-20">
+            <div className="relative px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-b-md sm:rounded-b-xl bg-gradient-to-r from-[#fbc02d] via-[#f57f17] to-[#fbc02d] text-amber-950 font-black text-[6px] sm:text-sm tracking-normal sm:tracking-wider flex items-center gap-0.5 sm:gap-1.5 shadow-md border-b-2 border-[#b26a00] whitespace-nowrap">
+              <Star className="w-2 h-2 sm:w-3.5 sm:h-3.5 fill-amber-950 text-amber-950" />
               <span>Recommended</span>
             </div>
           </div>
 
-          <div className="tier-card-main">
+          <div>
             {/* টপ আর্চ ও আইকন */}
-            <div className="relative pt-4 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
-              <div className="absolute top-0 w-20 sm:w-40 h-10 sm:h-20 bg-gradient-to-b from-[#9c27b0] via-[#ce93d8] to-transparent rounded-b-full opacity-90 -z-0"></div>
+            <div className="relative pt-5 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
+              {/* আর্চ ব্যাকড্রপ */}
+              <div className="absolute top-0 w-16 sm:w-40 h-9 sm:h-20 bg-gradient-to-b from-[#9c27b0] via-[#ce93d8] to-transparent rounded-b-full opacity-90 -z-0"></div>
 
               {/* সার্কুলার আইকন */}
-              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-1 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#9c27b0] flex items-center justify-center">
+              <div className="relative z-10 w-10 h-10 sm:w-20 sm:h-20 rounded-full bg-white p-0.5 sm:p-1.5 shadow-md ring-2 sm:ring-4 ring-[#9c27b0] flex items-center justify-center">
                 <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#7b1fa2] to-[#ab47bc] flex items-center justify-center">
                   <Award className="w-5 h-5 sm:w-10 sm:h-10 text-amber-300 fill-amber-300/30 stroke-[2.2]" />
                 </div>
               </div>
 
-              {/* ক্যাপসুল ব্যাজ: Sub Admin Panel */}
-              <div className="relative z-10 -mt-1.5 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#4a148c] text-white font-black text-[8px] sm:text-sm tracking-tight shadow-md whitespace-nowrap">
+              {/* ক্যাপসুল ব্যাজ */}
+              <div className="relative z-10 -mt-1 sm:-mt-2 px-1.5 sm:px-6 py-0.5 sm:py-1 rounded-full bg-[#4a148c] text-white font-black text-[7px] sm:text-sm tracking-wide shadow-md text-center whitespace-nowrap">
                 {plans.sub_admin.name}
               </div>
 
               {/* প্রাইস */}
-              <div className="mt-0.5 sm:mt-2 text-base sm:text-5xl font-black text-[#4a148c] tracking-tight">
+              <div className="mt-1 sm:mt-2 text-lg sm:text-5xl font-black text-[#4a148c] tracking-tight">
                 {plans.sub_admin.priceFormatted}
               </div>
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
               {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-bold sm:font-extrabold shadow-2xs leading-tight min-h-[28px] sm:min-h-0 flex items-center justify-center">
+              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[7px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
                 {plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}
               </div>
 
-              {/* ৩-ডট ডিভাইডার (•••) */}
+              {/* ৩-ডট ডিভাইডার */}
               <div className="flex items-center justify-center gap-1 sm:gap-1.5 text-[#9c27b0] py-0.5">
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#9c27b0]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#9c27b0]"></span>
-                <span className="w-1 sm:w-2 h-1 sm:h-2 rounded-full bg-[#9c27b0]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#9c27b0]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#9c27b0]"></span>
+                <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#9c27b0]"></span>
               </div>
 
               {/* ফিচার লিস্ট */}
-              <div className="space-y-1 sm:space-y-3 pt-0.5 sm:pt-1">
+              <div className="space-y-1.5 sm:space-y-3 pt-0.5 sm:pt-1">
                 {plans.sub_admin.features.map((feat, idx) => (
-                  <div key={idx} className="flex items-start sm:items-center gap-1 sm:gap-3">
-                    <div className="w-3.5 h-3.5 sm:w-6 sm:h-6 rounded-full bg-[#8e24aa] text-white flex items-center justify-center shrink-0 mt-0.5 sm:mt-0 shadow-xs">
-                      <Check className="w-2 sm:w-4 h-2 sm:h-4 stroke-[3.5]" />
+                  <div key={idx} className="flex items-center gap-1 sm:gap-3">
+                    <div className="w-3 h-3 sm:w-6 sm:h-6 rounded-full bg-[#8e24aa] text-white flex items-center justify-center shrink-0 shadow-xs">
+                      <Check className="w-2 h-2 sm:w-4 sm:h-4 stroke-[3.5]" />
                     </div>
-                    <span className="text-slate-900 font-bold sm:font-black text-[8px] sm:text-sm leading-snug">
+                    <span className="min-w-0 break-words text-slate-900 font-black text-[7px] sm:text-sm leading-tight">
                       {feat.title}
                     </span>
                   </div>
@@ -533,14 +305,14 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
           </div>
 
           {/* ক্যাপসুল বাটন */}
-          <div className="tier-card-footer p-1.5 sm:p-6 pt-2 sm:pt-4">
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
             <button
               onClick={() => onOpenDetails('sub_admin')}
-              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[9px] sm:text-base flex items-center justify-center gap-1 sm:gap-2 shadow-md shadow-purple-500/20 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
+              className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[7px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-purple-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
             >
-              <span>➔</span>
-              <span>বিস্তারিত<span className="hidden sm:inline"> দেখুন</span></span>
-              <span className="font-bold">&gt;</span>
+              <span className="text-[8px] sm:text-lg">➔</span>
+              <span>বিস্তারিত দেখুন</span>
+              <span className="text-[8px] sm:text-sm font-bold">&gt;</span>
             </button>
           </div>
         </div>
