@@ -62,16 +62,15 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
       </div>
 
       {/* ============================================================== */}
-      {/* 🎯 ২. ৩টি কার্ড — মোবাইলেও পাশাপাশি ৩ কলাম */}
-      {/* items-start: মোবাইলে কার্ড কনটেন্ট অনুযায়ী উচ্চতা নেবে, ডেস্কটপে সমান */}
+      {/* 🎯 ২. ৩টি কার্ড — সব ডিভাইসে পাশাপাশি ৩ কলাম, সমান উচ্চতা */}
       {/* ============================================================== */}
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-start sm:items-stretch pt-2">
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-6 items-stretch pt-2">
         
         {/* ============================================================== */}
         {/* --- Card 1: পার্সোনাল অ্যাকাউন্ট (নীল থিম) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
+          className={`min-w-0 w-full h-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#0070e0] bg-gradient-to-b from-[#f2f8ff] via-white to-[#edf5ff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col ${
             user?.activeTier === 'personal' ? 'ring-2 sm:ring-4 ring-blue-400/50' : ''
           }`}
         >
@@ -83,7 +82,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           )}
 
-          <div>
+          <div className="flex-1">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-3 sm:pt-7 pb-1 sm:pb-2 flex flex-col items-center">
               {/* আর্চ ব্যাকড্রপ */}
@@ -108,9 +107,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
-                {plans.personal.subtitle}
+              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
+              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+                <span>{plans.personal.subtitle}</span>
               </div>
 
               {/* ৩-ডট ডিভাইডার */}
@@ -136,8 +135,8 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          {/* ক্যাপসুল বাটন (সবসময় কার্ডের নিচে) */}
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4 mt-auto">
             <button
               onClick={() => onOpenDetails('personal')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#0057d9] via-[#0070f3] to-[#0057d9] hover:from-[#0047b3] hover:to-[#005cdb] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-blue-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
@@ -153,7 +152,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 2: বিজনেস অ্যাকাউন্ট (সবুজ থিম - সবচেয়ে জনপ্রিয়) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
+          className={`min-w-0 w-full h-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#00c853] bg-gradient-to-b from-[#f2fff6] via-white to-[#edfff2] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col ${
             user?.activeTier === 'business' ? 'ring-2 sm:ring-4 ring-emerald-400/50' : ''
           }`}
         >
@@ -166,7 +165,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          <div>
+          <div className="flex-1">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-5 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
               {/* আর্চ ব্যাকড্রপ */}
@@ -191,9 +190,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
-                {plans.business.subtitle}
+              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
+              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+                <span>{plans.business.subtitle}</span>
               </div>
 
               {/* ৩-ডট ডিভাইডার */}
@@ -219,8 +218,8 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          {/* ক্যাপসুল বাটন (সবসময় কার্ডের নিচে) */}
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4 mt-auto">
             <button
               onClick={() => onOpenDetails('business')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#00993d] via-[#00c853] to-[#00993d] hover:from-[#007a30] hover:to-[#00b048] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-green-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
@@ -236,7 +235,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
         {/* --- Card 3: Sub Admin Panel (পার্পল থিম - Recommended) --- */}
         {/* ============================================================== */}
         <div 
-          className={`min-w-0 w-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col sm:justify-between ${
+          className={`min-w-0 w-full h-full relative rounded-[16px] sm:rounded-[38px] overflow-hidden border-2 sm:border-[3.5px] border-[#9c27b0] bg-gradient-to-b from-[#fdf6ff] via-white to-[#f9edff] shadow-lg hover:shadow-2xl transition-all duration-300 flex flex-col ${
             user?.activeTier === 'sub_admin' ? 'ring-2 sm:ring-4 ring-purple-400/50' : ''
           }`}
         >
@@ -248,7 +247,7 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          <div>
+          <div className="flex-1">
             {/* টপ আর্চ ও আইকন */}
             <div className="relative pt-5 sm:pt-9 pb-1 sm:pb-2 flex flex-col items-center">
               {/* আর্চ ব্যাকড্রপ */}
@@ -273,9 +272,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
 
             <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স */}
-              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words">
-                {plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}
+              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
+              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+                <span>{plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}</span>
               </div>
 
               {/* ৩-ডট ডিভাইডার */}
@@ -301,8 +300,8 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
             </div>
           </div>
 
-          {/* ক্যাপসুল বাটন */}
-          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4">
+          {/* ক্যাপসুল বাটন (সবসময় কার্ডের নিচে) */}
+          <div className="p-1.5 sm:p-6 pt-2 sm:pt-4 mt-auto">
             <button
               onClick={() => onOpenDetails('sub_admin')}
               className="w-full py-1.5 sm:py-3.5 px-1 sm:px-6 rounded-full bg-gradient-to-r from-[#7b1fa2] via-[#9c27b0] to-[#7b1fa2] hover:from-[#6a1b9a] hover:to-[#8e24aa] text-white font-black text-[8px] sm:text-base flex items-center justify-center gap-0.5 sm:gap-2 shadow-lg shadow-purple-500/30 hover:scale-[1.02] active:scale-98 transition-all cursor-pointer whitespace-nowrap"
