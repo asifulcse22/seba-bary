@@ -119,6 +119,20 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#0091ff]"></span>
               </div>
 
+              {/* পার্সোনাল একাউন্ট বিশেষ সুবিধা (মোবাইলে গ্যাপ পূরণ) */}
+              <div className="bg-[#dbeafe]/60 border border-[#93c5fd]/50 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 space-y-0.5 sm:space-y-1">
+                {[
+                  'নিজের প্রয়োজনীয় তথ্য যাচাই',
+                  'সহজ ও সুবিধাজনক ব্যবহার',
+                  'ব্যক্তিগত কাজের উপযোগী',
+                ].map((text, i) => (
+                  <div key={i} className="flex items-center gap-1 sm:gap-1.5">
+                    <span className="text-[#2563eb] font-black text-[8px] sm:text-sm shrink-0">✦</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#1e3a8a] leading-snug break-words min-w-0">{text}</span>
+                  </div>
+                ))}
+              </div>
+
               {/* ফিচার লিস্ট */}
               <div className="space-y-1.5 sm:space-y-3 pt-0.5 sm:pt-1">
                 {plans.personal.features.map((feat, idx) => (
@@ -200,6 +214,20 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
+              </div>
+
+              {/* বিজনেস একাউন্ট বিশেষ সুবিধা (মোবাইলে গ্যাপ পূরণ) */}
+              <div className="bg-[#dcfce7]/60 border border-[#86efac]/50 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 space-y-0.5 sm:space-y-1">
+                {[
+                  'নিজের পাশাপাশি কাস্টমারের কাজ',
+                  'ডিজিটাল সেবা দিয়ে আয়ের সুযোগ',
+                  'এক অ্যাকাউন্টে বিভিন্ন সার্ভিস',
+                ].map((text, i) => (
+                  <div key={i} className="flex items-center gap-1 sm:gap-1.5">
+                    <span className="text-[#16a34a] font-black text-[8px] sm:text-sm shrink-0">✦</span>
+                    <span className="text-[8px] sm:text-xs font-bold text-[#14532d] leading-snug break-words min-w-0">{text}</span>
+                  </div>
+                ))}
               </div>
 
               {/* ফিচার লিস্ট */}

@@ -152,14 +152,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal, onGoToAuth }) =
             href="https://wa.me/8801603054567"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-violet-700 via-purple-600 to-fuchsia-600 hover:from-indigo-600 hover:via-fuchsia-600 hover:to-rose-500 border border-white/20 text-white font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-purple-600/35 hover:shadow-xl hover:shadow-fuchsia-500/45 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
-            title="হোয়াটসঅ্যাপে যোগাযোগ করুন (01603054567)"
+            className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-violet-700 via-purple-600 to-fuchsia-600 hover:from-indigo-600 hover:via-fuchsia-600 hover:to-rose-500 border border-white/20 text-white font-black text-xs sm:text-sm shadow-md shadow-purple-600/30 hover:shadow-lg hover:shadow-fuchsia-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+            title="হোয়াটসঅ্যাপে যোগাযোগ করুন (01603054567)"
           >
-            <span className="relative flex h-2.5 w-2.5">
+            <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-80"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-white"></span>
             </span>
-            <WhatsAppIcon className="w-4 h-4 fill-white group-hover:rotate-12 transition-transform" />
+            <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white group-hover:rotate-12 transition-transform" />
             <span className="hidden sm:inline font-black tracking-tight">WhatsApp</span>
           </a>
             
