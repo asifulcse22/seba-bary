@@ -130,7 +130,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal, onGoToAuth }) =
           </nav>
 
           {/* Right Section: WhatsApp, Balance, Notification & Profile or Login/Register */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             
             {/* WhatsApp Direct Contact Button */}
             {/*<a
@@ -152,27 +152,23 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTierModal, onGoToAuth }) =
             href="https://wa.me/8801603054567"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-violet-700 via-purple-600 to-fuchsia-600 hover:from-indigo-600 hover:via-fuchsia-600 hover:to-rose-500 border border-white/20 text-white font-black text-xs sm:text-sm shadow-md shadow-purple-600/30 hover:shadow-lg hover:shadow-fuchsia-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group"
+            className="flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:gap-2 sm:px-4 sm:py-2 rounded-full bg-gradient-to-r from-violet-700 via-purple-600 to-fuchsia-600 hover:from-indigo-600 hover:via-fuchsia-600 hover:to-rose-500 border border-white/20 text-white font-black text-xs sm:text-sm shadow-md shadow-purple-600/30 hover:shadow-lg hover:shadow-fuchsia-500/40 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer group shrink-0"
             title="হোয়াটসঅ্যাপে যোগাযোগ করুন (01603054567)"
           >
-            <span className="relative flex h-2 w-2 sm:h-2.5 sm:w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-80"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 sm:h-2.5 sm:w-2.5 bg-white"></span>
-            </span>
-            <WhatsAppIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-white group-hover:rotate-12 transition-transform" />
+            <WhatsAppIcon className="w-4 h-4 fill-white group-hover:rotate-12 transition-transform" />
             <span className="hidden sm:inline font-black tracking-tight">WhatsApp</span>
           </a>
             
             {/* Quick Wallet balance tag matching Image 1 & 2 */}
             <div 
               onClick={() => setActiveTab('wallet_hub')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100/90 border border-emerald-200 hover:border-emerald-300 rounded-full cursor-pointer transition-all duration-300 shadow-xs hover:shadow-md hover:scale-105 active:scale-95 whitespace-nowrap shrink-0 group"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100/90 border border-emerald-200 hover:border-emerald-300 rounded-full cursor-pointer transition-all duration-300 shadow-xs hover:shadow-md hover:scale-105 active:scale-95 whitespace-nowrap shrink-0 group"
               title="বর্তমান ওয়ালেট ব্যালেন্স (ক্লিক করে রিচার্জ করুন)"
             >
               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-emerald-600 group-hover:bg-teal-600 text-white flex items-center justify-center text-xs font-black shadow-xs transition-colors">
                 ৳
               </div>
-              <span className="font-black text-emerald-800 text-xs sm:text-sm md:text-base tabular-nums">
+              <span className="hidden sm:inline font-black text-emerald-800 text-xs sm:text-sm md:text-base tabular-nums">
                 {balance.toLocaleString('bn-BD', { minimumFractionDigits: 0 })}
               </span>
             </div>

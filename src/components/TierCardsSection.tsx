@@ -106,9 +106,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
             </div>
 
-            <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
-              <div className="bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+            <div className="px-1.5 sm:px-6 space-y-1 sm:space-y-3">
+              {/* সাবটাইটেল বক্স — mobile এ hidden, desktop এ দেখাবে */}
+              <div className="hidden sm:flex bg-[#e5f1ff] border border-[#b3d7ff] text-[#0a48a3] rounded-2xl py-2 px-3 text-center text-sm font-extrabold shadow-2xs leading-snug break-words items-center justify-center">
                 <span>{plans.personal.subtitle}</span>
               </div>
 
@@ -119,8 +119,8 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#0091ff]"></span>
               </div>
 
-              {/* পার্সোনাল একাউন্ট বিশেষ সুবিধা (মোবাইলে গ্যাপ পূরণ) */}
-              <div className="bg-[#dbeafe]/60 border border-[#93c5fd]/50 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 space-y-0.5 sm:space-y-1">
+              {/* পার্সোনাল একাউন্ট বিশেষ সুবিধা (শুধু desktop এ) */}
+              <div className="hidden sm:block bg-[#dbeafe]/60 border border-[#93c5fd]/50 rounded-xl px-3 py-2 space-y-1">
                 {[
                   'নিজের প্রয়োজনীয় তথ্য যাচাই',
                   'সহজ ও সুবিধাজনক ব্যবহার',
@@ -203,9 +203,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
             </div>
 
-            <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
-              <div className="bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+            <div className="px-1.5 sm:px-6 space-y-1 sm:space-y-3">
+              {/* সাবটাইটেল বক্স — mobile এ hidden, desktop এ দেখাবে */}
+              <div className="hidden sm:flex bg-[#e8f8ee] border border-[#b7ecc6] text-[#006d2c] rounded-2xl py-2 px-3 text-center text-sm font-extrabold shadow-2xs leading-snug break-words items-center justify-center">
                 <span>{plans.business.subtitle}</span>
               </div>
 
@@ -216,8 +216,8 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
                 <span className="w-1 h-1 sm:w-2 sm:h-2 rounded-full bg-[#00c853]"></span>
               </div>
 
-              {/* বিজনেস একাউন্ট বিশেষ সুবিধা (মোবাইলে গ্যাপ পূরণ) */}
-              <div className="bg-[#dcfce7]/60 border border-[#86efac]/50 rounded-lg sm:rounded-xl px-1.5 sm:px-3 py-1 sm:py-2 space-y-0.5 sm:space-y-1">
+              {/* বিজনেস একাউন্ট বিশেষ সুবিধা (শুধু desktop এ) */}
+              <div className="hidden sm:block bg-[#dcfce7]/60 border border-[#86efac]/50 rounded-xl px-3 py-2 space-y-1">
                 {[
                   'নিজের পাশাপাশি কাস্টমারের কাজ',
                   'ডিজিটাল সেবা দিয়ে আয়ের সুযোগ',
@@ -299,9 +299,9 @@ export const TierCardsSection: React.FC<TierCardsSectionProps> = ({ onOpenDetail
               </div>
             </div>
 
-            <div className="px-1.5 sm:px-6 space-y-1.5 sm:space-y-3">
-              {/* সাবটাইটেল বক্স (মোবাইলে সমান উচ্চতা) */}
-              <div className="bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-lg sm:rounded-2xl py-1 sm:py-2 px-1 sm:px-3 text-center text-[8px] sm:text-sm font-extrabold shadow-2xs leading-tight sm:leading-snug break-words min-h-[58px] sm:min-h-0 flex items-center justify-center">
+            <div className="px-1.5 sm:px-6 space-y-1 sm:space-y-3">
+              {/* সাবটাইটেল বক্স — mobile এ hidden, desktop এ দেখাবে */}
+              <div className="hidden sm:flex bg-[#f6ebff] border border-[#e3beff] text-[#58168f] rounded-2xl py-2 px-3 text-center text-sm font-extrabold shadow-2xs leading-snug break-words items-center justify-center">
                 <span>{plans.sub_admin.badgeUnderPrice || plans.sub_admin.subtitle}</span>
               </div>
 
