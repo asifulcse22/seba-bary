@@ -787,11 +787,6 @@ export const WalletHubView: React.FC = () => {
               <div className="space-y-2">
                 {[
                   {
-                    icon: <Zap className="w-4 h-4 text-amber-300 shrink-0" />,
-                    title: 'কোনো ওয়ালেট লক নেই',
-                    desc: 'কোনো অগ্রিম ডিপোজিট ছাড়াই সরাসরি সেবা নিতে পারবেন'
-                  },
-                  {
                     icon: <Clock className="w-4 h-4 text-cyan-300 shrink-0" />,
                     title: '১-৫ মিনিটে দ্রুত ডেলিভারি',
                     desc: 'অটোমেটিক সার্ভার ভেরিফিকেশনে তাৎক্ষণিক ডিজিটাল কপি'
@@ -845,17 +840,57 @@ export const WalletHubView: React.FC = () => {
                   </button>
                 </div>
               </div>
+
+              {/* ফাঁকা জায়গায় আকর্ষণীয় পার্সোনাল সেবাসমূহ (Quick Direct Services Grid) */}
+              <div className="p-3 sm:p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-cyan-300 flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+                    <span>জনপ্রিয় জরুরি ডিজিটাল সেবাসমূহ</span>
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-400/20 text-emerald-300 border border-emerald-400/30">
+                    সরাসরি আবেদন
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { title: 'NID অনলাইন কপি', icon: '🆔', speed: '১ মিনিট' },
+                    { title: 'জন্ম নিবন্ধন কপি', icon: '👶', speed: 'তাৎক্ষণিক' },
+                    { title: 'টিন সার্টিফিকেট', icon: '📄', speed: '২ মিনিট' },
+                    { title: 'অনলাইন চালান ফি', icon: '💳', speed: 'ইনস্ট্যান্ট' },
+                  ].map((svc, idx) => (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => setActiveTab('dashboard')}
+                      className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 hover:border-cyan-400/40 text-left transition-all duration-200 group/s cursor-pointer flex items-center justify-between"
+                    >
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <span className="text-base group-hover/s:scale-110 transition-transform shrink-0">{svc.icon}</span>
+                        <span className="text-[11px] font-bold text-white group-hover/s:text-cyan-200 truncate">
+                          {svc.title}
+                        </span>
+                      </div>
+                      <span className="text-[9px] font-semibold text-emerald-300 bg-emerald-500/20 px-1.5 py-0.2 rounded shrink-0">
+                        {svc.speed}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* Bottom Direct CTA */}
+            {/* Bottom Direct CTA: Changed from payment live support to direct dashboard services action */}
             <button
               type="button"
               onClick={() => setActiveTab('dashboard')}
-              className="relative z-10 w-full py-3.5 rounded-2xl bg-gradient-to-r from-blue-500 via-sky-500 to-indigo-600 hover:from-blue-400 hover:to-indigo-500 text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer group"
+              className="relative z-10 w-full py-3.5 px-5 rounded-2xl overflow-hidden bg-gradient-to-r from-blue-500 via-sky-500 to-indigo-600 hover:from-blue-400 hover:via-sky-400 hover:to-indigo-500 text-white font-black text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer group"
             >
-              <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
-              <span>পার্সোনাল সেবাগুলো দেখুন ও আবেদন করুন</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/25 to-transparent skew-x-12" />
+              <Sparkles className="relative w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform" />
+              <span className="relative">সরাসরি সেবা নিতে মূল ড্যাশবোর্ডে যান</span>
+              <ChevronRight className="relative w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         ) : (
