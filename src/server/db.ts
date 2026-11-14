@@ -685,3 +685,48 @@ export async function getOrders(userId: string): Promise<DbOrder[]> {
   const store = loadLocalStore();
   return store.orders.filter(o => o.userId === userId || !o.userId);
 }
+
+export async function getTotalUsersCount(): Promise<number> {
+  if (isNeonConnected && pool) {
+    try {
+      const res = await pool.query('SELECT COUNT(*) as count FROM users');
+      return parseInt(res.rows[0].count, 10);
+    } catch (e) {
+      console.error('Neon getTotalUsersCount error:', e);
+    }
+  }
+  const store = loadLocalStore();
+  return store.users ? store.users.length : 0;
+}
+
+export interface RegisteredUserSummary {
+  id: string;
+  name: string;
+  activeTier?: string;
+  createdAt?: string;
+}
+
+export async function getAllRegisteredUsers(): Promise<RegisteredUserSummary[]> {
+  if (isNeonConnected && pool) {
+    try {
+      const res = await pool.query('SELECT id, name, active_tier, created_at FROM users ORDER BY created_at DESC');
+      return res.rows.map(row => ({
+        id: String(row.id),
+        name: row.name,
+        activeTier: row.active_tier,
+        createdAt: row.created_at
+      }));
+    } catch (e) {
+      console.error('Neon getAllRegisteredUsers error:', e);
+    }
+  }
+  const store = loadLocalStore();
+  return (store.users || []).map(u => ({
+    id: String(u.id),
+    name: u.name,
+    activeTier: u.activeTier,
+    createdAt: u.createdAt
+  }));
+}
+
+

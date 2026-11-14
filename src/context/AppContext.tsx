@@ -354,6 +354,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // 🎯 ৩. সম্পূর্ণ ক্লিন লগআউট
   const logoutUser = () => {
+    const token = localStorage.getItem('smarthub_token') || authToken;
+    if (token) {
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      }).catch(() => {});
+    }
     localStorage.clear(); // ব্রাউজারের সমস্ত লোকাল সেশন একবারে ক্লিয়ার
     localStorage.setItem('smarthub_logged_out', 'true');
     setUser(null);
