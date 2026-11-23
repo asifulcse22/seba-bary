@@ -1,0 +1,5 @@
+# API Proxy to backend server
+/api/*  https://seba-bary.onrender.com/api/:splat  200
+
+# Cloudflare Pages SPA client-side routing fallback
+/*      /index.html                                 200

@@ -402,10 +402,10 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
       </header>
 
       {/* 
-        🌟 CENTER HERO AREA: justify-evenly দিয়ে পুরো স্ক্রিন পারফেক্ট ব্যালেন্সড 🌟
+        🌟 CENTER HERO AREA: স্ক্রিন অনুযায়ী পারফেক্ট ফিট (নো স্ক্রল) 🌟
       */}
-      <main className="relative z-20 flex-1 flex flex-col justify-evenly items-center px-3 sm:px-6 overflow-y-auto sm:overflow-hidden py-1">
-        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-2 lg:gap-8">
+      <main className="relative z-20 flex-1 w-full flex flex-col justify-center items-center px-3 sm:px-6 py-0.5 overflow-hidden">
+        <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-center lg:justify-between gap-1 lg:gap-8">
           
           {/* ========================================================= */}
           {/* DESKTOP ONLY: টাইটেল ও ৪টি বড় ২x২ বক্স */}
@@ -458,35 +458,35 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
           <div className="w-full max-w-sm sm:max-w-md flex flex-col items-center">
             
             {/* 🎯 ১. রিয়েল-টাইম ডিজিটাল ঘড়ি এবং রিয়েল-টাইম আসল অ্যাকাউন্ট কাউন্টার */}
-            <div className="w-full flex items-center justify-between gap-2.5 mb-2 px-0.5">
+            <div className={`w-full flex items-center justify-between gap-2 ${mode === 'register' ? 'mb-1' : 'mb-1.5'} px-0.5`}>
               {/* লাইভ ডিজিটাল ঘড়ি */}
-              <div className="flex-1 flex items-center gap-2.5 sm:gap-3 px-3 py-2.5 rounded-2xl bg-white/95 backdrop-blur-xl border border-sky-200 shadow-md shadow-sky-500/10 hover:shadow-lg transition-all min-w-0 group">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-blue-500/30 group-hover:scale-105 transition-transform">
-                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-white animate-pulse" />
+              <div className={`flex-1 flex items-center gap-2 px-2.5 ${mode === 'register' ? 'py-1 sm:py-1.5' : 'py-1.5 sm:py-2'} rounded-xl bg-white/95 backdrop-blur-xl border border-sky-200 shadow-sm min-w-0 group`}>
+                <div className={`${mode === 'register' ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-7 h-7 sm:w-8 sm:h-8'} rounded-lg bg-gradient-to-tr from-sky-500 via-blue-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform`}>
+                  <Clock className={`${mode === 'register' ? 'w-3 h-3 sm:w-3.5 sm:h-3.5' : 'w-3.5 h-3.5 sm:w-4 sm:h-4'} text-white animate-pulse`} />
                 </div>
                 <div className="flex flex-col text-left justify-center min-w-0 leading-tight">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-black text-xs sm:text-sm md:text-base text-slate-900 tracking-wider whitespace-nowrap">
+                  <div className="flex items-center gap-1">
+                    <span className="font-mono font-black text-xs sm:text-sm text-slate-900 tracking-wider whitespace-nowrap">
                       {timeInfo.timeBn}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-black px-1.5 py-0.5 rounded-md bg-sky-100 text-sky-800 border border-sky-300 uppercase shrink-0 font-sans shadow-2xs">
+                    <span className="text-[8px] sm:text-[9px] font-black px-1 py-0.2 rounded bg-sky-100 text-sky-800 border border-sky-200 uppercase shrink-0 font-sans">
                       {timeInfo.ampm}
                     </span>
                   </div>
-                  <span className="text-[11px] sm:text-xs md:text-[13px] font-extrabold text-sky-950 mt-1 tracking-tight truncate">
+                  <span className="text-[9.5px] sm:text-[10.5px] font-bold text-sky-950 truncate">
                     {currentDateBn}
                   </span>
                 </div>
               </div>
 
               {/* রিয়েল-টাইম আসল মোট একাউন্ট কাউন্টার (কোনো ডেমো ছাড়া) */}
-              <div className="flex-1 flex items-center gap-2.5 sm:gap-3 px-3 py-2.5 rounded-2xl bg-white/95 backdrop-blur-xl border border-emerald-200 shadow-md shadow-emerald-500/10 hover:shadow-lg transition-all min-w-0 group">
-                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-500 via-teal-600 to-green-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-emerald-500/30 group-hover:scale-105 transition-transform">
-                  <Users className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
+              <div className={`flex-1 flex items-center gap-2 px-2.5 ${mode === 'register' ? 'py-1 sm:py-1.5' : 'py-1.5 sm:py-2'} rounded-xl bg-white/95 backdrop-blur-xl border border-emerald-200 shadow-sm min-w-0 group`}>
+                <div className={`${mode === 'register' ? 'w-6 h-6 sm:w-7 sm:h-7' : 'w-7 h-7 sm:w-8 sm:h-8'} rounded-lg bg-gradient-to-tr from-emerald-500 via-teal-600 to-green-600 text-white flex items-center justify-center shrink-0 shadow-xs group-hover:scale-105 transition-transform`}>
+                  <Users className={`${mode === 'register' ? 'w-3 h-3 sm:w-3.5 sm:h-3.5' : 'w-3.5 h-3.5 sm:w-4 sm:h-4'} text-white`} />
                 </div>
                 <div className="flex flex-col text-left justify-center min-w-0 leading-tight">
-                  <div className="flex items-center gap-1.5">
-                    <span className="font-mono font-black text-xs sm:text-sm md:text-base text-emerald-800 tracking-tight whitespace-nowrap">
+                  <div className="flex items-center gap-1">
+                    <span className="font-mono font-black text-xs sm:text-sm text-emerald-800 tracking-tight whitespace-nowrap">
                       {toBengaliDigits(totalUsers)} জন
                     </span>
                     <span className="relative flex h-2 w-2 shrink-0">
@@ -494,7 +494,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
                   </div>
-                  <span className="text-[11px] sm:text-xs md:text-[13px] font-extrabold text-emerald-950 mt-1 tracking-tight truncate">
+                  <span className="text-[9.5px] sm:text-[10.5px] font-bold text-emerald-950 truncate">
                     আসল রেজিস্টার্ড একাউন্ট
                   </span>
                 </div>
@@ -502,12 +502,12 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             </div>
 
             {/* 🎯 মোবাইলের ওপরের ফাঁকা জায়গা ভরাট করা সেকশন */}
-            <div className="w-full flex flex-col items-center text-center mb-1 lg:hidden">
-              <div className="flex items-center gap-1.5 flex-wrap justify-center mb-1">
+            <div className="w-full flex flex-col items-center text-center mb-0.5 lg:hidden">
+              <div className="flex items-center gap-1.5 flex-wrap justify-center mb-0.5">
                 {topServicePills.map((pill, i) => (
                   <span 
                     key={i} 
-                    className="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-200 font-bold text-[10px] shadow-2xs"
+                    className="px-2.5 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-200 font-bold text-[9.5px] shadow-2xs"
                   >
                     {pill.icon} {pill.name}
                   </span>
@@ -516,13 +516,13 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             </div>
 
             {/* লোগো ও লোগোর নিচের ব্যাজ */}
-            <div className="flex flex-col items-center mb-1.5 z-30 shrink-0">
+            <div className={`flex flex-col items-center ${mode === 'register' ? 'mb-0.5' : 'mb-1'} z-30 shrink-0`}>
               <motion.div 
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className="relative inline-flex items-center justify-center mb-1"
+                className={`relative inline-flex items-center justify-center ${mode === 'register' ? 'mb-0.5' : 'mb-1'}`}
               >
-                <div className="absolute -inset-1.5 rounded-full bg-gradient-to-tr from-emerald-400/50 via-cyan-300/50 to-blue-500/50 blur-sm animate-pulse -z-10" />
+                <div className="absolute -inset-1 rounded-full bg-gradient-to-tr from-emerald-400/50 via-cyan-300/50 to-blue-500/50 blur-sm animate-pulse -z-10" />
                 
                 <motion.div 
                   animate={{ rotate: 360 }}
@@ -531,9 +531,9 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 />
                 
                 <motion.div 
-                  animate={{ y: [0, -3, 0] }}
+                  animate={{ y: [0, -2, 0] }}
                   transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative w-11 h-11 sm:w-13 sm:h-13 rounded-full bg-white p-0.5 shadow-xl flex items-center justify-center cursor-pointer group"
+                  className={`relative ${mode === 'register' ? 'w-8 h-8 sm:w-9 sm:h-9' : 'w-10 h-10 sm:w-11 sm:h-11'} rounded-full bg-white p-0.5 shadow-md flex items-center justify-center cursor-pointer group`}
                 >
                   <img 
                     src="/images/sheba-logo.png" 
@@ -544,8 +544,8 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
               </motion.div>
 
               {/* লোগোর নিচে ব্যাজ */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-300 text-[10.5px] sm:text-xs font-bold shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <div className={`inline-flex items-center gap-1 px-2.5 py-0.2 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-emerald-300 ${mode === 'register' ? 'text-[9.5px]' : 'text-[10px] sm:text-[11px]'} font-bold shadow-xs`}>
+                <Sparkles className="w-3 h-3 text-amber-300" />
                 <span>বাংলাদেশের বিশ্বস্ত ডিজিটাল সেবা প্ল্যাটফর্ম</span>
               </div>
             </div>
@@ -554,17 +554,17 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             <motion.div 
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="w-full bg-white/95 backdrop-blur-2xl rounded-2xl sm:rounded-3xl shadow-[0_12px_40px_-15px_rgba(2,132,199,0.35)] border border-white/90 p-3 sm:p-4 text-slate-800 ring-1 ring-sky-400/20 shrink-0"
+              className={`w-full bg-white/95 backdrop-blur-2xl rounded-2xl shadow-lg border border-white/90 ${mode === 'register' ? 'p-2 sm:p-2.5' : 'p-2.5 sm:p-3'} text-slate-800 ring-1 ring-sky-400/20 shrink-0`}
             >
               {/* Tab Switcher */}
-              <div className="relative p-0.5 sm:p-1 bg-sky-50/90 rounded-xl sm:rounded-2xl flex items-center mb-1.5 sm:mb-2 border border-sky-100">
+              <div className={`relative p-0.5 bg-sky-50/90 rounded-xl flex items-center ${mode === 'register' ? 'mb-1' : 'mb-1.5'} border border-sky-100`}>
                 <button
                   type="button"
                   onClick={() => {
                     setMode('login');
                     setErrorMessage(null);
                   }}
-                  className={`relative z-10 flex-1 py-1 sm:py-1.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1 transition-colors cursor-pointer ${
+                  className={`relative z-10 flex-1 py-1 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer ${
                     mode === 'login' ? 'text-white font-black' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -578,7 +578,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     setMode('register');
                     setErrorMessage(null);
                   }}
-                  className={`relative z-10 flex-1 py-1 sm:py-1.5 rounded-lg sm:rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1 transition-colors cursor-pointer ${
+                  className={`relative z-10 flex-1 py-1 rounded-lg font-bold text-xs flex items-center justify-center gap-1 transition-colors cursor-pointer ${
                     mode === 'register' ? 'text-white font-black' : 'text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -589,7 +589,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 <motion.div 
                   layout
                   transition={{ type: 'spring', stiffness: 500, damping: 35 }}
-                  className={`absolute top-0.5 bottom-0.5 rounded-lg sm:rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 shadow-md ${
+                  className={`absolute top-0.5 bottom-0.5 rounded-lg bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 shadow-md ${
                     mode === 'login' ? 'left-0.5 right-1/2' : 'left-1/2 right-0.5'
                   }`}
                 />
@@ -602,16 +602,16 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="mb-1.5 p-1.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10.5px] font-semibold flex items-center gap-1"
+                    className="mb-1 p-1 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[10px] font-semibold flex items-center gap-1"
                   >
-                    <div className="w-3.5 h-3.5 rounded-full bg-red-200 text-red-700 flex items-center justify-center shrink-0 font-bold text-[8px]">!</div>
+                    <div className="w-3 h-3 rounded-full bg-red-200 text-red-700 flex items-center justify-center shrink-0 font-bold text-[8px]">!</div>
                     <div className="flex-1 leading-tight">{errorMessage}</div>
                   </motion.div>
                 )}
               </AnimatePresence>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-1.5 sm:space-y-2">
+              <form onSubmit={handleSubmit} className="space-y-1">
                 
                 {/* Full Name (Register Only) */}
                 {mode === 'register' && (
@@ -621,12 +621,12 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     exit={{ opacity: 0, height: 0 }}
                     className="space-y-0.5"
                   >
-                    <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
+                    <label className="block text-[10px] sm:text-[10.5px] font-bold text-slate-700 leading-none mb-0.5">
                       আপনার পূর্ণ নাম <span className="text-red-500">*</span>
                     </label>
                     <div className="relative">
-                      <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                        <User className="w-3.5 h-3.5" />
+                      <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400">
+                        <User className="w-3 h-3" />
                       </div>
                       <input
                         type="text"
@@ -634,7 +634,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                         placeholder="আপনার নাম লিখুন"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="w-full pl-8 pr-2.5 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                        className="w-full pl-6 pr-2 py-1 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs font-medium bg-white"
                       />
                     </div>
                   </motion.div>
@@ -642,12 +642,12 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
 
                 {/* Mobile Number */}
                 <div className="space-y-0.5">
-                  <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
+                  <label className="block text-[10px] sm:text-[10.5px] font-bold text-slate-700 leading-none mb-0.5">
                     মোবাইল নম্বর <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
-                    <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                      <Phone className="w-3.5 h-3.5" />
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400">
+                      <Phone className="w-3 h-3" />
                     </div>
                     <input
                       type="text"
@@ -655,7 +655,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       placeholder="017XXXXXXXX"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      className="w-full pl-8 pr-2.5 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                      className="w-full pl-6 pr-2 py-1 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs font-medium bg-white"
                     />
                   </div>
                 </div>
@@ -663,21 +663,21 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 {/* Password */}
                 <div className="space-y-0.5">
                   <div className="flex items-center justify-between">
-                    <label className="block text-[11px] sm:text-xs font-bold text-slate-700">
+                    <label className="block text-[10px] sm:text-[10.5px] font-bold text-slate-700 leading-none mb-0.5">
                       পাসওয়ার্ড <span className="text-red-500">*</span>
                     </label>
                     {mode === 'login' && (
                       <span 
                         onClick={() => setErrorMessage('পাসওয়ার্ড রিসেটের জন্য হেল্পলাইন 01992-867758 নম্বরে যোগাযোগ করুন।')}
-                        className="text-[10px] sm:text-[11px] text-sky-600 hover:text-sky-700 cursor-pointer font-semibold"
+                        className="text-[9.5px] text-sky-600 hover:text-sky-700 cursor-pointer font-semibold"
                       >
                         ভুলে গেছেন?
                       </span>
                     )}
                   </div>
                   <div className="relative">
-                    <div className="absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400">
-                      <Lock className="w-3.5 h-3.5" />
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 text-slate-400">
+                      <Lock className="w-3 h-3" />
                     </div>
                     <input
                       type={showPassword ? 'text' : 'password'}
@@ -685,29 +685,29 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                       placeholder="পাসওয়ার্ড লিখুন"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-8 pr-8 py-1.5 rounded-lg sm:rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs sm:text-sm font-medium bg-white"
+                      className="w-full pl-6 pr-7 py-1 rounded-lg border border-slate-300 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-200 outline-none text-xs font-medium bg-white"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                     >
-                      {showPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      {showPassword ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                     </button>
                   </div>
                 </div>
 
                 {/* Terms Checkbox */}
                 {mode === 'register' && (
-                  <div className="flex items-center gap-1.5 pt-0.5 text-slate-600 text-xs">
+                  <div className="flex items-center gap-1.5 pt-0.5 text-slate-600">
                     <input
                       type="checkbox"
                       id="termsCheck"
                       checked={agreeTerms}
                       onChange={(e) => setAgreeTerms(e.target.checked)}
-                      className="w-3.5 h-3.5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-400"
+                      className="w-3 h-3 text-emerald-600 rounded border-slate-300 focus:ring-emerald-400"
                     />
-                    <label htmlFor="termsCheck" className="cursor-pointer text-[10px] sm:text-[11px] leading-tight select-none">
+                    <label htmlFor="termsCheck" className="cursor-pointer text-[9.5px] sm:text-[10px] leading-tight select-none">
                       আমি <span className="font-bold text-slate-800">সেবা বাড়ি</span>-র নিয়মে একমত।
                     </label>
                   </div>
@@ -717,31 +717,31 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full mt-1 py-2 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-75"
+                  className="w-full mt-1 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 via-teal-600 to-sky-600 hover:from-emerald-500 hover:via-teal-500 hover:to-sky-500 text-white font-black text-xs flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer disabled:opacity-75"
                 >
                   {isSubmitting ? (
                     <div className="flex items-center gap-1.5">
-                      <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                       <span>যাচাই হচ্ছে...</span>
                     </div>
                   ) : mode === 'login' ? (
                     <>
                       <span>লগইন করুন</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   ) : (
                     <>
                       <span>রেজিস্ট্রেশন সম্পন্ন করুন</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </>
                   )}
                 </button>
               </form>
 
               {/* Switch link */}
-              <div className="mt-1.5 text-center">
+              <div className="mt-1 text-center">
                 {mode === 'login' ? (
-                  <p className="text-[10.5px] sm:text-xs text-slate-600">
+                  <p className="text-[10px] sm:text-[10.5px] text-slate-600">
                     নতুন ব্যবহারকারী?{' '}
                     <button
                       type="button"
@@ -755,7 +755,7 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                     </button>
                   </p>
                 ) : (
-                  <p className="text-[10.5px] sm:text-xs text-slate-600">
+                  <p className="text-[10px] sm:text-[10.5px] text-slate-600">
                     ইতিমধ্যে অ্যাকাউন্ট আছে?{' '}
                     <button
                       type="button"
@@ -802,20 +802,20 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
             </div>
 
             {/* 🎯 ২. লাইভ ইউজার ইন ও আউট অ্যাক্টিভিটি ট্র্যাকার (ইন ও আউট কখন করেছে) */}
-            <div className="w-full max-w-sm sm:max-w-md mt-2 px-0.5">
-              <div className="rounded-2xl sm:rounded-3xl bg-white/95 backdrop-blur-xl border border-white/90 p-2.5 sm:p-3 shadow-xl shadow-black/10 text-slate-800">
+            <div className={`w-full max-w-sm sm:max-w-md ${mode === 'register' ? 'mt-1' : 'mt-1.5'} px-0.5 pb-1`}>
+              <div className={`rounded-xl sm:rounded-2xl bg-white/95 backdrop-blur-xl border border-white/90 ${mode === 'register' ? 'p-1.5 px-2' : 'p-2 sm:p-2.5'} shadow-md text-slate-800`}>
                 {/* কার্ড হেডার */}
-                <div className="flex items-center justify-between pb-1.5 mb-1.5 border-b border-slate-100 text-[10.5px]">
+                <div className={`flex items-center justify-between ${mode === 'register' ? 'pb-1 mb-1' : 'pb-1.5 mb-1.5'} border-b border-slate-100 text-[10px]`}>
                   <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                    <span className="relative flex h-2.5 w-2.5">
+                    <span className="relative flex h-2 w-2">
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-80"></span>
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
                     </span>
-                    <span className="text-xs sm:text-[13px] font-black text-slate-900 tracking-tight">
+                    <span className="text-[11px] sm:text-xs font-black text-slate-900 tracking-tight">
                       লাইভ ইউজার অ্যাক্টিভিটি (ইন ও আউট)
                     </span>
                   </div>
-                  <span className="text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1 shadow-2xs">
+                  <span className="text-[8.5px] sm:text-[9px] font-black px-1.5 py-0.2 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300 flex items-center gap-1 shadow-2xs">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span>রিয়েল-টাইম LIVE</span>
                   </span>
@@ -825,54 +825,54 @@ export const AuthLandingPage: React.FC<AuthLandingPageProps> = ({
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={currentActivity.id || activityIndex}
-                    initial={{ opacity: 0, y: 4 }}
+                    initial={{ opacity: 0, y: 3 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -4 }}
+                    exit={{ opacity: 0, y: -3 }}
                     transition={{ duration: 0.3 }}
-                    className={`flex items-center justify-between gap-2 py-2 px-3 rounded-xl border transition-all ${
+                    className={`flex items-center justify-between gap-2 ${mode === 'register' ? 'py-1 px-2' : 'py-1.5 px-2.5'} rounded-lg border transition-all ${
                       currentActivity.action === 'in'
                         ? 'bg-gradient-to-r from-emerald-50/90 via-teal-50/70 to-emerald-50/90 border-emerald-200/90'
                         : 'bg-gradient-to-r from-rose-50/90 via-orange-50/70 to-rose-50/90 border-rose-200/90'
                     }`}
                   >
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 shadow-xs ${
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className={`${mode === 'register' ? 'w-5 h-5' : 'w-6 h-6'} rounded-md flex items-center justify-center shrink-0 shadow-xs ${
                         currentActivity.action === 'in' 
                           ? 'bg-emerald-600 text-white' 
                           : 'bg-rose-600 text-white'
                       }`}>
-                        {currentActivity.action === 'in' ? <LogIn className="w-4 h-4" /> : <LogOut className="w-4 h-4" />}
+                        {currentActivity.action === 'in' ? <LogIn className="w-3 h-3" /> : <LogOut className="w-3 h-3" />}
                       </div>
                       <div className="flex flex-col min-w-0 leading-tight">
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs sm:text-[13px] font-black text-slate-900 truncate">
+                        <div className="flex items-center gap-1">
+                          <span className="text-[11px] sm:text-xs font-black text-slate-900 truncate">
                             {currentActivity.name}
                           </span>
                           {currentActivity.location && (
-                            <span className="text-[10.5px] sm:text-xs text-slate-600 font-bold truncate">
+                            <span className="text-[9.5px] text-slate-600 font-bold truncate">
                               • {currentActivity.location}
                             </span>
                           )}
                         </div>
-                        <span className="text-[10px] sm:text-[11px] font-bold text-slate-600 mt-0.5">
+                        <span className="text-[9px] font-bold text-slate-600">
                           {currentActivity.action === 'in' ? 'সফলভাবে লগইন করেছেন' : 'সফলভাবে লগআউট করেছেন'}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       {currentActivity.action === 'in' ? (
-                        <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-emerald-600 text-white shadow-xs flex items-center gap-1">
+                        <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-emerald-600 text-white shadow-xs flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping"></span>
                           <span>ইন (IN)</span>
                         </span>
                       ) : (
-                        <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-rose-600 text-white shadow-xs flex items-center gap-1">
+                        <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-rose-600 text-white shadow-xs flex items-center gap-1">
                           <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
                           <span>আউট (OUT)</span>
                         </span>
                       )}
-                      <span className="text-[10px] sm:text-[11px] font-black text-slate-700 whitespace-nowrap bg-white/90 border border-slate-200/90 px-2 py-0.5 rounded-md shadow-2xs">
+                      <span className="text-[9.5px] font-black text-slate-700 whitespace-nowrap bg-white/90 border border-slate-200 px-1.5 py-0.5 rounded shadow-2xs">
                         {currentActivity.timeAgo || 'এখনই'}
                       </span>
                     </div>
