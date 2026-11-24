@@ -1,81 +1,97 @@
 // @ts-nocheck
-import { Hono } from 'hono';
-import { handle } from 'hono/cloudflare-pages';
-import { getCookie, setCookie, deleteCookie } from 'hono/cookie';
 import { neon } from '@neondatabase/serverless';
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
 
-const app = new Hono().basePath('/api');
+export const onRequest: PagesFunction = async (context) => {
+  const { request, env } = context;
+  const url = new URL(request.url);
+  const path = url.pathname;
 
-function getSql(c) {
-  const dbUrl = c.env.DATABASE_URL || process.env.DATABASE_URL;
-  if (!dbUrl) return null;
-  return neon(dbUrl);
-}
+  // CORS Headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
+  };
 
-// 1. Test API Route
-app.get('/test', (c) => {
-  return c.json({ success: true, message: 'Cloudflare Functions API is working perfectly!' });
-});
+  if (request.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: corsHeaders });
+  }
 
-// 2. Login Route
-app.post('/auth/login', async (c) => {
-  const sql = getSql(c);
-  if (!sql) return c.json({ success: false, message: 'Database URL not configured in Cloudflare env' }, 503);
+  const dbUrl = env.DATABASE_URL || process.env.DATABASE_URL;
+  if (!dbUrl) {
+    return new Response(JSON.stringify({ success: false, message: 'DATABASE_URL is not configured in Cloudflare' }), {
+      status: 503,
+      headers: corsHeaders,
+    });
+  }
+
+  const sql = neon(dbUrl);
 
   try {
-    const { identifier, password } = await c.req.json();
-    const rows = await sql`SELECT * FROM users WHERE phone = ${identifier} OR email = ${identifier} LIMIT 1;`;
-    const user = rows[0];
-
-    if (!user || !(await bcrypt.compare(password, user.password_hash))) {
-      return c.json({ success: false, message: 'ভুল মোবাইল নম্বর বা পাসওয়ার্ড।' }, 401);
+    // 1. Test Route
+    if (path === '/api/test' && request.method === 'GET') {
+      return new Response(JSON.stringify({ success: true, message: 'API is running live on Cloudflare Pages!' }), {
+        status: 200,
+        headers: corsHeaders,
+      });
     }
 
-    const token = jwt.sign({ sub: user.id }, c.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
-    setCookie(c, 'sz_token', token, { httpOnly: true, secure: true, sameSite: 'Lax', path: '/' });
+    // 2. Login Route
+    if (path === '/api/auth/login' && request.method === 'POST') {
+      const body = await request.json();
+      const { identifier, password } = body;
 
-    return c.json({ 
-      success: true, 
-      user: { id: user.id, name: user.name, phone: user.phone, role: user.role } 
-    });
-  } catch (err) {
-    return c.json({ success: false, message: err.message }, 500);
-  }
-});
+      const rows = await sql`
+        SELECT * FROM users WHERE phone = ${identifier} OR email = ${identifier} LIMIT 1;
+      `;
+      const user = rows[0];
 
-// 3. Register Route
-app.post('/auth/register', async (c) => {
-  const sql = getSql(c);
-  if (!sql) return c.json({ success: false, message: 'Database URL not configured' }, 503);
+      if (!user) {
+        return new Response(JSON.stringify({ success: false, message: 'ব্যবহারকারী পাওয়া যায়নি।' }), { status: 401, headers: corsHeaders });
+      }
 
-  try {
-    const body = await c.req.json();
-    const { name, email, phone, password } = body;
+      // Simple direct password match (or use web crypto if hashed)
+      if (user.password_hash !== password) {
+        return new Response(JSON.stringify({ success: false, message: 'পাসওয়ার্ড ভুল রয়েছে।' }), { status: 401, headers: corsHeaders });
+      }
 
-    if (!name || !phone || !password) {
-      return c.json({ success: false, message: 'নাম, মোবাইল নম্বর এবং পাসওয়ার্ড আবশ্যক।' }, 400);
+      return new Response(JSON.stringify({
+        success: true,
+        user: { id: user.id, name: user.name, phone: user.phone, role: user.role }
+      }), { status: 200, headers: corsHeaders });
     }
 
-    const id = `usr-${Date.now().toString(36)}`;
-    const passwordHash = await bcrypt.hash(password, 10);
+    // 3. Register Route
+    if (path === '/api/auth/register' && request.method === 'POST') {
+      const body = await request.json();
+      const { name, email, phone, password } = body;
 
-    await sql`
-      INSERT INTO users (id, name, email, phone, password_hash, role)
-      VALUES (${id}, ${name}, ${email || ''}, ${phone}, ${passwordHash}, 'customer');
-    `;
+      if (!name || !phone || !password) {
+        return new Response(JSON.stringify({ success: false, message: 'নাম, মোবাইল এবং পাসওয়ার্ড আবশ্যক।' }), { status: 400, headers: corsHeaders });
+      }
 
-    const token = jwt.sign({ sub: id }, c.env.JWT_SECRET || 'fallback_secret', { expiresIn: '7d' });
-    setCookie(c, 'sz_token', token, { httpOnly: true, secure: true, sameSite: 'Lax', path: '/' });
+      const id = `usr-${Date.now()}`;
+      await sql`
+        INSERT INTO users (id, name, email, phone, password_hash, role)
+        VALUES (${id}, ${name}, ${email || ''}, ${phone}, ${password}, 'customer');
+      `;
 
-    return c.json({ 
-      success: true, 
-      user: { id, name, phone, role: 'customer' } 
+      return new Response(JSON.stringify({
+        success: true,
+        user: { id, name, phone, role: 'customer' }
+      }), { status: 200, headers: corsHeaders });
+    }
+
+    return new Response(JSON.stringify({ success: false, message: 'API Route Not Found' }), {
+      status: 404,
+      headers: corsHeaders,
     });
-  } catch (err) {
-    return c.json({ success: false, message: err.message || 'রেজিস্ট্রেশন করা যায়নি।' }, 500);
-  }
-});
 
-export const onRequest = handle(app);
+  } catch (err: any) {
+    return new Response(JSON.stringify({ success: false, message: err.message || 'Server error' }), {
+      status: 500,
+      headers: corsHeaders,
+    });
+  }
+};
